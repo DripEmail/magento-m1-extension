@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Drip_Connect>
+            <version>0.1.0</version>
+        </Drip_Connect>
+    </modules>
+</config>

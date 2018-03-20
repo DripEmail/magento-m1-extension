@@ -1,0 +1,12 @@
+{
+    "name": "drip/connect",
+    "description": "Drip Connect M1 module",
+    "type": "magento-module",
+    "authors": [
+        {
+            "name": "dev",
+            "email": "dev@robofirm.com",
+            "role": "developer"
+        }
+    ]
+}

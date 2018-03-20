@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Drip_Connect>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Drip_Connect>
+    </modules>
+</config>
