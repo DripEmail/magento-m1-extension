@@ -5,4 +5,16 @@
             <version>0.1.0</version>
         </Drip_Connect>
     </modules>
+    <global>
+        <models>
+            <drip_connect>
+                <class>Drip_Connect_Model</class>
+            </drip_connect>
+        </models>
+        <helpers>
+            <drip_connect>
+                <class>Drip_Connect_Helper</class>
+            </drip_connect>
+        </helpers>
+    </global>
 </config>
