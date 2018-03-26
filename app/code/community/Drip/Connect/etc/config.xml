@@ -16,5 +16,23 @@
                 <class>Drip_Connect_Helper</class>
             </drip_connect>
         </helpers>
+        <events>
+            <customer_save_before>
+                <observers>
+                    <drip_connect_customer_save_before>
+                        <class>drip_connect/observer_account</class>
+                        <method>checkIfCustomerNew</method>
+                    </drip_connect_customer_save_before>
+                </observers>
+            </customer_save_before>
+            <customer_save_commit_after>
+                <observers>
+                    <drip_connect_customer_save_commit_after>
+                        <class>drip_connect/observer_account</class>
+                        <method>afterCustomerSave</method>
+                    </drip_connect_customer_save_commit_after>
+                </observers>
+            </customer_save_commit_after>
+        </events>
     </global>
 </config>
