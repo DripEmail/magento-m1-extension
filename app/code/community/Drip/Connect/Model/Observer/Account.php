@@ -61,6 +61,14 @@ class Drip_Connect_Model_Observer_Account
                 'accepts_marketing' => ($customer->getIsSubscribed() ? 'yes' : 'no'),
             ),
         ))->call();
+
+        $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
+            'email' => $customer->getEmail(),
+            'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_NEW_CUSTOMER,
+            'properties' => array(
+                'source' => 'magento'
+            ),
+        ))->call();
     }
 
     /**
