@@ -35,6 +35,11 @@ class Drip_Connect_Model_Observer_Account
      */
     protected function proceedAccountNew($customer)
     {
+        Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', array(
+            'email' => $customer->getEmail(),
+            'user_id' => $customer->getEntityId(),
+            'ip_address' => Mage::helper('core/http')->getRemoteAddr(),
+        ))->call();
     }
 
     /**
