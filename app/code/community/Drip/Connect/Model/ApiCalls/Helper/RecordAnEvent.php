@@ -3,7 +3,8 @@
 class Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent
     extends Drip_Connect_Model_ApiCalls_Helper
 {
-    const EVENT_NEW_CUSTOMER = 'Customer created';
+    const EVENT_CUSTOMER_NEW = 'Customer created';
+    const EVENT_CUSTOMER_UPDATED = 'Customer updated';
 
     public function __construct($data = null)
     {

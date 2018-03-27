@@ -35,6 +35,18 @@
             </customer_save_commit_after>
         </events>
     </global>
+    <frontend>
+        <events>
+            <customer_address_save_commit_after>
+                <observers>
+                    <drip_connect_customer_address_save_commit_after>
+                        <class>drip_connect/observer_account</class>
+                        <method>afterCustomerAddressSaveFront</method>
+                    </drip_connect_customer_address_save_commit_after>
+                </observers>
+            </customer_address_save_commit_after>
+        </events>
+    </frontend>
     <default>
         <dripconnect_general>
             <api_settings>
