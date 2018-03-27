@@ -35,4 +35,13 @@
             </customer_save_commit_after>
         </events>
     </global>
+    <default>
+        <dripconnect_general>
+            <api_settings>
+                <url>https://api.getdrip.com/v2/</url>
+                <timeout>15000</timeout>
+                <behavior>call_api</behavior>
+            </api_settings>
+        </dripconnect_general>
+    </default>
 </config>

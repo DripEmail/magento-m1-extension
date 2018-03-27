@@ -31,13 +31,13 @@ class Drip_Connect_Model_Http_Client extends Zend_Http_Client
         $requestUrl = $this->getUri(true);
         $response = parent::request($method);
         $responseData = $response->getBody();
-        try {
+
+        if (!is_null($this->getLogger())) {
             $this->getLogger()->info('Request Url: '.$requestUrl);
             $this->getLogger()->info('Request Body: '.$requestBody);
             $this->getLogger()->info('Response: '.$responseData);
-        } catch (Exception $ex) {
-
         }
+
         return $response;
     }
 

@@ -16,7 +16,7 @@
             <show_in_website>1</show_in_website>
             <show_in_store>1</show_in_store>
             <groups>
-                <dripconnect_api_settings translate="label">
+                <api_settings translate="label">
                     <label>Api Settings</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>10</sort_order>
@@ -40,17 +40,26 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </api_key>
-                        <endpoint_url translate="label">
+                        <url translate="label">
                             <label>API endpoint URL</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>30</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </endpoint_url>
+                        </url>
+                        <timeout translate="label comment">
+                            <label>Timeout</label>
+                            <comment>Timeout in milliseconds</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </timeout>
                     </fields>
-                </dripconnect_api_settings>
-                <dripconnect_log_settings translate="label">
+                </api_settings>
+                <log_settings translate="label">
                     <label>Log Settings</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>100</sort_order>
@@ -80,7 +89,7 @@
                             </depends>
                         </log_rotation_period>
                     </fields>
-                </dripconnect_log_settings>
+                </log_settings>
             </groups>
         </dripconnect_general>
     </sections>
