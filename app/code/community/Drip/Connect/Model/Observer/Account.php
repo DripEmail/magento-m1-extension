@@ -35,10 +35,31 @@ class Drip_Connect_Model_Observer_Account
      */
     protected function proceedAccountNew($customer)
     {
+        $gender = $customer->getGender();
+        if ($gender == 1) {
+            $gender = 'Male';
+        } else if ($gender == 2) {
+            $gender = 'Female';
+        }
         Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', array(
             'email' => $customer->getEmail(),
             'user_id' => $customer->getEntityId(),
             'ip_address' => Mage::helper('core/http')->getRemoteAddr(),
+            'custom_fields' => array(
+                'first_name' => $customer->getFirstname(),
+                'last_name' => $customer->getLastname(),
+                'birthday' => $customer->getDob(),
+                'gender' => $gender,
+                'city' => $customer->getDefaultShippingAddress()->getCity(),
+                'state' => $customer->getDefaultShippingAddress()->getRegion(),
+                'zip_code' => $customer->getDefaultShippingAddress()->getPostcode(),
+                'country' => $customer->getDefaultShippingAddress()->getCountry(),
+                'phone_number' => $customer->getDefaultShippingAddress()->getTelephone(),
+                'magento_account_created' => $customer->getCreatedAt(),
+                'magento_customer_group' => Mage::getModel('customer/group')->load($customer->getGroupId())->getCustomerGroupCode(),
+                'magento_store' => $customer->getStoreId(),
+                'accepts_marketing' => ($customer->getIsSubscribed() ? 'yes' : 'no'),
+            ),
         ))->call();
     }
 
