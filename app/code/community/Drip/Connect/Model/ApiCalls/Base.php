@@ -48,7 +48,8 @@ class Drip_Connect_Model_ApiCalls_Base
             ));
 
             $this->_httpClient->setHeaders(array(
-                'Accept' => 'application/vnd.api+json'
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/vnd.api+json'
             ));
 
             $this->_httpClient->setAuth(
