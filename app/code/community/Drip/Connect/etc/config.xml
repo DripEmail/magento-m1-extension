@@ -53,6 +53,14 @@
                     </drip_connect_customer_address_save_commit_after>
                 </observers>
             </customer_address_save_commit_after>
+            <customer_login>
+                <observers>
+                    <drip_connect_customer_login>
+                        <class>drip_connect/observer_customer</class>
+                        <method>customerLogin</method>
+                    </drip_connect_customer_login>
+                </observers>
+            </customer_login>
         </events>
     </frontend>
     <default>

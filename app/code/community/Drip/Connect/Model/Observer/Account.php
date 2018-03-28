@@ -1,4 +1,7 @@
 <?php
+/**
+ * Actions with customer account - create, change, delete
+ */
 
 class Drip_Connect_Model_Observer_Account
 {

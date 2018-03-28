@@ -6,6 +6,7 @@ class Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent
     const EVENT_CUSTOMER_NEW = 'Customer created';
     const EVENT_CUSTOMER_UPDATED = 'Customer updated';
     const EVENT_CUSTOMER_DELETED = 'Customer deleted';
+    const EVENT_CUSTOMER_LOGIN = 'Customer logged in';
 
     public function __construct($data = null)
     {
