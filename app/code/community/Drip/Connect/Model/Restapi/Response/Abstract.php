@@ -17,7 +17,7 @@ class Drip_Connect_Model_Restapi_Response_Abstract
      * @param Zend_Http_Response $response
      * @param string $errorMessage
      */
-    public function __construct(Zend_Http_Response $response = null, $errorMessage)
+    public function __construct(Zend_Http_Response $rawResponse = null, $errorMessage)
     {
         if ($errorMessage) {
             $this->_setError($errorMessage);
