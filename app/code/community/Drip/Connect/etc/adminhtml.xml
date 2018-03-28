@@ -9,7 +9,7 @@
                             <config>
                                 <children>
                                     <dripconnect_general>
-                                        <title>API Configuration</title>
+                                        <title>Drip Connect Configuration</title>
                                         <sort_order>75</sort_order>
                                     </dripconnect_general>
                                 </children>
