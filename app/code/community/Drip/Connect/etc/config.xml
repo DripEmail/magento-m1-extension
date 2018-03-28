@@ -5,4 +5,55 @@
             <version>0.1.0</version>
         </Drip_Connect>
     </modules>
+    <global>
+        <models>
+            <drip_connect>
+                <class>Drip_Connect_Model</class>
+            </drip_connect>
+        </models>
+        <helpers>
+            <drip_connect>
+                <class>Drip_Connect_Helper</class>
+            </drip_connect>
+        </helpers>
+        <events>
+            <customer_save_before>
+                <observers>
+                    <drip_connect_customer_save_before>
+                        <class>drip_connect/observer_account</class>
+                        <method>checkIfCustomerNew</method>
+                    </drip_connect_customer_save_before>
+                </observers>
+            </customer_save_before>
+            <customer_save_commit_after>
+                <observers>
+                    <drip_connect_customer_save_commit_after>
+                        <class>drip_connect/observer_account</class>
+                        <method>afterCustomerSave</method>
+                    </drip_connect_customer_save_commit_after>
+                </observers>
+            </customer_save_commit_after>
+        </events>
+    </global>
+    <frontend>
+        <events>
+            <customer_address_save_commit_after>
+                <observers>
+                    <drip_connect_customer_address_save_commit_after>
+                        <class>drip_connect/observer_account</class>
+                        <method>afterCustomerAddressSaveFront</method>
+                    </drip_connect_customer_address_save_commit_after>
+                </observers>
+            </customer_address_save_commit_after>
+        </events>
+    </frontend>
+    <default>
+        <dripconnect_general>
+            <api_settings>
+                <url>https://api.getdrip.com/v2/</url>
+                <timeout>15000</timeout>
+                <behavior>call_api</behavior>
+            </api_settings>
+        </dripconnect_general>
+    </default>
 </config>
