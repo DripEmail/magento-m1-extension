@@ -33,6 +33,14 @@
                     </drip_connect_customer_save_commit_after>
                 </observers>
             </customer_save_commit_after>
+            <customer_delete_commit_after>
+                <observers>
+                    <drip_connect_customer_delete_commit_after>
+                        <class>drip_connect/observer_account</class>
+                        <method>afterCustomerDelete</method>
+                    </drip_connect_customer_delete_commit_after>
+                </observers>
+            </customer_delete_commit_after>
         </events>
     </global>
     <frontend>

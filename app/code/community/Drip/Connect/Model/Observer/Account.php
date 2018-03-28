@@ -45,6 +45,15 @@ class Drip_Connect_Model_Observer_Account
     }
 
     /**
+     * @param Varien_Event_Observer $observer
+     */
+    public function afterCustomerDelete($observer)
+    {
+        $customer = $observer->getCustomer();
+        $this->proceedAccountDelete($customer);
+    }
+
+    /**
      * drip actions for customer account create
      *
      * @param Mage_Customer_Model_Customer $customer
@@ -129,6 +138,22 @@ class Drip_Connect_Model_Observer_Account
         $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
             'email' => $customer->getEmail(),
             'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED,
+            'properties' => array(
+                'source' => 'magento'
+            ),
+        ))->call();
+    }
+
+    /**
+     * drip actions for customer account delete
+     *
+     * @param Mage_Customer_Model_Customer $customer
+     */
+    protected function proceedAccountDelete($customer)
+    {
+        $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
+            'email' => $customer->getEmail(),
+            'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_DELETED,
             'properties' => array(
                 'source' => 'magento'
             ),
