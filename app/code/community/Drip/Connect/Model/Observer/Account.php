@@ -39,7 +39,7 @@ class Drip_Connect_Model_Observer_Account
         $address = $observer->getDataObject();
         $customer = Mage::getModel('customer/customer')->load($address->getCustomerId());
         // customer changed an address we use in drip - update drip data
-        if ($address->getEntityId() == $customer->getDefaultShippingAddress()->getEntityId()) {
+        if ($customer->getDefaultShippingAddress() && $address->getEntityId() == $customer->getDefaultShippingAddress()->getEntityId()) {
             $this->proceedAccount($customer);
         }
     }
@@ -66,11 +66,11 @@ class Drip_Connect_Model_Observer_Account
                 'last_name' => $customer->getLastname(),
                 'birthday' => $customer->getDob(),
                 'gender' => $gender,
-                'city' => $customer->getDefaultShippingAddress()->getCity(),
-                'state' => $customer->getDefaultShippingAddress()->getRegion(),
-                'zip_code' => $customer->getDefaultShippingAddress()->getPostcode(),
-                'country' => $customer->getDefaultShippingAddress()->getCountry(),
-                'phone_number' => $customer->getDefaultShippingAddress()->getTelephone(),
+                'city' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getCity() : ''),
+                'state' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getRegion() : ''),
+                'zip_code' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getPostcode() : ''),
+                'country' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getCountry() : ''),
+                'phone_number' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getTelephone() : ''),
                 'magento_account_created' => $customer->getCreatedAt(),
                 'magento_customer_group' => Mage::getModel('customer/group')->load($customer->getGroupId())->getCustomerGroupCode(),
                 'magento_store' => $customer->getStoreId(),
@@ -115,11 +115,11 @@ class Drip_Connect_Model_Observer_Account
                 'last_name' => $customer->getLastname(),
                 'birthday' => $customer->getDob(),
                 'gender' => $gender,
-                'city' => $customer->getDefaultShippingAddress()->getCity(),
-                'state' => $customer->getDefaultShippingAddress()->getRegion(),
-                'zip_code' => $customer->getDefaultShippingAddress()->getPostcode(),
-                'country' => $customer->getDefaultShippingAddress()->getCountry(),
-                'phone_number' => $customer->getDefaultShippingAddress()->getTelephone(),
+                'city' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getCity() : ''),
+                'state' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getRegion() : ''),
+                'zip_code' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getPostcode() : ''),
+                'country' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getCountry() : ''),
+                'phone_number' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getTelephone() : ''),
                 'magento_account_created' => $customer->getCreatedAt(),
                 'magento_customer_group' => Mage::getModel('customer/group')->load($customer->getGroupId())->getCustomerGroupCode(),
                 'magento_store' => $customer->getStoreId(),
