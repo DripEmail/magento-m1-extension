@@ -41,6 +41,14 @@
                     </drip_connect_customer_delete_commit_after>
                 </observers>
             </customer_delete_commit_after>
+            <sales_order_save_commit_after>
+                <observers>
+                    <drip_connect_sales_order_save_commit_after>
+                        <class>drip_connect/observer_order</class>
+                        <method>afterOrderSave</method>
+                    </drip_connect_sales_order_save_commit_after>
+                </observers>
+            </sales_order_save_commit_after>
         </events>
     </global>
     <frontend>
