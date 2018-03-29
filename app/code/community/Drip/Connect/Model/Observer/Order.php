@@ -29,18 +29,16 @@ class Drip_Connect_Model_Observer_Order
             return;
         }
 
-        $customer = $order->getCustomer();
-        if ($customer->getId()) {
-            $email = $customer->getEmail();
-        } else {
-            // quest checkout
-            $email = $order->getQuote()->getCustomerEmail();
-        }
-
         if ($order->getState() == Mage_Sales_Model_Order::STATE_NEW) {
             $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-                'email' => $email,
+                'email' => $order->getCustomerEmail(),
                 'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_ORDER_CREATED,
+                'properties' => $this->getOrderData($order),
+            ))->call();
+        } else if ($order->getState() == Mage_Sales_Model_Order::STATE_COMPLETE) {
+            $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
+                'email' => $order->getCustomerEmail(),
+                'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_ORDER_COMPLETED,
                 'properties' => $this->getOrderData($order),
             ))->call();
         }
@@ -62,7 +60,7 @@ class Drip_Connect_Model_Observer_Order
             'tax' => $order->getTaxAmount(),
             'fees' => $order->getShippingAmount(),
             'discounts' => $order->getDiscountAmount(),
-            'currency' => $order->getQuote()->getQuoteCurrencyCode(),
+            'currency' => $order->getOrderCurrencyCode(),
             'items_count' => $order->getTotalQtyOrdered(),
             'order_id' => $order->getIncrementId(),
             'order_status' => $order->getState(),
@@ -81,7 +79,7 @@ class Drip_Connect_Model_Observer_Order
     protected function getItemsGroups($order)
     {
         $data = array();
-        foreach ($order->getQuote()->getAllItems() as $item) {
+        foreach ($order->getAllItems() as $item) {
             $product = Mage::getModel('catalog/product')->load($item->getProduct()->getId());
             $group = array(
                 'product_id' => $item->getProductId(),
@@ -89,20 +87,19 @@ class Drip_Connect_Model_Observer_Order
                 'name' => $item->getName(),
                 'brand' => $item->getBrand(),
                 'categories' => implode(',', $product->getCategoryIds()),
-                'quantity' => $item->getQty(),
+                'quantity' => $item->getQtyOrdered(),
                 'price' => $item->getPrice(),
-                'amount' => ($item->getQty() * $item->getPrice()),
+                'amount' => ($item->getQtyOrdered() * $item->getPrice()),
                 'tax' => $item->getTaxAmount(),
                 'taxable' => (preg_match('/[123456789]/', $item->getTaxAmount()) ? 'true' : 'false'),
                 'discounts' => $item->getDiscountAmount(),
-                'discount_codes' => $order->getQuote()->getCouponCode(),
-                'currency' => $order->getQuote()->getQuoteCurrencyCode(),
+                'discount_codes' => $order->getCouponCode(),
+                'currency' => $order->getOrderCurrencyCode(),
                 'product_url' => $item->getProduct()->getProductUrl(),
                 'image_url' => (string)Mage::helper('catalog/image')->init($product, 'image'),
             );
             $data[] = $group;
         }
-
         return $data;
     }
 
