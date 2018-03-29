@@ -7,6 +7,10 @@ class Drip_Connect_Model_Observer_Account
 {
     const REGISTRY_KEY_IS_NEW = 'newcustomer';
     const REGISTRY_KEY_OLD_DATA = 'oldcustomerdata';
+    const REGISTRY_KEY_OLD_ADDR = 'oldcustomeraddress';
+
+    static $isAddressSaved = false;
+    static $doNotUseAfterAddressSave = false;
 
     /**
      * - check if customer new
@@ -50,14 +54,57 @@ class Drip_Connect_Model_Observer_Account
      *
      * @param Varien_Event_Observer $observer
      */
+    public function beforeCustomerAddressSaveFront($observer)
+    {
+        if (self::$isAddressSaved) {
+            return;
+        }
+        $address = $observer->getDataObject();
+
+        // if editing address going to be set as default shipping
+        // do nothing after addres save. it will be updated on customer save
+        if ($address->getIsDefaultShipping()) {
+            self::$doNotUseAfterAddressSave = true;
+            return;
+        }
+
+        $customer = Mage::getModel('customer/customer')->load($address->getCustomerId());
+
+        // if editing address is already a default shipping one
+        // get its old values
+        if ($customer->getDefaultShippingAddress() && $address->getEntityId() == $customer->getDefaultShippingAddress()->getEntityId()) {
+            Mage::register(self::REGISTRY_KEY_OLD_ADDR, $this->getAddressFields($customer->getDefaultShippingAddress()));
+        }
+
+        self::$isAddressSaved = true;
+    }
+
+    /**
+     * change address from admin area get processed in afterCustomerSave() method
+     * this one used for user's actions with address on front
+     *
+     * @param Varien_Event_Observer $observer
+     */
     public function afterCustomerAddressSaveFront($observer)
     {
+        // will be processed with customer update
+        if (self::$doNotUseAfterAddressSave) {
+            return;
+        }
+
+        // change was not done in address we use in drip
+        if (empty(Mage::registry(self::REGISTRY_KEY_OLD_ADDR))) {
+            return;
+        }
+
         $address = $observer->getDataObject();
         $customer = Mage::getModel('customer/customer')->load($address->getCustomerId());
-        // customer changed an address we use in drip - update drip data
-        if ($customer->getDefaultShippingAddress() && $address->getEntityId() == $customer->getDefaultShippingAddress()->getEntityId()) {
+
+        if ($this->isAddressChanged($address)) {
             $this->proceedAccount($customer);
         }
+
+        Mage::unregister(self::REGISTRY_KEY_OLD_ADDR);
     }
 
     /**
@@ -138,6 +185,19 @@ class Drip_Connect_Model_Observer_Account
     }
 
     /**
+     * compare orig and new data
+     *
+     * @param Mage_Customer_Model_Address $address
+     */
+    protected function isAddressChanged($address)
+    {
+        $oldData = Mage::registry(self::REGISTRY_KEY_OLD_ADDR);
+        $newData = $this->getAddressFields($address);
+
+        return (serialize($oldData) != serialize($newData));
+    }
+
+    /**
      * prepare array of customer data we use to send in drip
      *
      * @param Mage_Customer_Model_Customer $customer
@@ -184,5 +244,21 @@ class Drip_Connect_Model_Observer_Account
         }
 
         return $data;
+    }
+
+    /**
+     * get address fields to compare
+     *
+     * @param Mage_Customer_Model_Address $address
+     */
+    protected function getAddressFields($address)
+    {
+        return array (
+            'city' => $address->getCity(),
+            'state' => $address->getRegion(),
+            'zip_code' => $address->getPostcode(),
+            'country' => $address->getCountry(),
+            'phone_number' => $address->getTelephone(),
+        );
     }
 }

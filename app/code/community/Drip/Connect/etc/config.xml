@@ -45,9 +45,19 @@
     </global>
     <frontend>
         <events>
+            <customer_address_save_before>
+                <observers>
+                    <drip_connect_customer_address_save_before>
+                        <type>singleton</type>
+                        <class>drip_connect/observer_account</class>
+                        <method>beforeCustomerAddressSaveFront</method>
+                    </drip_connect_customer_address_save_before>
+                </observers>
+            </customer_address_save_before>
             <customer_address_save_commit_after>
                 <observers>
                     <drip_connect_customer_address_save_commit_after>
+                        <type>singleton</type>
                         <class>drip_connect/observer_account</class>
                         <method>afterCustomerAddressSaveFront</method>
                     </drip_connect_customer_address_save_commit_after>
