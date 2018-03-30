@@ -231,6 +231,7 @@ class Drip_Connect_Model_Observer_Account
                 'zip_code' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getPostcode() : ''),
                 'country' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getCountry() : ''),
                 'phone_number' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getTelephone() : ''),
+                'magento_account_created' => $customer->getCreatedAt(),
                 'magento_customer_group' => Mage::getModel('customer/group')->load($customer->getGroupId())->getCustomerGroupCode(),
                 'magento_store' => $customer->getStoreId(),
                 'accepts_marketing' => ($customer->getIsSubscribed() ? 'yes' : 'no'),
