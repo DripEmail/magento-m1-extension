@@ -9,6 +9,7 @@ class Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent
     const EVENT_CUSTOMER_LOGIN = 'Customer logged in';
     const EVENT_ORDER_CREATED = 'Order created';
     const EVENT_ORDER_COMPLETED = 'Order fulfilled';
+    const EVENT_ORDER_REFUNDED = 'Order refunded';
 
     public function __construct($data = null)
     {
