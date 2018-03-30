@@ -240,7 +240,7 @@ class Drip_Connect_Model_Observer_Account
 
         if ($updatableOnly) {
             unset($data['custom_fields']['magento_account_created']);
-            unset($data['custom_fields']['ip_address']);
+            unset($data['ip_address']);
         }
 
         return $data;
