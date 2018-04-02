@@ -215,6 +215,8 @@ class Drip_Connect_Model_Observer_Account
             $gender = 'Male';
         } else if ($gender == 2) {
             $gender = 'Female';
+        } else {
+            $gender = '';
         }
         $data = array (
             'email' => $customer->getEmail(),
