@@ -10,6 +10,7 @@ class Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent
     const EVENT_ORDER_CREATED = 'Order created';
     const EVENT_ORDER_COMPLETED = 'Order fulfilled';
     const EVENT_ORDER_REFUNDED = 'Order refunded';
+    const EVENT_ORDER_CANCELED = 'Order canceled';
 
     public function __construct($data = null)
     {
