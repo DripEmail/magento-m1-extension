@@ -8,6 +8,9 @@
     function syncCustomers() {
 
         var elem = $('<?php echo $this->getHtmlId() ?>');
+        var res = $('sync_result');
+
+        elem.addClassName('disabled').setAttribute('disabled', 'disabled');
 
         params = {
             account_id: '<?=$this->getAccountId()?>',
@@ -16,12 +19,28 @@
         new Ajax.Request('<?php echo $this->getAjaxUrl() ?>', {
             parameters: params,
             onSuccess: function(response) {
-                //TODO
+                var result = '<?php echo Mage::helper('core')->jsQuoteEscape($this->__("Data's been sent")) ?>';
+                response = response.responseText;
+                if (response == 1) {
+                    res.removeClassName('error');
+                } else {
+                    res.addClassName('error');
+                    result = '<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Data send error')) ?>';
+                }
+                res.update(result);
+            },
+            onFailure: function(){
+                res.addClassName('error');
+                result = '<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Data send error')) ?>';
+            },
+            onComplete: function(){
+                elem.removeClassName('disabled')
+                    .removeAttribute('disabled');
             }
         });
     }
 //]]>
 </script>
 <button onclick="javascript:syncCustomers(); return false;" class="scalable" type="button" id="<?php echo $this->getHtmlId() ?>">
-    <span id="sync_result"><?php echo $this->escapeHtml($this->getButtonLabel()) ?></span>
-</button>
+    <?php echo $this->escapeHtml($this->getButtonLabel()) ?>
+</button> <b id="sync_result" style="color:green;"></b>
