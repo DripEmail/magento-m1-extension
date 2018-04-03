@@ -111,7 +111,7 @@ class Drip_Connect_Model_ApiCalls_Base
     }
 
     /**
-     * @param string sesponse class
+     * @param string response class
      */
     public function setResponseModel($response)
     {
