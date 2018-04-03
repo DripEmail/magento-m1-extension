@@ -1,3 +1,5 @@
-app/code/community/Drip/Connect                         app/code/community/Drip/Connect
-app/etc/modules/Drip_Connect.xml                        app/etc/modules/Drip_Connect.xml
-app/design/adminhtml/default/default/template/drip      app/design/adminhtml/default/default/template/drip
+app/code/community/Drip/Connect                             app/code/community/Drip/Connect
+app/etc/modules/Drip_Connect.xml                            app/etc/modules/Drip_Connect.xml
+app/design/frontend/base/default/layout/drip/connect.xml    app/design/frontend/base/default/layout/drip/connect.xml
+app/design/frontend/base/default/template/drip              app/design/frontend/base/default/template/drip
+app/design/adminhtml/default/default/template/drip          app/design/adminhtml/default/default/template/drip
