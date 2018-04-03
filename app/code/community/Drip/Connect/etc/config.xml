@@ -93,6 +93,13 @@
                 </observers>
             </customer_login>
         </events>
+        <layout>
+            <updates>
+                <drip_connect>
+                    <file>drip/connect.xml</file>
+                </drip_connect>
+            </updates>
+        </layout>
     </frontend>
     <admin>
         <routers>
