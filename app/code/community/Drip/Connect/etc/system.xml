@@ -59,6 +59,27 @@
                         </timeout>
                     </fields>
                 </api_settings>
+                <actions translate="label">
+                    <label>Drip Actions</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <sync_customers_data translate="label comment button_label">
+                            <label>Sync</label>
+                            <button_label>Sync All Customers To Drip</button_label>
+                            <comment>This will sync all your current Magento customer data into Drip. No automations will be triggered off of this import (e.g. welcome series, order confirmations).</comment>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>drip_connect/adminhtml_system_config_sync_customers</frontend_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sync_customers_data>
+                    </fields>
+                </actions>
                 <log_settings translate="label">
                     <label>Log Settings</label>
                     <frontend_type>text</frontend_type>
