@@ -48,7 +48,7 @@ class Drip_Connect_Model_Observer_Order
 
         switch ($order->getState()) {
             case Mage_Sales_Model_Order::STATE_NEW :
-                // inew order
+                // new order
                 $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
                     'email' => $order->getCustomerEmail(),
                     'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_ORDER_CREATED,
