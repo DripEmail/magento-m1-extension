@@ -18,7 +18,10 @@ class Drip_Connect_Model_Observer_Order
         if (!$order->getId()) {
             return;
         }
-        Mage::register(self::REGISTRY_KEY_OLD_DATA['total_refunded'], $order->getOrigData('total_refunded'));
+        $data = array(
+            'total_refunded' => $order->getOrigData('total_refunded'),
+        );
+        Mage::register(self::REGISTRY_KEY_OLD_DATA, $data);
     }
 
     /**
@@ -35,7 +38,7 @@ class Drip_Connect_Model_Observer_Order
     }
 
     /**
-     * drip actions on 'order placed' event
+     * drip actions on order state events
      *
      * @param Mage_Sales_Model_Order $order
      */
@@ -89,6 +92,14 @@ class Drip_Connect_Model_Observer_Order
                         'properties' => $this->getOrderData($order, true),
                     ))->call();
                 }
+                break;
+            case Mage_Sales_Model_Order::STATE_CANCELED :
+                // cancel order
+                $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
+                    'email' => $order->getCustomerEmail(),
+                    'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_ORDER_CANCELED,
+                    'properties' => $this->getOrderData($order),
+                ))->call();
                 break;
         }
 
@@ -167,7 +178,8 @@ class Drip_Connect_Model_Observer_Order
      */
     protected function checkIsRefund($order)
     {
-        $oldValue = trim(Mage::registry(self::REGISTRY_KEY_OLD_DATA['total_refunded']), "0");
+        $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
+        $oldValue = trim($oldData['total_refunded'], "0");
         $newValue = trim($order->getTotalRefunded(), "0");
 
         return ($oldValue != $newValue);
