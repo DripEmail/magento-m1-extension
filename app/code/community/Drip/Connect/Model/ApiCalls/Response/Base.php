@@ -34,5 +34,15 @@ class Drip_Connect_Model_ApiCalls_Response_Base
     {
         return $this->responseData;
     }
+
+    /**
+     * Get the HTTP response status code
+     *
+     * @return int
+     */
+    public function getResponseCode()
+    {
+        return $this->getResponse()->getStatus();
+    }
 }
 

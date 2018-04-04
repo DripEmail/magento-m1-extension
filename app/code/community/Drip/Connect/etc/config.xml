@@ -16,6 +16,11 @@
                 <class>Drip_Connect_Helper</class>
             </drip_connect>
         </helpers>
+        <blocks>
+            <drip_connect>
+                <class>Drip_Connect_Block</class>
+            </drip_connect>
+        </blocks>
         <events>
             <customer_save_before>
                 <observers>
@@ -41,6 +46,14 @@
                     </drip_connect_customer_delete_commit_after>
                 </observers>
             </customer_delete_commit_after>
+            <sales_order_save_before>
+                <observers>
+                    <drip_connect_sales_order_save_before>
+                        <class>drip_connect/observer_order</class>
+                        <method>beforeOrderSave</method>
+                    </drip_connect_sales_order_save_before>
+                </observers>
+            </sales_order_save_before>
             <sales_order_save_commit_after>
                 <observers>
                     <drip_connect_sales_order_save_commit_after>
@@ -80,7 +93,25 @@
                 </observers>
             </customer_login>
         </events>
+        <layout>
+            <updates>
+                <drip_connect>
+                    <file>drip/connect.xml</file>
+                </drip_connect>
+            </updates>
+        </layout>
     </frontend>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Drip_Connect after="Mage_Adminhtml">Drip_Connect_Adminhtml</Drip_Connect>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
     <default>
         <dripconnect_general>
             <api_settings>

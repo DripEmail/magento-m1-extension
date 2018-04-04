@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+
+<layout>
+    <default>
+        <reference name="before_body_end">
+            <block type="core/template" name="drip.footer.js" template="drip/footer_js.phtml" />
+        </reference>
+    </default>
+</layout>
