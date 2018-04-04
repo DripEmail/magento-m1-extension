@@ -1,0 +1,47 @@
+<?php
+/**
+ * @see Drip_Connect_Block_Adminhtml_System_Config_Sync_Customers
+ */
+?>
+<script type="text/javascript">
+//<![CDATA[
+    function syncCustomers() {
+
+        var elem = $('<?php echo $this->getHtmlId() ?>');
+        var res = $('sync_result');
+
+        elem.addClassName('disabled').setAttribute('disabled', 'disabled');
+
+        params = {
+            account_id: '<?=$this->getAccountId()?>',
+        };
+
+        new Ajax.Request('<?php echo $this->getAjaxUrl() ?>', {
+            parameters: params,
+            onSuccess: function(response) {
+                var result = '<?php echo Mage::helper('core')->jsQuoteEscape($this->__("Data's been sent to account")." ".$this->getAccountId()) ?>';
+                response = response.responseText;
+                if (response == 1) {
+                    res.removeClassName('error');
+                } else {
+                    res.addClassName('error');
+                    result = '<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Data send error')) ?>';
+                }
+                res.update(result);
+            },
+            onFailure: function(){
+                res.addClassName('error');
+                result = '<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Data send error')) ?>';
+            },
+            onComplete: function(){
+                elem.removeClassName('disabled')
+                    .removeAttribute('disabled');
+            }
+        });
+    }
+//]]>
+</script>
+<button onclick="javascript:syncCustomers(); return false;" type="button" id="<?php echo $this->getHtmlId() ?>"
+<?php if (!Mage::helper('drip_connect')->isModuleActive()) { ?> disabled="disabled" class="disabled" <?php } else { ?> class="scalable" <?php }?>>
+    <?php echo $this->escapeHtml($this->getButtonLabel()) ?>
+</button><br><b id="sync_result" style="color:green;"></b>
