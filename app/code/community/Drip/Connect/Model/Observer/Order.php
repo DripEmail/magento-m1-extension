@@ -5,7 +5,7 @@
 
 class Drip_Connect_Model_Observer_Order
 {
-    const REGISTRY_KEY_OLD_DATA = array();
+    const REGISTRY_KEY_OLD_DATA = 'orderoldvalues';
 
     /**
      * store some current params we may need to compare with themselves later
