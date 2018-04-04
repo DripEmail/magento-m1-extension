@@ -67,4 +67,25 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
         return $data;
     }
 
+    /**
+     * get request area
+     *
+     * @return string
+     */
+    public function getArea()
+    {
+        if (stripos(Mage::app()->getRequest()->getRequestUri(), "index.php/api")) {
+            return 'API';
+        }
+
+        if (Mage::app()->getStore()->isAdmin()) {
+            return 'Admin';
+        }
+
+        if (Mage::getDesign()->getArea() == 'adminhtml') {
+            return 'Admin';
+        }
+
+        return 'Storefront';
+    }
 }

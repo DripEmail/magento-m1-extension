@@ -23,6 +23,7 @@ class Drip_Connect_Model_Observer_Order
         }
         $data = array(
             'total_refunded' => $order->getOrigData('total_refunded'),
+            'state' => $order->getOrigData('state'),
         );
         Mage::register(self::REGISTRY_KEY_OLD_DATA, $data);
     }
@@ -57,6 +58,9 @@ class Drip_Connect_Model_Observer_Order
 
         switch ($order->getState()) {
             case Mage_Sales_Model_Order::STATE_NEW :
+                if ($this->isSameState($order)) {
+                    break;
+                }
                 // new order
                 $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
                     'email' => $order->getCustomerEmail(),
@@ -73,6 +77,9 @@ class Drip_Connect_Model_Observer_Order
                         'properties' => $this->getOrderData($order, true),
                     ))->call();
                 } else {
+                    if ($this->isSameState($order)) {
+                        break;
+                    }
                     // complete order
                     $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
                         'email' => $order->getCustomerEmail(),
@@ -82,6 +89,9 @@ class Drip_Connect_Model_Observer_Order
                 }
                 break;
             case Mage_Sales_Model_Order::STATE_CLOSED :
+                if ($this->isSameState($order)) {
+                    break;
+                }
                 // full refund
                 $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
                     'email' => $order->getCustomerEmail(),
@@ -100,6 +110,9 @@ class Drip_Connect_Model_Observer_Order
                 }
                 break;
             case Mage_Sales_Model_Order::STATE_CANCELED :
+                if ($this->isSameState($order)) {
+                    break;
+                }
                 // cancel order
                 $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
                     'email' => $order->getCustomerEmail(),
@@ -107,6 +120,25 @@ class Drip_Connect_Model_Observer_Order
                     'properties' => $this->getOrderData($order),
                 ))->call();
                 break;
+            default :
+                if ($this->isSameState($order)) {
+                    break;
+                }
+                // other states: send request to Drip Orders Api (not Events Api)
+                $response = Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateOrder', array(
+                    'email' => $order->getCustomerEmail(),
+                    'amount' => ($order->getGrandTotal()*100),
+                    'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
+                    'upstream_id' => $order->getIncrementId(),
+                    'identifier' => $order->getIncrementId(),
+                    'properties' => array(
+                        'order_state' => $order->getState(),
+                        'order_status' => $order->getStatus(),
+                        'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
+                        'magento_source' => Mage::helper('drip_connect')->getArea(),
+                    ),
+                ))->call();
+
         }
 
         $order->setIsAlreadyProcessed(true);
@@ -189,5 +221,17 @@ class Drip_Connect_Model_Observer_Order
         $newValue = trim($order->getTotalRefunded(), "0");
 
         return ($oldValue != $newValue);
+    }
+
+    /**
+     * check if order state has not been changed
+     */
+    protected function isSameState($order)
+    {
+        $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
+        $oldValue = $oldData['state'];
+        $newValue = $order->getState();
+
+        return ($oldValue == $newValue);
     }
 }
