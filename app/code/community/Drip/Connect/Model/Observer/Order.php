@@ -14,6 +14,9 @@ class Drip_Connect_Model_Observer_Order
      */
     public function beforeOrderSave($observer)
     {
+        if (!Mage::helper('drip_connect')->isModuleActive()) {
+            return;
+        }
         $order = $observer->getEvent()->getOrder();
         if (!$order->getId()) {
             return;
@@ -26,6 +29,9 @@ class Drip_Connect_Model_Observer_Order
      */
     public function afterOrderSave($observer)
     {
+        if (!Mage::helper('drip_connect')->isModuleActive()) {
+            return;
+        }
         $order = $observer->getEvent()->getOrder();
         if (!$order->getId()) {
             return;

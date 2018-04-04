@@ -3,6 +3,20 @@
 class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
 {
     /**
+     * check if module active
+     *
+     * @return bool
+     */
+    public function isModuleActive()
+    {
+        if (!empty(Mage::app()->getRequest()->getParam('store'))) {
+            return (bool)Mage::getStoreConfig('dripconnect_general/module_settings/is_enabled', Mage::app()->getRequest()->getParam('store'));
+        }
+
+        return (bool)Mage::getStoreConfig('dripconnect_general/module_settings/is_enabled');
+    }
+
+    /**
      * prepare array of customer data we use to send in drip
      *
      * @param Mage_Customer_Model_Customer $customer
