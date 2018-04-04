@@ -10,6 +10,9 @@ class Drip_Connect_Model_Observer_Customer
      */
     public function customerLogin($observer)
     {
+        if (!Mage::helper('drip_connect')->isModuleActive()) {
+            return;
+        }
         $customer = $observer->getCustomer();
         $this->proceedCustomerLogin($customer);
     }

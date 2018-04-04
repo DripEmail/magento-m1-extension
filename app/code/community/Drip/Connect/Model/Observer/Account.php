@@ -20,6 +20,9 @@ class Drip_Connect_Model_Observer_Account
      */
     public function checkIfCustomerNew($observer)
     {
+        if (!Mage::helper('drip_connect')->isModuleActive()) {
+            return;
+        }
         $customer = $observer->getCustomer();
         Mage::register(self::REGISTRY_KEY_IS_NEW, (bool)$customer->isObjectNew());
 
@@ -35,6 +38,9 @@ class Drip_Connect_Model_Observer_Account
      */
     public function afterCustomerSave($observer)
     {
+        if (!Mage::helper('drip_connect')->isModuleActive()) {
+            return;
+        }
         $customer = $observer->getCustomer();
 
         if (Mage::registry(self::REGISTRY_KEY_IS_NEW)) {
@@ -56,6 +62,9 @@ class Drip_Connect_Model_Observer_Account
      */
     public function beforeCustomerAddressSaveFront($observer)
     {
+        if (!Mage::helper('drip_connect')->isModuleActive()) {
+            return;
+        }
         if (self::$isAddressSaved) {
             return;
         }
@@ -87,6 +96,9 @@ class Drip_Connect_Model_Observer_Account
      */
     public function afterCustomerAddressSaveFront($observer)
     {
+        if (!Mage::helper('drip_connect')->isModuleActive()) {
+            return;
+        }
         // will be processed with customer update
         if (self::$doNotUseAfterAddressSave) {
             return;
@@ -112,6 +124,9 @@ class Drip_Connect_Model_Observer_Account
      */
     public function afterCustomerDelete($observer)
     {
+        if (!Mage::helper('drip_connect')->isModuleActive()) {
+            return;
+        }
         $customer = $observer->getCustomer();
         $this->proceedAccountDelete($customer);
     }

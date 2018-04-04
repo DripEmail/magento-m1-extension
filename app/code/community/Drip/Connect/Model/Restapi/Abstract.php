@@ -228,7 +228,7 @@ abstract class Drip_Connect_Model_Restapi_Abstract
         }
         $logFile = $logDir . DS . $this->_logFilename;
         $lastCreation = $this->getLogSettings()->getLastLogArchive();
-        if ($period && $lastCreation + $period < time()) {
+        if (is_file($logFile) && $period && $lastCreation + $period < time()) {
             Mage::getConfig()->saveConfig($this->_logSettingsXpath.'/last_log_archive', time());
             $archive = new Mage_Archive();
             $archive->pack($logFile, $archiveDir.'archive'.date('Y-m-d-H-i-s').'.tgz');

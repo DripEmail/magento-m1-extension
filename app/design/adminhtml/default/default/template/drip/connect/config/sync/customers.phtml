@@ -19,7 +19,7 @@
         new Ajax.Request('<?php echo $this->getAjaxUrl() ?>', {
             parameters: params,
             onSuccess: function(response) {
-                var result = '<?php echo Mage::helper('core')->jsQuoteEscape($this->__("Data's been sent to account").$this->getAccountId()) ?>';
+                var result = '<?php echo Mage::helper('core')->jsQuoteEscape($this->__("Data's been sent to account")." ".$this->getAccountId()) ?>';
                 response = response.responseText;
                 if (response == 1) {
                     res.removeClassName('error');
@@ -41,6 +41,7 @@
     }
 //]]>
 </script>
-<button onclick="javascript:syncCustomers(); return false;" class="scalable" type="button" id="<?php echo $this->getHtmlId() ?>">
+<button onclick="javascript:syncCustomers(); return false;" type="button" id="<?php echo $this->getHtmlId() ?>"
+<?php if (!Mage::helper('drip_connect')->isModuleActive()) { ?> disabled="disabled" class="disabled" <?php } else { ?> class="scalable" <?php }?>>
     <?php echo $this->escapeHtml($this->getButtonLabel()) ?>
 </button><br><b id="sync_result" style="color:green;"></b>

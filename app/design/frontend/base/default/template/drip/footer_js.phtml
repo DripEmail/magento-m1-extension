@@ -1,6 +1,5 @@
-<?php
-$accountId = Mage::getStoreConfig('dripconnect_general/api_settings/account_id');
-?>
+<?php if (Mage::helper('drip_connect')->isModuleActive()) : ?>
+<?php $accountId = Mage::getStoreConfig('dripconnect_general/api_settings/account_id'); ?>
 <!-- Drip -->
 <script type="text/javascript">
   var _dcq = _dcq || [];
@@ -16,3 +15,4 @@ $accountId = Mage::getStoreConfig('dripconnect_general/api_settings/account_id')
   })();
 </script>
 <!-- end Drip -->
+<?php endif; ?>
