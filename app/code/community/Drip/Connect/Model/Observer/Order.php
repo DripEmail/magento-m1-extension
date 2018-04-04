@@ -114,6 +114,25 @@ class Drip_Connect_Model_Observer_Order
                     'properties' => $this->getOrderData($order),
                 ))->call();
                 break;
+            default :
+                if ($this->isSameState($order)) {
+                    break;
+                }
+                // other states: send request to Drip Orders Api (not Events Api)
+                $response = Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateOrder', array(
+                    'email' => $order->getCustomerEmail(),
+                    'amount' => ($order->getGrandTotal()*100),
+                    'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
+                    'upstream_id' => $order->getIncrementId(),
+                    'identifier' => $order->getIncrementId(),
+                    'properties' => array(
+                        'order_state' => $order->getState(),
+                        'order_status' => $order->getStatus(),
+                        'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
+                        'magento_source' => Mage::helper('drip_connect')->getArea(),
+                    ),
+                ))->call();
+
         }
 
         $order->setIsAlreadyProcessed(true);
