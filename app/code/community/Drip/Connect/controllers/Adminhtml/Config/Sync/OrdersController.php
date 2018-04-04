@@ -1,10 +1,10 @@
 <?php
 
-class Drip_Connect_Adminhtml_Config_Sync_CustomersController
+class Drip_Connect_Adminhtml_Config_Sync_OrdersController
     extends Mage_Adminhtml_Controller_Action
 {
     /**
-     * prepare and send customers data
+     * prepare and send orders data
      *
      * @return void
      */
@@ -14,7 +14,8 @@ class Drip_Connect_Adminhtml_Config_Sync_CustomersController
         $result = 1;
         $page = 1;
         do {
-            $collection = Mage::getModel('customer/customer')
+            // todo filder orders
+            $collection = Mage::getModel('sales/order')
                 ->getCollection()
                 ->addAttributeToSelect('*')
                 ->setPageSize(Drip_Connect_Model_ApiCalls_Helper::MAX_BATCH_SIZE)
@@ -26,12 +27,9 @@ class Drip_Connect_Adminhtml_Config_Sync_CustomersController
                 $batch[] = Drip_Connect_Helper_Data::prepareCustomerData($customer);
             }
 
-            $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Subscribers', array(
-                'batch' => $batch,
-                'account' => $accountId,
-            ))->call();
+            // todo API call
 
-            if ($response->getResponseCode() != 201) { // drip success code for this action
+            if ($response->getResponseCode() != 202) { // drip success code for this action
                 $result = 0;
                 break;
             }
