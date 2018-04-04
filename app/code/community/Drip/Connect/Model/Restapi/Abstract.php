@@ -1,6 +1,7 @@
 <?php
 abstract class Drip_Connect_Model_Restapi_Abstract
 {
+    const USERAGENT = 'Drip Connect M1';
 
     /** @var string */
     protected $_responseModel;
@@ -30,7 +31,7 @@ abstract class Drip_Connect_Model_Restapi_Abstract
     protected $_logger;
 
     /** @var string */
-    protected $_logSettingsXpath = 'dripconnect_general/dripconnect_log_settings';
+    protected $_logSettingsXpath = 'dripconnect_general/log_settings';
 
     /**
      * Makes API call and returns response object.
@@ -52,7 +53,11 @@ abstract class Drip_Connect_Model_Restapi_Abstract
             $response = new $className($rawResponse);
             return $response;
         } catch (Exception $e) {
-            Mage::log($e->__toString(), Zend_Log::ERR, $this->_logFilename);
+            Mage::log(
+                $e->__toString(),
+                Zend_Log::ERR,
+                str_replace(Mage::getBaseDir('log'), '', $this->getLogFile())
+            );
             $className = Mage::getConfig()->getModelClassName($this->_responseModel);
             /** @var Drip_Connect_Model_Restapi_Response_Abstract $response */
             $response = new $className(null, $e->getMessage());
@@ -92,7 +97,6 @@ abstract class Drip_Connect_Model_Restapi_Abstract
             case Drip_Connect_Model_Source_Behavior::CALL_API:
             default:
                 $this->_lastResponse = $this->_callApi($request);
-                Mage::log(get_class($request), null, 'api/request.log');
                 break;
         }
 
@@ -193,8 +197,8 @@ abstract class Drip_Connect_Model_Restapi_Abstract
     public function getLogger()
     {
         if (!$this->_logger) {
-            $logger = new Zend_Log();
             if ($this->getLogSettings()->getIsEnabled()) {
+                $logger = new Zend_Log();
                 $writer = new Zend_Log_Writer_Stream($this->getLogFile());
                 $logger->addWriter($writer);
             }
