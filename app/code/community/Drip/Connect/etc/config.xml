@@ -16,6 +16,11 @@
                 <class>Drip_Connect_Helper</class>
             </drip_connect>
         </helpers>
+        <blocks>
+            <drip_connect>
+                <class>Drip_Connect_Block</class>
+            </drip_connect>
+        </blocks>
         <events>
             <customer_save_before>
                 <observers>
@@ -96,6 +101,17 @@
             </updates>
         </layout>
     </frontend>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Drip_Connect after="Mage_Adminhtml">Drip_Connect_Adminhtml</Drip_Connect>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
     <default>
         <dripconnect_general>
             <api_settings>

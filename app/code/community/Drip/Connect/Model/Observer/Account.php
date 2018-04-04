@@ -25,7 +25,7 @@ class Drip_Connect_Model_Observer_Account
 
         if (!$customer->isObjectNew()) {
             $orig = Mage::getModel('customer/customer')->load($customer->getId());
-            $data = $this->prepareCustomerData($orig);
+            $data = Drip_Connect_Helper_Data::prepareCustomerData($orig);
             Mage::register(self::REGISTRY_KEY_OLD_DATA, $data);
         }
     }
@@ -123,7 +123,7 @@ class Drip_Connect_Model_Observer_Account
      */
     protected function proceedAccountNew($customer)
     {
-        $customerData = $this->prepareCustomerData($customer, false);
+        $customerData = Drip_Connect_Helper_Data::prepareCustomerData($customer, false);
         Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $customerData)->call();
 
         $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
@@ -142,7 +142,7 @@ class Drip_Connect_Model_Observer_Account
      */
     protected function proceedAccount($customer)
     {
-        $customerData = $this->prepareCustomerData($customer);
+        $customerData = Drip_Connect_Helper_Data::prepareCustomerData($customer);
 
         Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $customerData)->call();
 
@@ -179,7 +179,7 @@ class Drip_Connect_Model_Observer_Account
     protected function isCustomerChanged($customer)
     {
         $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
-        $newData = $this->prepareCustomerData($customer);
+        $newData = Drip_Connect_Helper_Data::prepareCustomerData($customer);
 
         return (serialize($oldData) != serialize($newData));
     }
@@ -195,57 +195,6 @@ class Drip_Connect_Model_Observer_Account
         $newData = $this->getAddressFields($address);
 
         return (serialize($oldData) != serialize($newData));
-    }
-
-    /**
-     * prepare array of customer data we use to send in drip
-     *
-     * @param Mage_Customer_Model_Customer $customer
-     * @param bool $updatableOnly leave only those fields which are used in update action
-     */
-    protected function prepareCustomerData($customer, $updatableOnly = true)
-    {
-        if ($customer->getOrigData() && $customer->getData('email') != $customer->getOrigData('email')) {
-            $newEmail = $customer->getData('email');
-        } else {
-            $newEmail = '';
-        }
-        $gender = $customer->getGender();
-        if ($gender == 1) {
-            $gender = 'Male';
-        } else if ($gender == 2) {
-            $gender = 'Female';
-        } else {
-            $gender = '';
-        }
-        $data = array (
-            'email' => $customer->getEmail(),
-            'new_email' => ($newEmail ? $newEmail : ''),
-            'user_id' => $customer->getEntityId(),
-            'ip_address' => Mage::helper('core/http')->getRemoteAddr(),
-            'custom_fields' => array(
-                'first_name' => $customer->getFirstname(),
-                'last_name' => $customer->getLastname(),
-                'birthday' => $customer->getDob(),
-                'gender' => $gender,
-                'city' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getCity() : ''),
-                'state' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getRegion() : ''),
-                'zip_code' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getPostcode() : ''),
-                'country' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getCountry() : ''),
-                'phone_number' => ($customer->getDefaultShippingAddress() ? $customer->getDefaultShippingAddress()->getTelephone() : ''),
-                'magento_account_created' => $customer->getCreatedAt(),
-                'magento_customer_group' => Mage::getModel('customer/group')->load($customer->getGroupId())->getCustomerGroupCode(),
-                'magento_store' => $customer->getStoreId(),
-                'accepts_marketing' => ($customer->getIsSubscribed() ? 'yes' : 'no'),
-            ),
-        );
-
-        if ($updatableOnly) {
-            unset($data['custom_fields']['magento_account_created']);
-            unset($data['ip_address']);
-        }
-
-        return $data;
     }
 
     /**
