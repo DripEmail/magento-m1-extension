@@ -18,7 +18,10 @@ class Drip_Connect_Model_Observer_Order
         if (!$order->getId()) {
             return;
         }
-        Mage::register(self::REGISTRY_KEY_OLD_DATA['total_refunded'], $order->getOrigData('total_refunded'));
+        $data = array(
+            'total_refunded' => $order->getOrigData('total_refunded'),
+        );
+        Mage::register(self::REGISTRY_KEY_OLD_DATA, $data);
     }
 
     /**
@@ -175,7 +178,8 @@ class Drip_Connect_Model_Observer_Order
      */
     protected function checkIsRefund($order)
     {
-        $oldValue = trim(Mage::registry(self::REGISTRY_KEY_OLD_DATA['total_refunded']), "0");
+        $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
+        $oldValue = trim($oldData['total_refunded'], "0");
         $newValue = trim($order->getTotalRefunded(), "0");
 
         return ($oldValue != $newValue);
