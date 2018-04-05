@@ -157,14 +157,14 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     protected function getOrderAddressData($addressId)
     {
         $address = Mage::getModel('sales/order_address')->load($addressId);
-        $street = $address->getStreet();
+
         return array(
             'name' => $address->getName(),
             'first_name' => $address->getFirstname(),
             'last_name' => $address->getLastname(),
             'company' => $address->getCompany(),
-            'address_1' => $street[0],
-            'address_2' => $street[1],
+            'address_1' => $address->getStreet1(),
+            'address_2' => $address->getStreet2(),
             'city' => $address->getCity(),
             'state' => $address->getRegion(),
             'zip' => $address->getPostcode(),
