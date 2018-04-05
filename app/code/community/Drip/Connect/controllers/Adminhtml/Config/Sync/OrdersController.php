@@ -23,8 +23,8 @@ class Drip_Connect_Adminhtml_Config_Sync_OrdersController
                 ->load();
 
             $batch = array();
-            foreach ($collection as $customer) {
-                $batch[] = Drip_Connect_Helper_Data::prepareCustomerData($customer);
+            foreach ($collection as $order) {
+                //$batch[] = Drip_Connect_Helper_Data::prepareOrderData($order);
             }
 
             // todo API call
