@@ -42,9 +42,13 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
      */
     public function getOrderDataRefund($order, $refundValue)
     {
+        $refunds = $order->getCreditmemosCollection();
+        $refundId = $refunds->getLastItem()->getIncrementId();
+
         $data = array(
             'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateRefund::PROVIDER_NAME,
             'order_upstream_id' => $order->getIncrementId(),
+            'upstream_id' => $refundId,
             'amount' => $refundValue,
         );
 
