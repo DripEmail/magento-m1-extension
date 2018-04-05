@@ -79,12 +79,11 @@ class Drip_Connect_Model_Observer_Order
                     if ($this->isSameState($order)) {
                         break;
                     }
-                    // complete order
-                    $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-                        'email' => $order->getCustomerEmail(),
-                        'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_ORDER_COMPLETED,
-                        'properties' => $this->getOrderData($order),
-                    ))->call();
+                    // full complete order
+                    $response = Mage::getModel(
+                        'drip_connect/ApiCalls_Helper_CreateUpdateOrder',
+                        Mage::helper('drip_connect/order')->getOrderDataCompleted($order)
+                    )->call();
                 }
                 break;
             case Mage_Sales_Model_Order::STATE_CLOSED :

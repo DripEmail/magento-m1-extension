@@ -2,6 +2,10 @@
 
 class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
 {
+    const FULFILLMENT_NO = 'not_fulfilled';
+    const FULFILLMENT_PARTLY = 'partially_fulfilled';
+    const FULFILLMENT_YES = 'fulfilled';
+
     /**
      * prepare array of order data we use to send in drip for new orders
      *
@@ -30,6 +34,47 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
         );
 
         return $data;
+    }
+
+    /**
+     * prepare array of order data we use to send in drip for full/partly completed orders
+     *
+     * @param Mage_Sales_Model_Order $order
+     *
+     * @return array
+     */
+    public function getOrderDataCompleted($order)
+    {
+        $data = array(
+            'upstream_id' => $order->getIncrementId(),
+            'fulfillment_state' => $this->getOrderFulfillment($order),
+            'billing_address' => $this->getOrderBillingData($order),
+            'shipping_address' => $this->getOrderShippingData($order),
+        );
+
+        return $data;
+    }
+
+    /**
+     * check fullfilment state of an order
+     *
+     * @param Mage_Sales_Model_Order $order
+     *
+     * @return string
+     */
+    protected function getOrderFulfillment($order)
+    {
+        if ($order->getState() == Mage_Sales_Model_Order::STATE_COMPLETE) {
+            return self::FULFILLMENT_YES;
+        }
+
+        foreach ($order->getAllItems() as $item) {
+            if ($item->getStatus() == 'Shipped') {
+                return self::FULFILLMENT_PARTLY;
+            }
+        }
+
+        return self::FULFILLMENT_NO;
     }
 
     /**
