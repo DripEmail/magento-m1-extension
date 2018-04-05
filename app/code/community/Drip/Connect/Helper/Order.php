@@ -46,6 +46,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     public function getOrderDataCompleted($order)
     {
         $data = array(
+            'email' => $order->getCustomerEmail(),
             'upstream_id' => $order->getIncrementId(),
             'fulfillment_state' => $this->getOrderFulfillment($order),
             'billing_address' => $this->getOrderBillingData($order),
