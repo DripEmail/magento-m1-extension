@@ -51,6 +51,29 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
             'fulfillment_state' => $this->getOrderFulfillment($order),
             'billing_address' => $this->getOrderBillingData($order),
             'shipping_address' => $this->getOrderShippingData($order),
+			);
+
+        return $data;
+    }
+
+	/**
+     * prepare array of order data we use to send in drip for full/partly refunded orders
+     *
+     * @param Mage_Sales_Model_Order $order
+     * @param int $refundValue
+     *
+     * @return array
+     */
+    public function getOrderDataRefund($order, $refundValue)
+    {
+        $refunds = $order->getCreditmemosCollection();
+        $refundId = $refunds->getLastItem()->getIncrementId();
+
+        $data = array(
+            'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateRefund::PROVIDER_NAME,
+            'order_upstream_id' => $order->getIncrementId(),
+            'upstream_id' => $refundId,
+            'amount' => $refundValue,
         );
 
         return $data;
