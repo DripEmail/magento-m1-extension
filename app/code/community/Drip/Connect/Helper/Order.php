@@ -2,6 +2,10 @@
 
 class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
 {
+    const FULFILLMENT_NO = 'not_fulfilled';
+    const FULFILLMENT_PARTLY = 'partially_fulfilled';
+    const FULFILLMENT_YES = 'fulfilled';
+
     /**
      * prepare array of order data we use to send in drip for new orders
      *
@@ -33,6 +37,27 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * prepare array of order data we use to send in drip for full/partly completed orders
+     *
+     * @param Mage_Sales_Model_Order $order
+     *
+     * @return array
+     */
+    public function getOrderDataCompleted($order)
+    {
+        $data = array(
+            'email' => $order->getCustomerEmail(),
+            'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
+            'upstream_id' => $order->getIncrementId(),
+            'fulfillment_state' => $this->getOrderFulfillment($order),
+            'billing_address' => $this->getOrderBillingData($order),
+            'shipping_address' => $this->getOrderShippingData($order),
+        );
+
+        return $data;
+    }
+
+    /**
      * prepare array of order data we use to send in drip for canceled orders
      *
      * @param Mage_Sales_Model_Order $order
@@ -48,6 +73,51 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
         );
 
         return $data;
+    }
+
+    /**
+     * prepare array of order data we use to send in drip for full/partly refunded orders
+     *
+     * @param Mage_Sales_Model_Order $order
+     * @param int $refundValue
+     *
+     * @return array
+     */
+    public function getOrderDataRefund($order, $refundValue)
+    {
+        $refunds = $order->getCreditmemosCollection();
+        $refundId = $refunds->getLastItem()->getIncrementId();
+
+        $data = array(
+            'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateRefund::PROVIDER_NAME,
+            'order_upstream_id' => $order->getIncrementId(),
+            'upstream_id' => $refundId,
+            'amount' => $refundValue,
+        );
+
+        return $data;
+    }
+
+    /**
+     * check fullfilment state of an order
+     *
+     * @param Mage_Sales_Model_Order $order
+     *
+     * @return string
+     */
+    protected function getOrderFulfillment($order)
+    {
+        if ($order->getState() == Mage_Sales_Model_Order::STATE_COMPLETE) {
+            return self::FULFILLMENT_YES;
+        }
+
+        foreach ($order->getAllItems() as $item) {
+            if ($item->getStatus() == 'Shipped') {
+                return self::FULFILLMENT_PARTLY;
+            }
+        }
+
+        return self::FULFILLMENT_NO;
     }
 
     /**
@@ -88,14 +158,14 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     protected function getOrderAddressData($addressId)
     {
         $address = Mage::getModel('sales/order_address')->load($addressId);
-        $street = $address->getStreet();
+
         return array(
             'name' => $address->getName(),
             'first_name' => $address->getFirstname(),
             'last_name' => $address->getLastname(),
             'company' => $address->getCompany(),
-            'address_1' => $street[0],
-            'address_2' => $street[1],
+            'address_1' => $address->getStreet1(),
+            'address_2' => $address->getStreet2(),
             'city' => $address->getCity(),
             'state' => $address->getRegion(),
             'zip' => $address->getPostcode(),
