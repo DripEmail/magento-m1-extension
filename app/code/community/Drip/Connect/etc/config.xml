@@ -62,6 +62,14 @@
                     </drip_connect_sales_order_save_commit_after>
                 </observers>
             </sales_order_save_commit_after>
+            <wishlist_add_product>
+                <observers>
+                    <wishlist_change_event>
+                        <class>drip_connect/observer_wishlist</class>
+                        <method>addProduct</method>
+                    </wishlist_change_event>
+                </observers>
+            </wishlist_add_product>
         </events>
     </global>
     <frontend>
