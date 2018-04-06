@@ -18,6 +18,11 @@ class Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent
             'endpoint' => Mage::getStoreConfig('dripconnect_general/api_settings/account_id').'/'.self::ENDPOINT_EVENTS,
         ));
 
+        if (!empty($data) && is_array($data)) {
+            $data['properties']['source'] = 'magento';
+            $data['properties']['magento_source'] = Mage::helper('drip_connect')->getArea();
+        }
+
         $eventInfo = [
             'events' => [
                 $data

@@ -74,7 +74,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getArea()
     {
-        if (stripos(Mage::app()->getRequest()->getRequestUri(), "index.php/api")) {
+        if (stripos(Mage::app()->getRequest()->getRequestUri(), "/api/") === 0) {
             return 'API';
         }
 

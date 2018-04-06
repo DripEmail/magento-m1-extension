@@ -164,9 +164,6 @@ class Drip_Connect_Model_Observer_Account
         $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
             'email' => $customer->getEmail(),
             'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED,
-            'properties' => array(
-                'source' => 'magento'
-            ),
         ))->call();
     }
 
@@ -180,9 +177,6 @@ class Drip_Connect_Model_Observer_Account
         $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
             'email' => $customer->getEmail(),
             'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_DELETED,
-            'properties' => array(
-                'source' => 'magento'
-            ),
         ))->call();
     }
 
