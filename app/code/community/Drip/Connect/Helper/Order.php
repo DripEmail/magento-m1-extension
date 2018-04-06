@@ -51,12 +51,12 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
             'fulfillment_state' => $this->getOrderFulfillment($order),
             'billing_address' => $this->getOrderBillingData($order),
             'shipping_address' => $this->getOrderShippingData($order),
-			);
+        );
 
         return $data;
     }
-	
-	/**
+
+    /**
      * prepare array of order data we use to send in drip for canceled orders
      *
      * @param Mage_Sales_Model_Order $order
@@ -74,7 +74,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
         return $data;
     }
 
-	/**
+    /**
      * prepare array of order data we use to send in drip for full/partly refunded orders
      *
      * @param Mage_Sales_Model_Order $order
