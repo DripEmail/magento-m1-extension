@@ -40,7 +40,6 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
         $data = array (
             'email' => $customer->getEmail(),
             'new_email' => ($newEmail ? $newEmail : ''),
-            'user_id' => $customer->getEntityId(),
             'ip_address' => Mage::helper('core/http')->getRemoteAddr(),
             'custom_fields' => array(
                 'first_name' => $customer->getFirstname(),
