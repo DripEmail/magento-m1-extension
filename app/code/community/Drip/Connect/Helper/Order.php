@@ -47,6 +47,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     {
         $data = array(
             'email' => $order->getCustomerEmail(),
+            'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
             'upstream_id' => $order->getIncrementId(),
             'fulfillment_state' => $this->getOrderFulfillment($order),
             'billing_address' => $this->getOrderBillingData($order),
