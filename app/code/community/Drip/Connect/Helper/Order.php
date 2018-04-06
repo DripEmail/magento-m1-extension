@@ -51,6 +51,47 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
             'fulfillment_state' => $this->getOrderFulfillment($order),
             'billing_address' => $this->getOrderBillingData($order),
             'shipping_address' => $this->getOrderShippingData($order),
+			);
+
+        return $data;
+    }
+	
+	/**
+     * prepare array of order data we use to send in drip for canceled orders
+     *
+     * @param Mage_Sales_Model_Order $order
+     *
+     * @return array
+     */
+    public function getOrderDataCanceled($order)
+    {
+        $data = array(
+            'email' => $order->getCustomerEmail(),
+            'upstream_id' => $order->getIncrementId(),
+            'cancelled_at' => $order->getUpdatedAt(),
+        );
+
+        return $data;
+    }
+
+	/**
+     * prepare array of order data we use to send in drip for full/partly refunded orders
+     *
+     * @param Mage_Sales_Model_Order $order
+     * @param int $refundValue
+     *
+     * @return array
+     */
+    public function getOrderDataRefund($order, $refundValue)
+    {
+        $refunds = $order->getCreditmemosCollection();
+        $refundId = $refunds->getLastItem()->getIncrementId();
+
+        $data = array(
+            'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateRefund::PROVIDER_NAME,
+            'order_upstream_id' => $order->getIncrementId(),
+            'upstream_id' => $refundId,
+            'amount' => $refundValue,
         );
 
         return $data;
@@ -116,14 +157,14 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     protected function getOrderAddressData($addressId)
     {
         $address = Mage::getModel('sales/order_address')->load($addressId);
-        $street = $address->getStreet();
+
         return array(
             'name' => $address->getName(),
             'first_name' => $address->getFirstname(),
             'last_name' => $address->getLastname(),
             'company' => $address->getCompany(),
-            'address_1' => $street[0],
-            'address_2' => $street[1],
+            'address_1' => $address->getStreet1(),
+            'address_2' => $address->getStreet2(),
             'city' => $address->getCity(),
             'state' => $address->getRegion(),
             'zip' => $address->getPostcode(),
