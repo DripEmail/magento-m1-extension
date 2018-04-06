@@ -62,30 +62,27 @@ class Drip_Connect_Model_Observer_Order
                     break;
                 }
                 // new order
-                $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-                    'email' => $order->getCustomerEmail(),
-                    'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_ORDER_CREATED,
-                    'properties' => $this->getOrderData($order),
-                ))->call();
+                $response = Mage::getModel(
+                    'drip_connect/ApiCalls_Helper_CreateUpdateOrder',
+                    Mage::helper('drip_connect/order')->getOrderDataNew($order)
+                )->call();
                 break;
             case Mage_Sales_Model_Order::STATE_COMPLETE :
-                if ($this->checkIsRefund($order)) {
+                if ($this->refundDiff($order)) {
                     // partial refund of completed order
-                    $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-                        'email' => $order->getCustomerEmail(),
-                        'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_ORDER_REFUNDED,
-                        'properties' => $this->getOrderData($order, true),
-                    ))->call();
+                    $response = Mage::getModel(
+                        'drip_connect/ApiCalls_Helper_CreateUpdateRefund',
+                        Mage::helper('drip_connect/order')->getOrderDataRefund($order, $this->refundDiff($order))
+                    )->call();
                 } else {
                     if ($this->isSameState($order)) {
                         break;
                     }
-                    // complete order
-                    $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-                        'email' => $order->getCustomerEmail(),
-                        'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_ORDER_COMPLETED,
-                        'properties' => $this->getOrderData($order),
-                    ))->call();
+                    // full complete order
+                    $response = Mage::getModel(
+                        'drip_connect/ApiCalls_Helper_CreateUpdateOrder',
+                        Mage::helper('drip_connect/order')->getOrderDataCompleted($order)
+                    )->call();
                 }
                 break;
             case Mage_Sales_Model_Order::STATE_CLOSED :
@@ -93,20 +90,18 @@ class Drip_Connect_Model_Observer_Order
                     break;
                 }
                 // full refund
-                $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-                    'email' => $order->getCustomerEmail(),
-                    'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_ORDER_REFUNDED,
-                    'properties' => $this->getOrderData($order, true),
-                ))->call();
+                $response = Mage::getModel(
+                    'drip_connect/ApiCalls_Helper_CreateUpdateRefund',
+                    Mage::helper('drip_connect/order')->getOrderDataRefund($order, $this->refundDiff($order))
+                )->call();
                 break;
             case Mage_Sales_Model_Order::STATE_PROCESSING :
-                if ($this->checkIsRefund($order)) {
+                if ($this->refundDiff($order)) {
                     // partial refund of processing order
-                    $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-                        'email' => $order->getCustomerEmail(),
-                        'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_ORDER_REFUNDED,
-                        'properties' => $this->getOrderData($order, true),
-                    ))->call();
+                    $response = Mage::getModel(
+                        'drip_connect/ApiCalls_Helper_CreateUpdateRefund',
+                        Mage::helper('drip_connect/order')->getOrderDataRefund($order, $this->refundDiff($order))
+                    )->call();
                 }
                 break;
             case Mage_Sales_Model_Order::STATE_CANCELED :
@@ -114,11 +109,10 @@ class Drip_Connect_Model_Observer_Order
                     break;
                 }
                 // cancel order
-                $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-                    'email' => $order->getCustomerEmail(),
-                    'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_ORDER_CANCELED,
-                    'properties' => $this->getOrderData($order),
-                ))->call();
+                $response = Mage::getModel(
+                    'drip_connect/ApiCalls_Helper_CreateUpdateOrder',
+                    Mage::helper('drip_connect/order')->getOrderDataCanceled($order)
+                )->call();
                 break;
             default :
                 if ($this->isSameState($order)) {
@@ -150,6 +144,8 @@ class Drip_Connect_Model_Observer_Order
      * @param  Mage_Sales_Model_Order $order
      * @param  bool $isRefund
      * @return array
+     *
+     * // todo: remove when all will be reworked to use Orders Api instead of Events Api
      */
     protected function getOrderData($order, $isRefund = false)
     {
@@ -175,6 +171,8 @@ class Drip_Connect_Model_Observer_Order
      * @param  Mage_Sales_Model_Order $order
      * @param  bool $isRefund
      * @return array
+     *
+     * // todo: remove when all will be reworked to use Orders Api instead of Events Api
      */
     protected function getItemsGroups($order, $isRefund = false)
     {
@@ -212,15 +210,15 @@ class Drip_Connect_Model_Observer_Order
      *
      * @param  Mage_Sales_Model_Order $order
      *
-     * @return bool
+     * @return int Refund value in cents
      */
-    protected function checkIsRefund($order)
+    protected function refundDiff($order)
     {
         $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
-        $oldValue = trim($oldData['total_refunded'], "0");
-        $newValue = trim($order->getTotalRefunded(), "0");
+        $oldValue = (int) (number_format($oldData['total_refunded'], 2) * 100);
+        $newValue = (int) (number_format($order->getTotalRefunded(), 2) * 100);
 
-        return ($oldValue != $newValue);
+        return ($newValue - $oldValue);
     }
 
     /**
