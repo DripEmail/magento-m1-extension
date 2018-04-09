@@ -58,13 +58,7 @@ class Drip_Connect_Model_Observer_Wishlist
      * @return mixed
      */
     private function doWishlistEvent($action, $customer, $product) {
-        try {
-            $image = (string)Mage::helper('catalog/image')->init($product, 'thumbnail')->resize(160, 160);
-        } catch (Exception $e) {
-            $image = '';
-        }
-
-        return Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
+          return Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
             'email' => $customer->getEmail(),
             'action' => $action,
             'properties' => array(
@@ -74,7 +68,7 @@ class Drip_Connect_Model_Observer_Wishlist
                 'name' => $product->getName(),
                 'price' => Mage::helper('drip_connect')->formatPrice($product->getFinalPrice()),
                 'currency' => Mage::app()->getStore()->getCurrentCurrencyCode(),
-                'image_url' => $image,
+                'image_url' => Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()),
                 'source' => 'magento'
             ),
         ))->call();
