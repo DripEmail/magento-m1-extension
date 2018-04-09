@@ -33,7 +33,7 @@ class Drip_Connect_Model_Observer_Wishlist
                 'categories' => Mage::helper('drip_connect')->getProductCategoryNames($product),
                 'brand' => $product->getAttributeText('manufacturer'),
                 'name' => $product->getName(),
-                'price' => Mage::helper('drip_connect')->formatPrice($product->getFinalPrice()),
+                'price' => Mage::helper('drip_connect')->priceAsCents($product->getFinalPrice()),
                 'currency' => Mage::app()->getStore()->getCurrentCurrencyCode(),
                 'image_url' => $image,
                 'source' => 'magento'

@@ -121,7 +121,7 @@ class Drip_Connect_Model_Observer_Order
                 // other states: send request to Drip Orders Api (not Events Api)
                 $response = Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateOrder', array(
                     'email' => $order->getCustomerEmail(),
-                    'amount' => ($order->getGrandTotal()*100),
+                    'amount' => Mage::helper('drip_connect')->priceAsCents($order->getGrandTotal()),
                     'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
                     'upstream_id' => $order->getIncrementId(),
                     'identifier' => $order->getIncrementId(),
@@ -148,8 +148,9 @@ class Drip_Connect_Model_Observer_Order
     protected function refundDiff($order)
     {
         $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
-        $oldValue = (int) (number_format($oldData['total_refunded'], 2) * 100);
-        $newValue = (int) (number_format($order->getTotalRefunded(), 2) * 100);
+        $oldValue = Mage::helper('drip_connect')->priceAsCents($oldData['total_refunded']);
+        $newValue = Mage::helper('drip_connect')->priceAsCents($order->getTotalRefunded());
+
 
         return ($newValue - $oldValue);
     }
