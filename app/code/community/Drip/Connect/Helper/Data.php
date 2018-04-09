@@ -113,10 +113,11 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
 
     /**
      * @param $price
-     * consistently format prices
+     * consistently format prices as cents
+     * strip all except numbers and periods
      * @return string
      */
-    public function formatPrice($price) {
-        return number_format($price, 2, '.', ',');
+    public function priceAsCents($price) {
+        return preg_replace("/[^0-9.]/", "", $price) * 100;
     }
 }

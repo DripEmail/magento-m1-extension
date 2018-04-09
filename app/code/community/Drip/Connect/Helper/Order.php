@@ -20,10 +20,10 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
             'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
             'upstream_id' => $order->getIncrementId(),
             'identifier' => $order->getIncrementId(),
-            'amount' => ($order->getGrandTotal()*100),
-            'tax' => ($order->getTaxAmount()*100),
-            'fees' => ($order->getShippingAmount()*100),
-            'discount' => ($order->getDiscountAmount()*100),
+            'amount' => Mage::helper('drip_connect')->priceAsCents($order->getGrandTotal()),
+            'tax' => Mage::helper('drip_connect')->priceAsCents($order->getTaxAmount()),
+            'fees' => Mage::helper('drip_connect')->priceAsCents($order->getShippingAmount()),
+            'discount' => Mage::helper('drip_connect')->priceAsCents($order->getDiscountAmount()),
             'currency_code' => $order->getOrderCurrencyCode(),
             'items' => $this->getOrderItemsData($order),
             'billing_address' => $this->getOrderBillingData($order),
@@ -200,18 +200,18 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
                 'sku' => $item->getSku(),
                 'name' => $item->getName(),
                 'quantity' => $item->getQtyOrdered(),
-                'price' => ($item->getPrice()*100),
-                'amount' => ($item->getQtyOrdered() * $item->getPrice() * 100),
-                'tax' => ($item->getTaxAmount()*100),
+                'price' => Mage::helper('drip_connect')->priceAsCents($item->getPrice()),
+                'amount' => Mage::helper('drip_connect')->priceAsCents($item->getQtyOrdered() * $item->getPrice()),
+                'tax' => Mage::helper('drip_connect')->priceAsCents($item->getTaxAmount()),
                 'taxable' => (preg_match('/[123456789]/', $item->getTaxAmount()) ? 'true' : 'false'),
-                'discount' => ($item->getDiscountAmount()*100),
+                'discount' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount()),
                 'properties' => array(
                     'product_url' => $item->getProduct()->getProductUrl(),
                     'product_image_url' => $image,
                 ),
             );
             if ($isRefund) {
-                $group['refund_amount'] = ($item->getAmountRefunded()*100);
+                $group['refund_amount'] = Mage::helper('drip_connect')->priceAsCents($item->getAmountRefunded());
                 $group['refund_quantity'] = $item->getQtyRefunded();
             }
             $data[] = $group;
