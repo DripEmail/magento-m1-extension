@@ -190,11 +190,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
         foreach ($order->getAllItems() as $item) {
             $product = Mage::getModel('catalog/product')->load($item->getProduct()->getId());
             $product->setStore(1);
-            try {
-                $image = (string)Mage::helper('catalog/image')->init($product, 'thumbnail')->resize(160, 160);
-            } catch (Exception $e) {
-                $image = '';
-            }
+
             $group = array(
                 'product_id' => $item->getProductId(),
                 'sku' => $item->getSku(),
@@ -207,7 +203,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
                 'discount' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount()),
                 'properties' => array(
                     'product_url' => $item->getProduct()->getProductUrl(),
-                    'product_image_url' => $image,
+                    'product_image_url' => Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()),
                 ),
             );
             if ($isRefund) {

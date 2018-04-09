@@ -5,11 +5,6 @@
     if (strlen($title) > 10) {
         $title = substr($title, 0, 10) . '...';
     }
-    try {
-        $image = (string)Mage::helper('catalog/image')->init($product, 'thumbnail')->resize(160, 160);
-    } catch (Exception $e) {
-        $image = '';
-    }
     $currentPrice = Mage::helper('drip_connect')->priceAsCents($product->getFinalPrice());
     $initialPrice = Mage::helper('drip_connect')->priceAsCents($product->getPrice());
 ?>
@@ -27,7 +22,7 @@
         <?php endif; ?>
         currency: "<?= Mage::app()->getStore()->getCurrentCurrencyCode() ?>",
         product_url: "<?= $product->getProductUrl() ?>",
-        image_url: "<?= $image ?>"
+        image_url: "<?= Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()) ?>"
     }]);
     </script>
     <!-- end Drip track -->
