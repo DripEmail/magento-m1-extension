@@ -20,10 +20,10 @@
         sku: "<?= $product->getSku() ?>",
         name: "<?= $product->getName() ?>",
         brand: "<?= $product->getAttributeText('manufacturer') ?>",
-        categories: "<?= implode(',', $product->getCategoryIds()) ?>",
-        price: "<?= $currentPrice ?>",
+        categories: "<?= Mage::helper('drip_connect')->getProductCategoryNames($product) ?>",
+        price: "<?= Mage::helper('drip_connect')->formatPrice($product->getFinalPrice()) ?>",
         <?php if ($currentPrice != $initialPrice) : ?>
-        compared_at_price: "<?= $initialPrice ?>",
+        compared_at_price: "<?= Mage::helper('drip_connect')->formatPrice($initialPrice) ?>",
         <?php endif; ?>
         currency: "<?= Mage::app()->getStore()->getCurrentCurrencyCode() ?>",
         product_url: "<?= $product->getProductUrl() ?>",
