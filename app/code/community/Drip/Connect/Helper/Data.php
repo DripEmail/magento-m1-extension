@@ -88,4 +88,36 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
 
         return 'Storefront';
     }
+
+    /**
+     * @param $product
+     * Return comma separated string of category names this product is assigned to
+     * @return string
+     */
+    public function getProductCategoryNames($product) {
+        $catIds = $product->getCategoryIds();
+        $categoriesString = '';
+        $numCategories = count($catIds);
+        if($numCategories) {
+            $catCollection = Mage::getResourceModel('catalog/category_collection')
+                ->addAttributeToSelect('name')
+                ->addAttributeToFilter('entity_id', $catIds);
+
+            foreach($catCollection as $category) {
+                $categoriesString .= $category->getName() . ', ';
+            }
+            $categoriesString = substr($categoriesString, 0, -2);
+        }
+
+        return $categoriesString;
+    }
+
+    /**
+     * @param $price
+     * consistently format prices
+     * @return string
+     */
+    public function formatPrice($price) {
+        return number_format($price, 2, '.', ',');
+    }
 }
