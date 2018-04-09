@@ -123,11 +123,6 @@ class Drip_Connect_Model_Observer_Quote
         $data = array ();
         foreach ($quote->getAllItems() as $item) {
             $product = Mage::getModel('catalog/product')->load($item->getProduct()->getId());
-            try {
-                $image = (string)Mage::helper('catalog/image')->init($product, 'thumbnail')->resize(160, 160);
-            } catch (Exception $e) {
-                $image = '';
-            }
 
             $group = array(
                 'product_id' => $item->getProductId(),
@@ -141,8 +136,8 @@ class Drip_Connect_Model_Observer_Quote
                 'taxable' => (preg_match('/[123456789]/', $item->getTaxAmount()) ? 'true' : 'false'),
                 'discount' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount()),
                 'currency' => $quote->getQuoteCurrencyCode(),
-                'product_url' => $item->getProduct()->getProductUrl(),
-                'image_url' => $image,
+                'product_url' => $product->getProductUrl(),
+                'image_url' => Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()),
             );
             $data[] = $group;
         }
