@@ -109,12 +109,20 @@
             </wishlist_add_product>
             <controller_action_predispatch_wishlist_index_remove>
                 <observers>
-                    <data_wishlist_delete>
+                    <drip_connect_wishlist_remove_product>
                         <class>drip_connect/observer_wishlist</class>
                         <method>removeProduct</method>
-                    </data_wishlist_delete>
+                    </drip_connect_wishlist_remove_product>
                 </observers>
             </controller_action_predispatch_wishlist_index_remove>
+            <controller_action_predispatch_wishlist_index_update>
+                <observers>
+                    <drip_connect_wishlist_update>
+                        <class>drip_connect/observer_wishlist</class>
+                        <method>removeProductsWithoutQuantity</method>
+                    </drip_connect_wishlist_update>
+                </observers>
+            </controller_action_predispatch_wishlist_index_update>
             <sales_quote_save_before>
                 <observers>
                     <drip_connect_sales_quote_save_before>
