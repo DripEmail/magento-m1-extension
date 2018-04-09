@@ -19,7 +19,7 @@
         product_id: "<?= $product->getId() ?>",
         sku: "<?= $product->getSku() ?>",
         name: "<?= $product->getName() ?>",
-        brand: "<?= $product->getBrand() ?>",
+        brand: "<?= $product->getAttributeText('manufacturer') ?>",
         categories: "<?= implode(',', $product->getCategoryIds()) ?>",
         price: "<?= $currentPrice ?>",
         <?php if ($currentPrice != $initialPrice) : ?>
