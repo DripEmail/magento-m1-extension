@@ -40,7 +40,6 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
         $data = array (
             'email' => $customer->getEmail(),
             'new_email' => ($newEmail ? $newEmail : ''),
-            'user_id' => $customer->getEntityId(),
             'ip_address' => Mage::helper('core/http')->getRemoteAddr(),
             'custom_fields' => array(
                 'first_name' => $customer->getFirstname(),
@@ -74,7 +73,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getArea()
     {
-        if (stripos(Mage::app()->getRequest()->getRequestUri(), "index.php/api")) {
+        if (stripos(Mage::app()->getRequest()->getRequestUri(), "/api/") === 0) {
             return 'API';
         }
 
@@ -99,4 +98,35 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
         return ($price*100);
     }
 
+    /**
+     * @param $product
+     * Return comma separated string of category names this product is assigned to
+     * @return string
+     */
+    public function getProductCategoryNames($product) {
+        $catIds = $product->getCategoryIds();
+        $categoriesString = '';
+        $numCategories = count($catIds);
+        if($numCategories) {
+            $catCollection = Mage::getResourceModel('catalog/category_collection')
+                ->addAttributeToSelect('name')
+                ->addAttributeToFilter('entity_id', $catIds);
+
+            foreach($catCollection as $category) {
+                $categoriesString .= $category->getName() . ', ';
+            }
+            $categoriesString = substr($categoriesString, 0, -2);
+        }
+
+        return $categoriesString;
+    }
+
+    /**
+     * @param $price
+     * consistently format prices
+     * @return string
+     */
+    public function formatPrice($price) {
+        return number_format($price, 2, '.', ',');
+    }
 }
