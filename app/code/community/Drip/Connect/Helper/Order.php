@@ -189,7 +189,6 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
         $data = array();
         foreach ($order->getAllItems() as $item) {
             $product = Mage::getModel('catalog/product')->load($item->getProduct()->getId());
-            $product->setStore(1);
             try {
                 $image = (string)Mage::helper('catalog/image')->init($product, 'thumbnail')->resize(160, 160);
             } catch (Exception $e) {

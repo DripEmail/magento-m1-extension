@@ -88,4 +88,15 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
 
         return 'Storefront';
     }
+
+    /**
+     * @param $price
+     *
+     * @return int
+     */
+    public function formatPriceCents($price) {
+        $price = number_format($price, 2, '.', '');
+        return ($price*100);
+    }
+
 }

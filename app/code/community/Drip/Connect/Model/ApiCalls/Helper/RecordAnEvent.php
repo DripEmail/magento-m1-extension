@@ -11,12 +11,19 @@ class Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent
     const EVENT_ORDER_COMPLETED = 'Order fulfilled';
     const EVENT_ORDER_REFUNDED = 'Order refunded';
     const EVENT_ORDER_CANCELED = 'Order canceled';
+    const EVENT_QUOTE_NEW = 'Checkout created';
+    const EVENT_QUOTE_CHANGED = 'Checkout updated';
 
     public function __construct($data = null)
     {
         $this->apiClient = Mage::getModel('drip_connect/ApiCalls_Base', array(
             'endpoint' => Mage::getStoreConfig('dripconnect_general/api_settings/account_id').'/'.self::ENDPOINT_EVENTS,
         ));
+
+        if (!empty($data) && is_array($data)) {
+            $data['properties']['source'] = 'magento';
+            $data['properties']['magento_source'] = Mage::helper('drip_connect')->getArea();
+        }
 
         $eventInfo = [
             'events' => [
