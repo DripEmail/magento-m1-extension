@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Drip_Connect>
-            <version>0.1.0</version>
+            <version>0.2.0</version>
         </Drip_Connect>
     </modules>
     <global>
@@ -21,6 +21,13 @@
                 <class>Drip_Connect_Block</class>
             </drip_connect>
         </blocks>
+        <resources>
+            <drip_connect_setup>
+                <setup>
+                    <module>Drip_Connect</module>
+                </setup>
+            </drip_connect_setup>
+        </resources>
         <events>
             <customer_save_before>
                 <observers>
@@ -108,6 +115,22 @@
                     </data_wishlist_delete>
                 </observers>
             </controller_action_predispatch_wishlist_index_remove>
+            <sales_quote_save_before>
+                <observers>
+                    <drip_connect_sales_quote_save_before>
+                        <class>drip_connect/observer_quote</class>
+                        <method>beforeQuoteSaved</method>
+                    </drip_connect_sales_quote_save_before>
+                </observers>
+            </sales_quote_save_before>
+            <sales_quote_save_commit_after>
+                <observers>
+                    <drip_connect_sales_quote_save_commit_after>
+                        <class>drip_connect/observer_quote</class>
+                        <method>afterQuoteSaved</method>
+                    </drip_connect_sales_quote_save_commit_after>
+                </observers>
+            </sales_quote_save_commit_after>
         </events>
         <layout>
             <updates>

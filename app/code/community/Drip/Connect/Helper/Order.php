@@ -189,8 +189,6 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
         $data = array();
         foreach ($order->getAllItems() as $item) {
             $product = Mage::getModel('catalog/product')->load($item->getProduct()->getId());
-            $product->setStore(1);
-
             $group = array(
                 'product_id' => $item->getProductId(),
                 'sku' => $item->getSku(),
