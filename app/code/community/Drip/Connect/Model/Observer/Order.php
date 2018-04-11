@@ -61,6 +61,13 @@ class Drip_Connect_Model_Observer_Order
                 if ($this->isSameState($order)) {
                     break;
                 }
+
+                //if guest checkout, create subscriber record
+                if($order->getCustomerIsGuest()) {
+                    $customerData = Mage::helper('drip_connect')->prepareCustomerDataForGuestCheckout($order);
+                    Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $customerData)->call();
+                }
+
                 // new order
                 $response = Mage::getModel(
                     'drip_connect/ApiCalls_Helper_CreateUpdateOrder',
