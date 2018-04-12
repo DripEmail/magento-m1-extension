@@ -14,11 +14,18 @@ class Drip_Connect_Model_Observer_Order
      */
     public function beforeOrderSave($observer)
     {
+        if (!Mage::helper('drip_connect')->isModuleActive()) {
+            return;
+        }
         $order = $observer->getEvent()->getOrder();
         if (!$order->getId()) {
             return;
         }
-        Mage::register(self::REGISTRY_KEY_OLD_DATA['total_refunded'], $order->getOrigData('total_refunded'));
+        $data = array(
+            'total_refunded' => $order->getOrigData('total_refunded'),
+            'state' => $order->getOrigData('state'),
+        );
+        Mage::register(self::REGISTRY_KEY_OLD_DATA, $data);
     }
 
     /**
@@ -26,6 +33,9 @@ class Drip_Connect_Model_Observer_Order
      */
     public function afterOrderSave($observer)
     {
+        if (!Mage::helper('drip_connect')->isModuleActive()) {
+            return;
+        }
         $order = $observer->getEvent()->getOrder();
         if (!$order->getId()) {
             return;
@@ -35,7 +45,7 @@ class Drip_Connect_Model_Observer_Order
     }
 
     /**
-     * drip actions on 'order placed' event
+     * drip actions on order state events
      *
      * @param Mage_Sales_Model_Order $order
      */
@@ -48,114 +58,91 @@ class Drip_Connect_Model_Observer_Order
 
         switch ($order->getState()) {
             case Mage_Sales_Model_Order::STATE_NEW :
-                // inew order
-                $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-                    'email' => $order->getCustomerEmail(),
-                    'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_ORDER_CREATED,
-                    'properties' => $this->getOrderData($order),
-                ))->call();
+                if ($this->isSameState($order)) {
+                    break;
+                }
+
+                //if guest checkout, create subscriber record
+                if($order->getCustomerIsGuest()) {
+                    $customerData = Mage::helper('drip_connect')->prepareCustomerDataForGuestCheckout($order);
+                    Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $customerData)->call();
+                }
+
+                // new order
+                $response = Mage::getModel(
+                    'drip_connect/ApiCalls_Helper_CreateUpdateOrder',
+                    Mage::helper('drip_connect/order')->getOrderDataNew($order)
+                )->call();
                 break;
             case Mage_Sales_Model_Order::STATE_COMPLETE :
-                if ($this->checkIsRefund($order)) {
+                if ($this->refundDiff($order)) {
                     // partial refund of completed order
-                    $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-                        'email' => $order->getCustomerEmail(),
-                        'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_ORDER_REFUNDED,
-                        'properties' => $this->getOrderData($order, true),
-                    ))->call();
+                    $response = Mage::getModel(
+                        'drip_connect/ApiCalls_Helper_CreateUpdateRefund',
+                        Mage::helper('drip_connect/order')->getOrderDataRefund($order, $this->refundDiff($order))
+                    )->call();
                 } else {
-                    // complete order
-                    $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-                        'email' => $order->getCustomerEmail(),
-                        'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_ORDER_COMPLETED,
-                        'properties' => $this->getOrderData($order),
-                    ))->call();
+                    if ($this->isSameState($order)) {
+                        break;
+                    }
+                    // full complete order
+                    $response = Mage::getModel(
+                        'drip_connect/ApiCalls_Helper_CreateUpdateOrder',
+                        Mage::helper('drip_connect/order')->getOrderDataCompleted($order)
+                    )->call();
                 }
                 break;
             case Mage_Sales_Model_Order::STATE_CLOSED :
+                if ($this->isSameState($order)) {
+                    break;
+                }
                 // full refund
-                $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-                    'email' => $order->getCustomerEmail(),
-                    'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_ORDER_REFUNDED,
-                    'properties' => $this->getOrderData($order, true),
-                ))->call();
+                $response = Mage::getModel(
+                    'drip_connect/ApiCalls_Helper_CreateUpdateRefund',
+                    Mage::helper('drip_connect/order')->getOrderDataRefund($order, $this->refundDiff($order))
+                )->call();
                 break;
             case Mage_Sales_Model_Order::STATE_PROCESSING :
-                if ($this->checkIsRefund($order)) {
+                if ($this->refundDiff($order)) {
                     // partial refund of processing order
-                    $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-                        'email' => $order->getCustomerEmail(),
-                        'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_ORDER_REFUNDED,
-                        'properties' => $this->getOrderData($order, true),
-                    ))->call();
+                    $response = Mage::getModel(
+                        'drip_connect/ApiCalls_Helper_CreateUpdateRefund',
+                        Mage::helper('drip_connect/order')->getOrderDataRefund($order, $this->refundDiff($order))
+                    )->call();
                 }
                 break;
+            case Mage_Sales_Model_Order::STATE_CANCELED :
+                if ($this->isSameState($order)) {
+                    break;
+                }
+                // cancel order
+                $response = Mage::getModel(
+                    'drip_connect/ApiCalls_Helper_CreateUpdateOrder',
+                    Mage::helper('drip_connect/order')->getOrderDataCanceled($order)
+                )->call();
+                break;
+            default :
+                if ($this->isSameState($order)) {
+                    break;
+                }
+                // other states: send request to Drip Orders Api (not Events Api)
+                $response = Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateOrder', array(
+                    'email' => $order->getCustomerEmail(),
+                    'amount' => Mage::helper('drip_connect')->priceAsCents($order->getGrandTotal()),
+                    'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
+                    'upstream_id' => $order->getIncrementId(),
+                    'identifier' => $order->getIncrementId(),
+                    'properties' => array(
+                        'order_state' => $order->getState(),
+                        'order_status' => $order->getStatus(),
+                        'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
+                        'magento_source' => Mage::helper('drip_connect')->getArea(),
+                    ),
+                ))->call();
+
         }
 
         $order->setIsAlreadyProcessed(true);
-    }
-
-    /**
-     * get order's data we want send to drip
-     *
-     * @param  Mage_Sales_Model_Order $order
-     * @param  bool $isRefund
-     * @return array
-     */
-    protected function getOrderData($order, $isRefund = false)
-    {
-        $data = array(
-            'source' => 'magento',
-            'amount' => ($isRefund ? $order->getTotalRefunded() : $order->getGrandTotal()),
-            'tax' => $order->getTaxAmount(),
-            'fees' => $order->getShippingAmount(),
-            'discounts' => $order->getDiscountAmount(),
-            'currency' => $order->getOrderCurrencyCode(),
-            'items_count' => $order->getTotalQtyOrdered(),
-            'order_id' => $order->getIncrementId(),
-            'order_status' => $order->getState(),
-            'line_items' => $this->getItemsGroups($order, $isRefund),
-        );
-
-        return $data;
-    }
-
-    /**
-     * get order's items as groups with equal attr values
-     *
-     * @param  Mage_Sales_Model_Order $order
-     * @param  bool $isRefund
-     * @return array
-     */
-    protected function getItemsGroups($order, $isRefund = false)
-    {
-        $data = array();
-        foreach ($order->getAllItems() as $item) {
-            $product = Mage::getModel('catalog/product')->load($item->getProduct()->getId());
-            $group = array(
-                'product_id' => $item->getProductId(),
-                'sku' => $item->getSku(),
-                'name' => $item->getName(),
-                'brand' => $item->getBrand(),
-                'categories' => implode(',', $product->getCategoryIds()),
-                'quantity' => $item->getQtyOrdered(),
-                'price' => $item->getPrice(),
-                'amount' => ($item->getQtyOrdered() * $item->getPrice()),
-                'tax' => $item->getTaxAmount(),
-                'taxable' => (preg_match('/[123456789]/', $item->getTaxAmount()) ? 'true' : 'false'),
-                'discounts' => $item->getDiscountAmount(),
-                'discount_codes' => $order->getCouponCode(),
-                'currency' => $order->getOrderCurrencyCode(),
-                'product_url' => $item->getProduct()->getProductUrl(),
-                'image_url' => (string)Mage::helper('catalog/image')->init($product, 'image'),
-            );
-            if ($isRefund) {
-                $group['refund_amount'] = $item->getAmountRefunded();
-                $group['refund_quantity'] = $item->getQtyRefunded();
-            }
-            $data[] = $group;
-        }
-        return $data;
     }
 
     /**
@@ -163,13 +150,27 @@ class Drip_Connect_Model_Observer_Order
      *
      * @param  Mage_Sales_Model_Order $order
      *
-     * @return bool
+     * @return int Refund value in cents
      */
-    protected function checkIsRefund($order)
+    protected function refundDiff($order)
     {
-        $oldValue = trim(Mage::registry(self::REGISTRY_KEY_OLD_DATA['total_refunded']), "0");
-        $newValue = trim($order->getTotalRefunded(), "0");
+        $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
+        $oldValue = Mage::helper('drip_connect')->priceAsCents($oldData['total_refunded']);
+        $newValue = Mage::helper('drip_connect')->priceAsCents($order->getTotalRefunded());
 
-        return ($oldValue != $newValue);
+
+        return ($newValue - $oldValue);
+    }
+
+    /**
+     * check if order state has not been changed
+     */
+    protected function isSameState($order)
+    {
+        $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
+        $oldValue = $oldData['state'];
+        $newValue = $order->getState();
+
+        return ($oldValue == $newValue);
     }
 }

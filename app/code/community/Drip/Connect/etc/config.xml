@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Drip_Connect>
-            <version>0.1.0</version>
+            <version>0.2.0</version>
         </Drip_Connect>
     </modules>
     <global>
@@ -21,6 +21,13 @@
                 <class>Drip_Connect_Block</class>
             </drip_connect>
         </blocks>
+        <resources>
+            <drip_connect_setup>
+                <setup>
+                    <module>Drip_Connect</module>
+                </setup>
+            </drip_connect_setup>
+        </resources>
         <events>
             <customer_save_before>
                 <observers>
@@ -92,6 +99,46 @@
                     </drip_connect_customer_login>
                 </observers>
             </customer_login>
+            <wishlist_add_product>
+                <observers>
+                    <wishlist_change_event>
+                        <class>drip_connect/observer_wishlist</class>
+                        <method>addProduct</method>
+                    </wishlist_change_event>
+                </observers>
+            </wishlist_add_product>
+            <controller_action_predispatch_wishlist_index_remove>
+                <observers>
+                    <drip_connect_wishlist_remove_product>
+                        <class>drip_connect/observer_wishlist</class>
+                        <method>removeProduct</method>
+                    </drip_connect_wishlist_remove_product>
+                </observers>
+            </controller_action_predispatch_wishlist_index_remove>
+            <controller_action_predispatch_wishlist_index_update>
+                <observers>
+                    <drip_connect_wishlist_update>
+                        <class>drip_connect/observer_wishlist</class>
+                        <method>removeProductsWithoutQuantity</method>
+                    </drip_connect_wishlist_update>
+                </observers>
+            </controller_action_predispatch_wishlist_index_update>
+            <sales_quote_save_before>
+                <observers>
+                    <drip_connect_sales_quote_save_before>
+                        <class>drip_connect/observer_quote</class>
+                        <method>beforeQuoteSaved</method>
+                    </drip_connect_sales_quote_save_before>
+                </observers>
+            </sales_quote_save_before>
+            <sales_quote_save_commit_after>
+                <observers>
+                    <drip_connect_sales_quote_save_commit_after>
+                        <class>drip_connect/observer_quote</class>
+                        <method>afterQuoteSaved</method>
+                    </drip_connect_sales_quote_save_commit_after>
+                </observers>
+            </sales_quote_save_commit_after>
         </events>
         <layout>
             <updates>
@@ -114,6 +161,9 @@
     </admin>
     <default>
         <dripconnect_general>
+            <module_settings>
+                <is_enabled>0</is_enabled>
+            </module_settings>
             <api_settings>
                 <url>https://api.getdrip.com/v2/</url>
                 <timeout>15000</timeout>

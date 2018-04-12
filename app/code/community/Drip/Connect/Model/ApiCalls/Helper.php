@@ -5,7 +5,10 @@ abstract class Drip_Connect_Model_ApiCalls_Helper
     const ENDPOINT_ACCOUNTS = 'accounts';
     const ENDPOINT_SUBSCRIBERS = 'subscribers';
     const ENDPOINT_EVENTS = 'events';
+    const ENDPOINT_ORDERS = 'orders';
+    const ENDPOINT_REFUNDS = 'refunds';
     const ENDPOINT_BATCH_SUBSCRIBERS = 'subscribers/batches';
+    const ENDPOINT_BATCH_ORDERS = 'orders/batches';
 
     const MAX_BATCH_SIZE = 1000;
 

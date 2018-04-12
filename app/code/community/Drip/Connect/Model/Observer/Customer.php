@@ -10,8 +10,14 @@ class Drip_Connect_Model_Observer_Customer
      */
     public function customerLogin($observer)
     {
+        if (!Mage::helper('drip_connect')->isModuleActive()) {
+            return;
+        }
         $customer = $observer->getCustomer();
         $this->proceedCustomerLogin($customer);
+
+        //Check for active quote
+        Mage::helper('drip_connect/quote')->checkIfQuoteCreated($customer);
     }
 
     /**
@@ -24,9 +30,6 @@ class Drip_Connect_Model_Observer_Customer
         $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
             'email' => $customer->getEmail(),
             'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_LOGIN,
-            'properties' => array(
-                'source' => 'magento'
-            ),
         ))->call();
     }
 }

@@ -1,14 +1,14 @@
 <?php
 /**
- * @see Drip_Connect_Block_Adminhtml_System_Config_Sync_Customers
+ * @see Drip_Connect_Block_Adminhtml_System_Config_Sync_Orders
  */
 ?>
 <script type="text/javascript">
 //<![CDATA[
-    function syncCustomers() {
+    function syncOrders() {
 
         var elem = $('<?php echo $this->getHtmlId() ?>');
-        var res = $('sync_result');
+        var res = $('sync_orders_result');
 
         elem.addClassName('disabled').setAttribute('disabled', 'disabled');
 
@@ -41,7 +41,7 @@
     }
 //]]>
 </script>
-<button onclick="javascript:syncCustomers(); return false;" type="button" id="<?php echo $this->getHtmlId() ?>"
+<button onclick="javascript:syncOrders(); return false;" type="button" id="<?php echo $this->getHtmlId() ?>"
 <?php if (!Mage::helper('drip_connect')->isModuleActive()) { ?> disabled="disabled" class="disabled" <?php } else { ?> class="scalable" <?php }?>>
     <?php echo $this->escapeHtml($this->getButtonLabel()) ?>
-</button><br><b id="sync_result" style="color:green;"></b>
+</button><br><b id="sync_orders_result" style="color:green;"></b>

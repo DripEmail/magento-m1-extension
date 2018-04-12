@@ -3,7 +3,12 @@
 <layout>
     <default>
         <reference name="before_body_end">
-            <block type="core/template" name="drip.footer.js" template="drip/footer_js.phtml" />
+            <block type="core/template" name="drip.footer.js" template="drip/footer_js.phtml" before="-" />
         </reference>
     </default>
+    <catalog_product_view>
+        <reference name="before_body_end">
+            <block type="core/template" name="drip.pdp.tracking" template="drip/pdp_tracking.phtml" />
+        </reference>
+    </catalog_product_view>
 </layout>
