@@ -17,7 +17,7 @@ class Drip_Connect_Model_Observer_Customer
         $this->proceedCustomerLogin($customer);
 
         //Check for active quote
-        Mage::helper('drip_connect/quote')->checkIfQuoteCreated($customer);
+        Mage::helper('drip_connect/quote')->checkForEmptyQuote($customer);
     }
 
     /**
