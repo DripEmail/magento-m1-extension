@@ -77,7 +77,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
             'fees' => Mage::helper('drip_connect')->priceAsCents($quote->getShippingAddress()->getShippingAmount()),
             'discounts' => Mage::helper('drip_connect')->priceAsCents((100*$quote->getSubtotal() - 100*$quote->getSubtotalWithDiscount())/100),
             'currency' => $quote->getQuoteCurrencyCode(),
-            'items_count' => count($quote->getAllItems()),
+            'items_count' => $quote->getItemsQty(),
             'abandoned_cart_url' => Mage::helper('checkout/cart')->getCartUrl(),
             'line_items' => $this->prepareQuoteItemsData($quote),
         );
