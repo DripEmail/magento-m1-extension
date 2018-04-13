@@ -23,7 +23,9 @@ class Drip_Connect_Adminhtml_Config_Sync_CustomersController
 
             $batch = array();
             foreach ($collection as $customer) {
-                $batch[] = Drip_Connect_Helper_Data::prepareCustomerData($customer);
+                $data = Drip_Connect_Helper_Data::prepareCustomerData($customer);
+                $data['tags'] = array('Synced from Magento');
+                $batch[] = $data;
             }
 
             $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Subscribers', array(
