@@ -24,7 +24,7 @@ class Drip_Connect_Adminhtml_Config_Sync_CustomersController
             $batch = array();
             foreach ($collection as $customer) {
                 $data = Drip_Connect_Helper_Data::prepareCustomerData($customer);
-                $data['custom_fields']['import'] = true;
+                $data['tags'] = array('Synced from Magento');
                 $batch[] = $data;
             }
 
