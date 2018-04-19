@@ -73,7 +73,7 @@
     </global>
     <frontend>
         <events>
-            <customer_address_save_before>
+            <!--<customer_address_save_before>
                 <observers>
                     <drip_connect_customer_address_save_before>
                         <type>singleton</type>
@@ -90,7 +90,7 @@
                         <method>afterCustomerAddressSaveFront</method>
                     </drip_connect_customer_address_save_commit_after>
                 </observers>
-            </customer_address_save_commit_after>
+            </customer_address_save_commit_after>-->
             <customer_login>
                 <observers>
                     <drip_connect_customer_login>
