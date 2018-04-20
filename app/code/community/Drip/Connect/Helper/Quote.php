@@ -4,6 +4,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
 {
     const REGISTRY_KEY_IS_NEW = 'newquote';
     const REGISTRY_KEY_OLD_DATA = 'oldquotedata';
+    const REGISTRY_KEY_CUSTOMER_REGISTERED_OR_LOGGED_IN_WITH_EMTPY_QUOTE = 'customercreatedemptycart';
 
     // if/when we know the user's email, it will be saved here
     protected $email;
@@ -13,26 +14,19 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
      * so we can't fire "checkout created" on the quote b/c it's not yet assigned to the customer.  Doesn't matter
      * anyway since they've already place an order.
      *
+     * When customer logs in or registers, magento creates an empty quote right away.  We don't want to call
+     * checkout created on this action, so we check the quote total to avoid firing any quote related events.
      *
      * @param $customer
      */
-    public function checkIfQuoteCreated($customer)
+    public function checkForEmptyQuote($customer)
     {
         //gets active quote for customer, but troube is quote hasn't been updated with this customer info yet
         $quote = Mage::getModel('sales/quote')->loadByCustomer($customer);
 
-        //check if quote has been sent to drip as new already
-        if ($quote->customer_email && !$quote->getDrip()) {
-            //Mage::register(self::REGISTRY_KEY_IS_NEW, true);
-            $quote->setDrip(true);
-            $quote->save();
-
-            //call drip api with checkout created event
-            $this->proceedQuoteNew($quote);
-        } else {
-            //Mage::register(self::REGISTRY_KEY_IS_NEW, false);
+        if(Mage::helper('drip_connect')->priceAsCents($quote->getGrandTotal()) == 0) {
+            Mage::register(self::REGISTRY_KEY_CUSTOMER_REGISTERED_OR_LOGGED_IN_WITH_EMTPY_QUOTE, true);
         }
-
     }
 
 
@@ -77,7 +71,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
             'fees' => Mage::helper('drip_connect')->priceAsCents($quote->getShippingAddress()->getShippingAmount()),
             'discounts' => Mage::helper('drip_connect')->priceAsCents((100*$quote->getSubtotal() - 100*$quote->getSubtotalWithDiscount())/100),
             'currency' => $quote->getQuoteCurrencyCode(),
-            'items_count' => count($quote->getAllItems()),
+            'items_count' => floatval($quote->getItemsQty()),
             'abandoned_cart_url' => Mage::helper('checkout/cart')->getCartUrl(),
             'line_items' => $this->prepareQuoteItemsData($quote),
         );

@@ -26,11 +26,13 @@ class Drip_Connect_Model_Observer_Quote
             Mage::register(Drip_Connect_Helper_Quote::REGISTRY_KEY_OLD_DATA, $data);
         }
 
-        if (!$quote->getDrip()) {
-            Mage::register(Drip_Connect_Helper_Quote::REGISTRY_KEY_IS_NEW, true);
-            $quote->setDrip(true);
-        } else {
-            Mage::register(Drip_Connect_Helper_Quote::REGISTRY_KEY_IS_NEW, false);
+        if (!Mage::registry(Drip_Connect_Helper_Quote::REGISTRY_KEY_CUSTOMER_REGISTERED_OR_LOGGED_IN_WITH_EMTPY_QUOTE)) {
+            if (!$quote->getDrip()) {
+                Mage::register(Drip_Connect_Helper_Quote::REGISTRY_KEY_IS_NEW, true);
+                $quote->setDrip(true);
+            } else {
+                Mage::register(Drip_Connect_Helper_Quote::REGISTRY_KEY_IS_NEW, false);
+            }
         }
     }
 
@@ -43,6 +45,11 @@ class Drip_Connect_Model_Observer_Quote
             return;
         }
 
+        //do nothing
+        if (Mage::registry(Drip_Connect_Helper_Quote::REGISTRY_KEY_CUSTOMER_REGISTERED_OR_LOGGED_IN_WITH_EMTPY_QUOTE)) {
+            return;
+        }
+
         $quote = $observer->getEvent()->getQuote();
 
         if (Mage::helper('drip_connect/quote')->isUnknownUser($quote)) {
@@ -52,12 +59,19 @@ class Drip_Connect_Model_Observer_Quote
         if (Mage::registry(Drip_Connect_Helper_Quote::REGISTRY_KEY_IS_NEW)) {
             Mage::helper('drip_connect/quote')->proceedQuoteNew($quote);
         } else {
-            if (Mage::helper('drip_connect/quote')->isQuoteChanged($quote)) {
-                Mage::helper('drip_connect/quote')->proceedQuote($quote);
+            $oldData = Mage::registry(Drip_Connect_Helper_Quote::REGISTRY_KEY_OLD_DATA);
+            if($oldData['items_count'] == 0) {
+                //customer logged in previously with empty cart and then adds a product
+                Mage::helper('drip_connect/quote')->proceedQuoteNew($quote);
+            } else {
+                   if (Mage::helper('drip_connect/quote')->isQuoteChanged($quote)) {
+                    Mage::helper('drip_connect/quote')->proceedQuote($quote);
+                }
             }
         }
         Mage::unregister(Drip_Connect_Helper_Quote::REGISTRY_KEY_IS_NEW);
         Mage::unregister(Drip_Connect_Helper_Quote::REGISTRY_KEY_OLD_DATA);
+        Mage::unregister(Drip_Connect_Helper_Quote::REGISTRY_KEY_CUSTOMER_REGISTERED_OR_LOGGED_IN_WITH_EMTPY_QUOTE);
     }
 
 }
