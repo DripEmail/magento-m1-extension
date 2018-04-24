@@ -21,21 +21,51 @@ class Drip_Connect_Adminhtml_Config_Sync_CustomersController
                 ->setCurPage($page++)
                 ->load();
 
-            $batch = array();
+            $batchCustomer = array();
+            $batchEvents = array();
             foreach ($collection as $customer) {
-                $data = Drip_Connect_Helper_Data::prepareCustomerData($customer);
-                $data['tags'] = array('Synced from Magento');
-                $batch[] = $data;
+                $dataCustomer = Drip_Connect_Helper_Data::prepareCustomerData($customer);
+                $dataCustomer['tags'] = array('Synced from Magento');
+                $batchCustomer[] = $dataCustomer;
+
+                $dataEvents = array(
+                    'email' => $customer->getEmail(),
+                    'action' => ($customer->getDrip()
+                        ? Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED
+                        : Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_NEW),
+                );
+                $batchEvents[] = $dataEvents;
+
+                if (!$customer->getDrip()) {
+                    $customer->setNeedToUpdateAttribute(1);
+                    $customer->setDrip(1);
+                }
             }
 
             $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Subscribers', array(
-                'batch' => $batch,
+                'batch' => $batchCustomer,
                 'account' => $accountId,
             ))->call();
 
             if ($response->getResponseCode() != 201) { // drip success code for this action
                 $result = 0;
                 break;
+            }
+
+            $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Events', array(
+                'batch' => $batchEvents,
+                'account' => $accountId,
+            ))->call();
+
+            if ($response->getResponseCode() != 201) { // drip success code for this action
+                $result = 0;
+                break;
+            }
+
+            foreach ($collection as $customer) {
+                if ($customer->getNeedToUpdateAttribute()) {
+                    $customer->getResource()->saveAttribute($customer, 'drip');
+                }
             }
         } while ($page <= $collection->getLastPageNumber());
 
