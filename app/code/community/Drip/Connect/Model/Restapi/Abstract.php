@@ -201,8 +201,8 @@ abstract class Drip_Connect_Model_Restapi_Abstract
                 $logger = new Zend_Log();
                 $writer = new Zend_Log_Writer_Stream($this->getLogFile());
                 $logger->addWriter($writer);
+                $this->_logger = $logger;
             }
-            $this->_logger = $logger;
         }
         return $this->_logger;
     }
