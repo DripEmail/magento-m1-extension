@@ -32,7 +32,7 @@ class Drip_Connect_Model_Observer_Account
             Mage::register(self::REGISTRY_KEY_OLD_DATA, $data);
         } else {
             $customer->setDrip(1);
-            Mage::helper('drip_connect/quote')->checkForEmptyQuote($customer);
+            Mage::helper('drip_connect/quote')->checkForEmptyQuoteCustomer($customer);
         }
     }
 

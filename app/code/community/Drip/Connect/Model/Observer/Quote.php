@@ -24,6 +24,8 @@ class Drip_Connect_Model_Observer_Quote
             $orig = Mage::getModel('sales/quote')->load($quote->getId());
             $data = Mage::helper('drip_connect/quote')->prepareQuoteData($orig);
             Mage::register(Drip_Connect_Helper_Quote::REGISTRY_KEY_OLD_DATA, $data);
+        } else {
+            Mage::helper('drip_connect/quote')->checkForEmptyQuote($quote);
         }
 
         if (!Mage::registry(Drip_Connect_Helper_Quote::REGISTRY_KEY_CUSTOMER_REGISTERED_OR_LOGGED_IN_WITH_EMTPY_QUOTE)) {
