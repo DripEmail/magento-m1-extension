@@ -25,10 +25,18 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
         $quote = Mage::getModel('sales/quote')->loadByCustomer($customer);
 
         if(Mage::helper('drip_connect')->priceAsCents($quote->getGrandTotal()) == 0) {
-            Mage::register(self::REGISTRY_KEY_CUSTOMER_REGISTERED_OR_LOGGED_IN_WITH_EMTPY_QUOTE, true);
+            $this->setEmptyQuoteFlag(true);
         }
     }
 
+    /**
+     * @param bool $state
+     */
+    public function setEmptyQuoteFlag($state)
+    {
+        Mage::unregister(self::REGISTRY_KEY_CUSTOMER_REGISTERED_OR_LOGGED_IN_WITH_EMTPY_QUOTE);
+        Mage::register(self::REGISTRY_KEY_CUSTOMER_REGISTERED_OR_LOGGED_IN_WITH_EMTPY_QUOTE, $state);
+    }
 
     /**
      * drip actions when send quote to drip 1st time
