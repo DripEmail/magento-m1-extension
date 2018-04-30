@@ -19,16 +19,28 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
      *
      * @param $customer
      */
-    public function checkForEmptyQuote($customer)
+    public function checkForEmptyQuoteCustomer($customer)
     {
         //gets active quote for customer, but troube is quote hasn't been updated with this customer info yet
         $quote = Mage::getModel('sales/quote')->loadByCustomer($customer);
+        $this->checkForEmptyQuote($quote);
+    }
 
+    public function checkForEmptyQuote($quote)
+    {
         if(Mage::helper('drip_connect')->priceAsCents($quote->getGrandTotal()) == 0) {
-            Mage::register(self::REGISTRY_KEY_CUSTOMER_REGISTERED_OR_LOGGED_IN_WITH_EMTPY_QUOTE, true);
+            $this->setEmptyQuoteFlag(true);
         }
     }
 
+    /**
+     * @param bool $state
+     */
+    public function setEmptyQuoteFlag($state)
+    {
+        Mage::unregister(self::REGISTRY_KEY_CUSTOMER_REGISTERED_OR_LOGGED_IN_WITH_EMTPY_QUOTE);
+        Mage::register(self::REGISTRY_KEY_CUSTOMER_REGISTERED_OR_LOGGED_IN_WITH_EMTPY_QUOTE, $state);
+    }
 
     /**
      * drip actions when send quote to drip 1st time
