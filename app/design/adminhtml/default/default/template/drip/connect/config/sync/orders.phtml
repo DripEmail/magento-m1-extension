@@ -14,17 +14,17 @@
 
         params = {
             account_id: '<?=$this->getAccountId()?>',
+            store_id: '<?=$this->getStoreId()?>',
         };
 
-// TODO ajax should just set new state (queued) for 'dripconnect_general/actions/sync_customers_data_state' for current store
-// cron will check this value for all stores, run required tasks and set flag to 'in progress'
         new Ajax.Request('<?php echo $this->getAjaxUrl() ?>', {
             parameters: params,
             onSuccess: function(response) {
-                var result = '<?php echo Mage::helper('core')->jsQuoteEscape($this->__("Data's been sent to account")." ".$this->getAccountId()) ?>';
+                var result = '';
                 response = response.responseText;
-                if (response == 1) {
+                if (response == <?=Drip_Connect_Model_Source_SyncState::QUEUED?>) {
                     res.removeClassName('error');
+                    result = '<?=Drip_Connect_Model_Source_SyncState::getLabel(Drip_Connect_Model_Source_SyncState::QUEUED)?>';
                 } else {
                     res.addClassName('error');
                     result = '<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Data send error')) ?>';
@@ -34,8 +34,6 @@
             onFailure: function(){
                 res.addClassName('error');
                 result = '<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Data send error')) ?>';
-            },
-            onComplete: function(){
                 elem.removeClassName('disabled')
                     .removeAttribute('disabled');
             }

@@ -51,7 +51,7 @@ class Drip_Connect_Block_Adminhtml_System_Config_Sync_Orders
     /**
      * @return bool
      */
-    protected function isSyncAvailable()
+    public function isSyncAvailable()
     {
         if (!Mage::helper('drip_connect')->isModuleActive()) {
             return false;
@@ -60,5 +60,17 @@ class Drip_Connect_Block_Adminhtml_System_Config_Sync_Orders
             return false;
         }
         return true;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStoreId()
+    {
+        $code = Mage::app()->getRequest()->getParam('store');
+        if (empty($code)) {
+            return 0;
+        }
+        return Mage::getConfig()->getNode('stores')->{$code}->{'system'}->{'store'}->{'id'};
     }
 }

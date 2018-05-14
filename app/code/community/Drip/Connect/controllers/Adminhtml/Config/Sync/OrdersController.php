@@ -10,39 +10,22 @@ class Drip_Connect_Adminhtml_Config_Sync_OrdersController
      */
     public function runAction()
     {
-        $accountId = $this->getRequest()->getParam('account_id');
-        $result = 1;
-        $page = 1;
-        do {
-            $collection = Mage::getModel('sales/order')
-                ->getCollection()
-                ->addAttributeToSelect('*')
-                ->addFieldToFilter('state', array('nin' => array(
-                    Mage_Sales_Model_Order::STATE_CANCELED,
-                    Mage_Sales_Model_Order::STATE_CLOSED
-                    )))
-                ->setPageSize(Drip_Connect_Model_ApiCalls_Helper::MAX_BATCH_SIZE)
-                ->setCurPage($page++)
-                ->load();
+        $storeId = $this->getRequest()->getParam('store_id');
 
-            $batch = array();
-            foreach ($collection as $order) {
-                $data = Mage::helper('drip_connect/order')->getOrderDataNew($order);
-                $data['occurred_at'] = $order->getCreatedAt();
-                $batch[] = $data;
-            }
+        if (empty($storeId)) {
+            Mage::getConfig()->saveConfig(
+                'dripconnect_general/actions/sync_orders_data_state',
+                Drip_Connect_Model_Source_SyncState::QUEUED
+            );
+        } else {
+            Mage::getConfig()->saveConfig(
+                'dripconnect_general/actions/sync_orders_data_state',
+                Drip_Connect_Model_Source_SyncState::QUEUED,
+                'stores',
+                $storeId
+            );
+        }
 
-            $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Orders', array(
-                'batch' => $batch,
-                'account' => $accountId,
-            ))->call();
-
-            if ($response->getResponseCode() != 202) { // drip success code for this action
-                $result = 0;
-                break;
-            }
-        } while ($page <= $collection->getLastPageNumber());
-
-        $this->getResponse()->setBody($result);
+        $this->getResponse()->setBody(Drip_Connect_Model_Source_SyncState::QUEUED);
     }
 }
