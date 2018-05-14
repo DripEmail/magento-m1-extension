@@ -12,19 +12,7 @@ class Drip_Connect_Adminhtml_Config_Sync_CustomersController
     {
         $storeId = $this->getRequest()->getParam('store_id');
 
-        if (empty($storeId)) {
-            Mage::getConfig()->saveConfig(
-                'dripconnect_general/actions/sync_customers_data_state',
-                Drip_Connect_Model_Source_SyncState::QUEUED
-            );
-        } else {
-            Mage::getConfig()->saveConfig(
-                'dripconnect_general/actions/sync_customers_data_state',
-                Drip_Connect_Model_Source_SyncState::QUEUED,
-                'stores',
-                $storeId
-            );
-        }
+        Mage::helper('drip_connect')->setCustomersSyncStateToStore($storeId, Drip_Connect_Model_Source_SyncState::QUEUED);
 
         $this->getResponse()->setBody(Drip_Connect_Model_Source_SyncState::QUEUED);
     }

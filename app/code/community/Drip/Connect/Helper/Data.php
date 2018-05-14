@@ -150,4 +150,46 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
     public function priceAsCents($price) {
         return (int) preg_replace("/[^0-9.]/", "", $price) * 100;
     }
+
+    /**
+     * @param int $storeId
+     * @param int $state
+     */
+    public function setCustomersSyncStateToStore($storeId, $state)
+    {
+        if (empty($storeId)) {
+            Mage::getConfig()->saveConfig(
+                'dripconnect_general/actions/sync_customers_data_state',
+                Drip_Connect_Model_Source_SyncState::QUEUED
+            );
+        } else {
+            Mage::getConfig()->saveConfig(
+                'dripconnect_general/actions/sync_customers_data_state',
+                Drip_Connect_Model_Source_SyncState::QUEUED,
+                'stores',
+                $storeId
+            );
+        }
+    }
+
+    /**
+     * @param int $storeId
+     * @param int $state
+     */
+    public function setOrdersSyncStateToStore($storeId, $state)
+    {
+        if (empty($storeId)) {
+            Mage::getConfig()->saveConfig(
+                'dripconnect_general/actions/sync_orders_data_state',
+                Drip_Connect_Model_Source_SyncState::QUEUED
+            );
+        } else {
+            Mage::getConfig()->saveConfig(
+                'dripconnect_general/actions/sync_orders_data_state',
+                Drip_Connect_Model_Source_SyncState::QUEUED,
+                'stores',
+                $storeId
+            );
+        }
+    }
 }

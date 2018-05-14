@@ -175,4 +175,24 @@
             </actions>
         </dripconnect_general>
     </default>
+    <crontab>
+        <jobs>
+            <drip_connect_sync_customers>
+                <schedule>
+                    <cron_expr>*/5 * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>drip_connect/cron_customers::syncCustomers</model>
+                </run>
+            </drip_connect_sync_customers>
+            <drip_connect_sync_orders>
+                <schedule>
+                    <cron_expr>*/5 * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>drip_connect/cron_orders::syncOrders</model>
+                </run>
+            </drip_connect_sync_orders>
+        </jobs>
+    </crontab>
 </config>
