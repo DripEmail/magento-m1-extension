@@ -8,7 +8,7 @@
     function syncOrders() {
 
         var elem = $('<?php echo $this->getHtmlId() ?>');
-        var res = $('sync_orders_result');
+        var res = $('sync_orders_state');
 
         elem.addClassName('disabled').setAttribute('disabled', 'disabled');
 
@@ -16,6 +16,8 @@
             account_id: '<?=$this->getAccountId()?>',
         };
 
+// TODO ajax should just set new state (queued) for 'dripconnect_general/actions/sync_customers_data_state' for current store
+// cron will check this value for all stores, run required tasks and set flag to 'in progress'
         new Ajax.Request('<?php echo $this->getAjaxUrl() ?>', {
             parameters: params,
             onSuccess: function(response) {
@@ -42,6 +44,6 @@
 //]]>
 </script>
 <button onclick="javascript:syncOrders(); return false;" type="button" id="<?php echo $this->getHtmlId() ?>"
-<?php if (!Mage::helper('drip_connect')->isModuleActive()) { ?> disabled="disabled" class="disabled" <?php } else { ?> class="scalable" <?php }?>>
+<?php if (!$this->isSyncAvailable()) { ?> disabled="disabled" class="disabled" <?php } else { ?> class="scalable" <?php }?>>
     <?php echo $this->escapeHtml($this->getButtonLabel()) ?>
-</button><br><b id="sync_orders_result" style="color:green;"></b>
+</button> &nbsp; <b id="sync_orders_state"><?= Drip_Connect_Model_Source_SyncState::getLabel(Mage::getStoreConfig('dripconnect_general/actions/sync_orders_data_state', Mage::app()->getRequest()->getParam('store'))); ?></b>
