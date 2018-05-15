@@ -10,7 +10,7 @@ class Drip_Connect_Model_Cron_Orders
      *     ],
      * ]
      */
-    protected $accounts;
+    protected $accounts = [];
 
     /**
      * get all queued account ids
@@ -20,15 +20,14 @@ class Drip_Connect_Model_Cron_Orders
     {
         $this->getAccountsToSyncOrders();
 
-        foreach ($accounts as $accountId) {
+        foreach ($this->accounts as $accountId => $stores) {
             if ($this->syncOrdersWithAccount($accountId)) {
-                foreach ($accounts[$accountId] as $storeId) {
-                    Mage::helper('drip_connect')->setOrdersSyncStateToStore($storeId, Drip_Connect_Model_Source_SyncState::READY);
-                }
+                $status = Drip_Connect_Model_Source_SyncState::READY;
             } else {
-                foreach ($accounts[$accountId] as $storeId) {
-                    Mage::helper('drip_connect')->setOrdersSyncStateToStore($storeId, Drip_Connect_Model_Source_SyncState::READYERRORS);
-                }
+                $status = Drip_Connect_Model_Source_SyncState::READYERRORS;
+            }
+            foreach ($stores as $storeId) {
+                Mage::helper('drip_connect')->setOrdersSyncStateToStore($storeId, $status);
             }
         }
     }
@@ -38,27 +37,33 @@ class Drip_Connect_Model_Cron_Orders
      */
     protected function getAccountsToSyncOrders()
     {
-        // todo
-        //$this->accounts
-        // get default values for dripconnect_general/api_settings/account_id
-        // and dripconnect_general/actions/sync_orders_data_state
-        // add them in $accounts array
-        // then walk through the all stores (except admin one)
-        // if account_id != default account_id
-        //   if sync_orders_data_state == QUEUED
-        //     add in $accounts array
+        if (Mage::getStoreConfig('dripconnect_general/actions/sync_orders_data_state', 0) == Drip_Connect_Model_Source_SyncState::QUEUED) {
+            $defAccount = Mage::getStoreConfig('dripconnect_general/api_settings/account_id', 0);
+            $this->accounts[$defAccount][] = 0;
+        }
+
+        foreach (Mage::app()->getStores() as $store) {
+            $storeId = $store->getStoreId();
+
+            if (Mage::getStoreConfig('dripconnect_general/actions/sync_orders_data_state', $storeId) == Drip_Connect_Model_Source_SyncState::QUEUED) {
+                $account = Mage::getStoreConfig('dripconnect_general/api_settings/account_id', $storeId);
+                $this->accounts[$account][] = $storeId;
+            }
+        }
     }
 
     /**
+     * @param int $accountId
+     *
      * @return bool
      */
     protected function syncOrdersWithAccount($accountId)
     {
-        foreach ($this->accounts as $accountId => $stores) {
-            foreach ($stores as $storeId) {
-                Mage::helper('drip_connect')->setOrdersSyncStateToStore($storeId, Drip_Connect_Model_Source_SyncState::PROGRESS);
-            }
+        $stores = $this->accounts[$accountId];
+        foreach ($stores as $storeId) {
+            Mage::helper('drip_connect')->setOrdersSyncStateToStore($storeId, Drip_Connect_Model_Source_SyncState::PROGRESS);
         }
+
 
         $result = true;
         $page = 1;

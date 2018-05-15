@@ -160,12 +160,12 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
         if (empty($storeId)) {
             Mage::getConfig()->saveConfig(
                 'dripconnect_general/actions/sync_customers_data_state',
-                Drip_Connect_Model_Source_SyncState::QUEUED
+                $state
             );
         } else {
             Mage::getConfig()->saveConfig(
                 'dripconnect_general/actions/sync_customers_data_state',
-                Drip_Connect_Model_Source_SyncState::QUEUED,
+                $state,
                 'stores',
                 $storeId
             );
@@ -181,12 +181,12 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
         if (empty($storeId)) {
             Mage::getConfig()->saveConfig(
                 'dripconnect_general/actions/sync_orders_data_state',
-                Drip_Connect_Model_Source_SyncState::QUEUED
+                $state
             );
         } else {
             Mage::getConfig()->saveConfig(
                 'dripconnect_general/actions/sync_orders_data_state',
-                Drip_Connect_Model_Source_SyncState::QUEUED,
+                $state,
                 'stores',
                 $storeId
             );
