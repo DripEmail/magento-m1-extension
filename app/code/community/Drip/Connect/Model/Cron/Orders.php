@@ -64,7 +64,6 @@ class Drip_Connect_Model_Cron_Orders
             Mage::helper('drip_connect')->setOrdersSyncStateToStore($storeId, Drip_Connect_Model_Source_SyncState::PROGRESS);
         }
 
-
         $result = true;
         $page = 1;
         do {
