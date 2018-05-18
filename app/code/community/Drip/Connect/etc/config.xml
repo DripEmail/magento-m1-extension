@@ -169,6 +169,30 @@
                 <timeout>15000</timeout>
                 <behavior>call_api</behavior>
             </api_settings>
+            <actions>
+                <sync_customers_data_state>0</sync_customers_data_state>
+                <sync_orders_data_state>0</sync_orders_data_state>
+            </actions>
         </dripconnect_general>
     </default>
+    <crontab>
+        <jobs>
+            <drip_connect_sync_customers>
+                <schedule>
+                    <cron_expr>*/5 * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>drip_connect/cron_customers::syncCustomers</model>
+                </run>
+            </drip_connect_sync_customers>
+            <drip_connect_sync_orders>
+                <schedule>
+                    <cron_expr>*/5 * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>drip_connect/cron_orders::syncOrders</model>
+                </run>
+            </drip_connect_sync_orders>
+        </jobs>
+    </crontab>
 </config>

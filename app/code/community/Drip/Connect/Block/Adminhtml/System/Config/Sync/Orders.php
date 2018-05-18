@@ -47,4 +47,30 @@ class Drip_Connect_Block_Adminhtml_System_Config_Sync_Orders
 
         return $this->_toHtml();
     }
+
+    /**
+     * @return bool
+     */
+    public function isSyncAvailable()
+    {
+        if (!Mage::helper('drip_connect')->isModuleActive()) {
+            return false;
+        }
+        if (Mage::getStoreConfig('dripconnect_general/actions/sync_orders_data_state', Mage::app()->getRequest()->getParam('store')) != Drip_Connect_Model_Source_SyncState::READY) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStoreId()
+    {
+        $code = Mage::app()->getRequest()->getParam('store');
+        if (empty($code)) {
+            return 0;
+        }
+        return Mage::getConfig()->getNode('stores')->{$code}->{'system'}->{'store'}->{'id'};
+    }
 }

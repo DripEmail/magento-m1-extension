@@ -87,26 +87,51 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <sync_customers_data translate="label comment button_label">
-                            <label>Sync</label>
+                            <label>Sync Customers</label>
                             <button_label>Sync All Customers To Drip</button_label>
                             <comment>This will sync all your current Magento customer data into Drip. No automations will be triggered off of this import (e.g. welcome series, order confirmations).</comment>
                             <frontend_type>button</frontend_type>
                             <frontend_model>drip_connect/adminhtml_system_config_sync_customers</frontend_model>
-                            <sort_order>1</sort_order>
+                            <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
+                            <show_in_website>0</show_in_website>
                             <show_in_store>1</show_in_store>
                         </sync_customers_data>
+                        <sync_customers_data_state translate="label">
+                            <label>action state</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>drip_connect/source_syncState</source_model>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <hideThisField>1</hideThisField>
+                            </depends>
+                        </sync_customers_data_state>
                         <sync_orders_data translate="label comment button_label">
+                            <label>Sync Orders</label>
                             <button_label>Sync All Orders To Drip</button_label>
                             <comment>This will sync all your current Magento orders into Drip. No automations will be triggered off of this import (e.g. welcome series, order confirmations). We will not sync any orders that have been cancelled or refunded.</comment>
                             <frontend_type>button</frontend_type>
                             <frontend_model>drip_connect/adminhtml_system_config_sync_orders</frontend_model>
                             <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
+                            <show_in_website>0</show_in_website>
                             <show_in_store>1</show_in_store>
                         </sync_orders_data>
+                        <sync_orders_data_state translate="label">
+                            <label>action state</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>drip_connect/source_syncState</source_model>
+                            <sort_order>21</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <hideThisField>1</hideThisField>
+                            </depends>
+                        </sync_orders_data_state>
                     </fields>
                 </actions>
                 <log_settings translate="label">
