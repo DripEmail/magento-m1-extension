@@ -21,7 +21,13 @@ class Drip_Connect_Model_Cron_Orders
         $this->getAccountsToSyncOrders();
 
         foreach ($this->accounts as $accountId => $stores) {
-            if ($this->syncOrdersWithAccount($accountId)) {
+            try {
+                $result = $this->syncOrdersWithAccount($accountId);
+            } catch (\Exception $e) {
+                $result = false;
+            }
+
+            if ($result) {
                 $status = Drip_Connect_Model_Source_SyncState::READY;
             } else {
                 $status = Drip_Connect_Model_Source_SyncState::READYERRORS;
