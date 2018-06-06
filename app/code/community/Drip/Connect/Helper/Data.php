@@ -162,6 +162,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
                 'dripconnect_general/actions/sync_customers_data_state',
                 $state
             );
+            $storeId = null;
         } else {
             Mage::getConfig()->saveConfig(
                 'dripconnect_general/actions/sync_customers_data_state',
@@ -170,6 +171,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
                 $storeId
             );
         }
+        Mage::app()->getStore($storeId)->resetConfig();
     }
 
     /**
@@ -183,6 +185,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
                 'dripconnect_general/actions/sync_orders_data_state',
                 $state
             );
+            $storeId = null;
         } else {
             Mage::getConfig()->saveConfig(
                 'dripconnect_general/actions/sync_orders_data_state',
@@ -191,5 +194,6 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
                 $storeId
             );
         }
+        Mage::app()->getStore($storeId)->resetConfig();
     }
 }
