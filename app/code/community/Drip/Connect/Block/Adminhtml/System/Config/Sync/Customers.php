@@ -56,7 +56,9 @@ class Drip_Connect_Block_Adminhtml_System_Config_Sync_Customers
         if (!Mage::helper('drip_connect')->isModuleActive()) {
             return false;
         }
-        if (Mage::getStoreConfig('dripconnect_general/actions/sync_customers_data_state', Mage::app()->getRequest()->getParam('store')) != Drip_Connect_Model_Source_SyncState::READY) {
+        $syncState = Mage::getStoreConfig('dripconnect_general/actions/sync_customers_data_state', Mage::app()->getRequest()->getParam('store'));
+        if ($syncState != Drip_Connect_Model_Source_SyncState::READY &&
+            $syncState != Drip_Connect_Model_Source_SyncState::READYERRORS) {
             return false;
         }
         return true;
