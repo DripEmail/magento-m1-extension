@@ -189,7 +189,6 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     {
         $data = array();
         foreach ($order->getAllItems() as $item) {
-            $product = Mage::getModel('catalog/product')->load($item->getProduct()->getId());
             $group = array(
                 'product_id' => $item->getProductId(),
                 'sku' => $item->getSku(),
@@ -200,11 +199,14 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
                 'tax' => Mage::helper('drip_connect')->priceAsCents($item->getTaxAmount()),
                 'taxable' => (preg_match('/[123456789]/', $item->getTaxAmount()) ? 'true' : 'false'),
                 'discount' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount()),
-                'properties' => array(
+            );
+            if (!empty($item->getProduct()->getId())) {
+                $product = Mage::getModel('catalog/product')->load($item->getProduct()->getId());
+                $group['properties'] = array(
                     'product_url' => $item->getProduct()->getProductUrl(),
                     'product_image_url' => Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()),
-                ),
-            );
+                );
+            }
             if ($isRefund) {
                 $group['refund_amount'] = Mage::helper('drip_connect')->priceAsCents($item->getAmountRefunded());
                 $group['refund_quantity'] = $item->getQtyRefunded();
