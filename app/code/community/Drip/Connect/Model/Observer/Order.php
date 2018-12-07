@@ -56,24 +56,29 @@ class Drip_Connect_Model_Observer_Order
             return;
         }
 
+        if ($this->isOrderNew($order)) {
+            if ($this->isSameState($order)) {
+                return;
+            }
+
+            //if guest checkout, create subscriber record
+            if($order->getCustomerIsGuest()) {
+                $customerData = Mage::helper('drip_connect')->prepareCustomerDataForGuestCheckout($order);
+                Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $customerData)->call();
+            }
+
+            // new order
+            $response = Mage::getModel(
+                'drip_connect/ApiCalls_Helper_CreateUpdateOrder',
+                Mage::helper('drip_connect/order')->getOrderDataNew($order)
+            )->call();
+
+            $order->setIsAlreadyProcessed(true);
+
+            return;
+        }
+
         switch ($order->getState()) {
-            case Mage_Sales_Model_Order::STATE_NEW :
-                if ($this->isSameState($order)) {
-                    break;
-                }
-
-                //if guest checkout, create subscriber record
-                if($order->getCustomerIsGuest()) {
-                    $customerData = Mage::helper('drip_connect')->prepareCustomerDataForGuestCheckout($order);
-                    Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $customerData)->call();
-                }
-
-                // new order
-                $response = Mage::getModel(
-                    'drip_connect/ApiCalls_Helper_CreateUpdateOrder',
-                    Mage::helper('drip_connect/order')->getOrderDataNew($order)
-                )->call();
-                break;
             case Mage_Sales_Model_Order::STATE_COMPLETE :
                 if ($this->refundDiff($order)) {
                     // partial refund of completed order
@@ -143,6 +148,27 @@ class Drip_Connect_Model_Observer_Order
         }
 
         $order->setIsAlreadyProcessed(true);
+    }
+
+    /**
+     * check if current order is new
+     *
+     * @param  Mage_Sales_Model_Order $order
+     *
+     * @return int Refund value in cents
+     */
+    protected function isOrderNew($order)
+    {
+        if ($order->getState() == Mage_Sales_Model_Order::STATE_NEW) {
+            return true;
+        }
+
+        $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
+        if (empty($oldData['state'])) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
