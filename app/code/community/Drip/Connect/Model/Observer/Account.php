@@ -24,11 +24,13 @@ class Drip_Connect_Model_Observer_Account
             return;
         }
         $customer = $observer->getCustomer();
+        Mage::unregister(self::REGISTRY_KEY_IS_NEW);
         Mage::register(self::REGISTRY_KEY_IS_NEW, (bool)$customer->isObjectNew());
 
         if (!$customer->isObjectNew()) {
             $orig = Mage::getModel('customer/customer')->load($customer->getId());
             $data = Drip_Connect_Helper_Data::prepareCustomerData($orig);
+            Mage::unregister(self::REGISTRY_KEY_OLD_DATA);
             Mage::register(self::REGISTRY_KEY_OLD_DATA, $data);
         } else {
             $customer->setDrip(1);
@@ -85,6 +87,7 @@ class Drip_Connect_Model_Observer_Account
         // if editing address is already a default shipping one
         // get its old values
         if ($customer->getDefaultShippingAddress() && $address->getEntityId() == $customer->getDefaultShippingAddress()->getEntityId()) {
+            Mage::unregister(self::REGISTRY_KEY_OLD_ADDR);
             Mage::register(self::REGISTRY_KEY_OLD_ADDR, $this->getAddressFields($customer->getDefaultShippingAddress()));
         }
 
