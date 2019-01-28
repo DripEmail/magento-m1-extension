@@ -12,7 +12,7 @@ class Drip_Connect_Model_Observer_Wishlist
      */
     public function addProduct($observer)
     {
-        if(!Mage::helper('drip_connect')->isModuleActive()) {
+        if (!Mage::helper('drip_connect')->isModuleActive()) {
             return;
         }
 
@@ -74,15 +74,15 @@ class Drip_Connect_Model_Observer_Wishlist
         }
         
         //loop through each product and check quantity
-        if ($_POST && isset($_POST['description']) && is_array($_POST['description'])) {
-            foreach ($_POST['description'] as $itemId => $description) {
+        if (filter_input_array(INPUT_POST) && isset(filter_input(INPUT_POST, 'description')) && is_array(filter_input(INPUT_POST, 'description'))) {
+            foreach (filter_input(INPUT_POST, 'description') as $itemId => $description) {
                 $item = Mage::getModel('wishlist/item')->load($itemId);
                 if ($item->getWishlistId() != $wishlist->getId()) {
                     continue;
                 }
 
                 //item qty set to zero
-                if (isset($_POST['qty'][$itemId]) && $_POST['qty'][$itemId] == 0) {
+                if (isset(filter_input(INPUT_POST, 'qty')[$itemId]) && filter_input(INPUT_POST, 'qty')[$itemId] == 0) {
                     $customer = Mage::getSingleton('customer/session')->getCustomer();
                     $product = Mage::getModel('catalog/product')->load($item->getProductId());
 
@@ -114,7 +114,7 @@ class Drip_Connect_Model_Observer_Wishlist
                 'name' => $product->getName(),
                 'price' => Mage::helper('drip_connect')->priceAsCents($product->getFinalPrice()),
                 'currency' => Mage::app()->getStore()->getCurrentCurrencyCode(),
-                'image_url' => Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()),
+                'image_url' => Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getThumbnail()),
                 'source' => 'magento'
             ),
         ))->call();

@@ -3,6 +3,11 @@
 class Drip_Connect_Adminhtml_Config_Sync_OrdersController
     extends Mage_Adminhtml_Controller_Action
 {
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')->isAllowed('dripconnect_general');
+    }
+    
     /**
      * prepare and send orders data
      *
