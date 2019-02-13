@@ -18,7 +18,8 @@
         <?php endif; ?>
         currency: "<?= Mage::app()->getStore()->getCurrentCurrencyCode() ?>",
         product_url: "<?= $product->getProductUrl() ?>",
-        image_url: "<?= Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()) ?>"
+        image_url: "<?= Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()) ?>",
+        source: "magento"
     }]);
     </script>
     <!-- end Drip track -->
