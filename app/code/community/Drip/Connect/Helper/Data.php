@@ -17,6 +17,37 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * prepare array of guest subscriber data
+     *
+     * @param Mage_Newsletter_Model_Subscriber $subscriber
+     * @param bool $updatableOnly leave only those fields which are used in update action
+     *
+     * @return array
+     */
+    static public function prepareGuestSubscriberData($subscriber, $updatableOnly = true)
+    {
+        if ($subscriber->getSubscriberStatus == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
+            $acceptsMarketing = 'yes';
+        } else {
+            $acceptsMarketing = 'no';
+        }
+
+        $data = array (
+            'email' => $subscriber->getSubscriberEmail(),
+            'ip_address' => Mage::helper('core/http')->getRemoteAddr(),
+            'custom_fields' => array(
+                'accepts_marketing' => $acceptsMarketing,
+            ),
+        );
+
+        if ($updatableOnly) {
+            unset($data['ip_address']);
+        }
+
+        return $data;
+    }
+
+    /**
      * prepare array of customer data we use to send in drip
      *
      * @param Mage_Customer_Model_Customer $customer
