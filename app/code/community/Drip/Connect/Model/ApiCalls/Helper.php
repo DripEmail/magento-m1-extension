@@ -4,6 +4,7 @@ abstract class Drip_Connect_Model_ApiCalls_Helper
 {
     const ENDPOINT_ACCOUNTS = 'accounts';
     const ENDPOINT_SUBSCRIBERS = 'subscribers';
+    const ENDPOINT_SUBSCRIBERS_UNSUBSCRIBE_ALL = 'unsubscribe_all';
     const ENDPOINT_EVENTS = 'events';
     const ENDPOINT_ORDERS = 'orders';
     const ENDPOINT_REFUNDS = 'refunds';

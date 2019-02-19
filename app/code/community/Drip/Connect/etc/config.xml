@@ -29,6 +29,14 @@
             </drip_connect_setup>
         </resources>
         <events>
+            <controller_action_predispatch_newsletter_manage_save>
+                <observers>
+                    <drip_connect_controller_action_predispatch_newsletter_manage_save>
+                        <class>drip_connect/observer_account</class>
+                        <method>saveSubscribtionState</method>
+                    </drip_connect_controller_action_predispatch_newsletter_manage_save>
+                </observers>
+            </controller_action_predispatch_newsletter_manage_save>
             <customer_save_before>
                 <observers>
                     <drip_connect_customer_save_before>
