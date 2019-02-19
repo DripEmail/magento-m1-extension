@@ -49,11 +49,9 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
      */
     public function proceedQuoteNew($quote)
     {
-        Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-            'email' => $quote->customer_email,
-            'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_QUOTE_NEW,
-            'properties' => $this->prepareQuoteData($quote),
-        ))->call();
+        $data = $this->prepareQuoteData($quote);
+        $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote::QUOTE_NEW;
+        Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateQuote', $data)->call();
     }
 
     /**
@@ -63,11 +61,9 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
      */
     public function proceedQuote($quote)
     {
-        Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-            'email' => $this->email,
-            'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_QUOTE_CHANGED,
-            'properties' => $this->prepareQuoteData($quote),
-        ))->call();
+        $data = $this->prepareQuoteData($quote);
+        $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote::QUOTE_CHANGED;
+        Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateQuote', $data)->call();
     }
 
     /**
@@ -78,17 +74,19 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
     public function prepareQuoteData($quote)
     {
         $data = array (
-            'amount' => Mage::helper('drip_connect')->priceAsCents($quote->getGrandTotal()),
-            'tax' => Mage::helper('drip_connect')->priceAsCents($quote->getShippingAddress()->getTaxAmount()),
-            'fees' => Mage::helper('drip_connect')->priceAsCents($quote->getShippingAddress()->getShippingAmount()),
-            'discounts' => Mage::helper('drip_connect')->priceAsCents((100*$quote->getSubtotal() - 100*$quote->getSubtotalWithDiscount())/100),
-            'currency' => $quote->getQuoteCurrencyCode(),
-            'items_count' => floatval($quote->getItemsQty()),
-            'abandoned_cart_url' => Mage::helper('checkout/cart')->getCartUrl(),
-            'line_items' => $this->prepareQuoteItemsData($quote),
+            "provider" => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote::PROVIDER_NAME,
+            "email" => $this->email,
+            "cart_id" => $quote->getId(),
+            "grand_total" => Mage::helper('drip_connect')->priceAsCents($quote->getGrandTotal())/100,
+            "total_discounts" => Mage::helper('drip_connect')->priceAsCents($quote->getSubtotal() - $quote->getSubtotalWithDiscount())/100,
+            "currency" => $quote->getQuoteCurrencyCode(),
+            "cart_url" => Mage::helper('checkout/cart')->getCartUrl(),
+            'items' => $this->prepareQuoteItemsData($quote),
         );
+
         return $data;
     }
+
     /**
      * @param Mage_Sales_Model_Quote $quote
      *
@@ -100,21 +98,24 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
         foreach ($quote->getAllItems() as $item) {
             $product = Mage::getModel('catalog/product')->load($item->getProduct()->getId());
 
+            $categories = explode(',', Mage::helper('drip_connect')->getProductCategoryNames($product));
+            if (empty($categories)) {
+                $categories = [];
+            }
+
             $group = array(
                 'product_id' => $item->getProductId(),
                 'sku' => $item->getSku(),
                 'name' => $item->getName(),
-                'categories' => Mage::helper('drip_connect')->getProductCategoryNames($product),
+                'categories' => $categories,
                 'quantity' => $item->getQty(),
-                'price' => Mage::helper('drip_connect')->priceAsCents($item->getPrice()),
-                'amount' => Mage::helper('drip_connect')->priceAsCents(($item->getQty() * $item->getPrice())),
-                'tax' => Mage::helper('drip_connect')->priceAsCents($item->getTaxAmount()),
-                'taxable' => (preg_match('/[123456789]/', $item->getTaxAmount()) ? 'true' : 'false'),
-                'discount' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount()),
-                'currency' => $quote->getQuoteCurrencyCode(),
+                'price' => Mage::helper('drip_connect')->priceAsCents($item->getPrice())/100,
+                'discount' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount())/100,
+                'total' => $item->getQty() * Mage::helper('drip_connect')->priceAsCents($item->getPrice())/100,
                 'product_url' => $product->getProductUrl(),
                 'image_url' => Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()),
             );
+
             $data[] = $group;
         }
 

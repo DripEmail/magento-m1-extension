@@ -64,11 +64,11 @@ class Drip_Connect_Model_Observer_Quote
             Mage::helper('drip_connect/quote')->proceedQuoteNew($quote);
         } else {
             $oldData = Mage::registry(Drip_Connect_Helper_Quote::REGISTRY_KEY_OLD_DATA);
-            if($oldData['items_count'] == 0) {
+            if(empty($oldData['items']) || count($oldData['items']) == 0) {
                 //customer logged in previously with empty cart and then adds a product
                 Mage::helper('drip_connect/quote')->proceedQuoteNew($quote);
             } else {
-                   if (Mage::helper('drip_connect/quote')->isQuoteChanged($quote)) {
+                if (Mage::helper('drip_connect/quote')->isQuoteChanged($quote)) {
                     Mage::helper('drip_connect/quote')->proceedQuote($quote);
                 }
             }
