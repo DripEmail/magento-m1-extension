@@ -33,6 +33,10 @@ class Drip_Connect_Model_ApiCalls_Base
                 $endpoint = '';
             }
             $url = Mage::getStoreConfig('dripconnect_general/api_settings/url').$endpoint;
+
+            if (!empty($options['v3'])) {
+                $url = str_replace('/v2/', '/v3/', $url);
+            }
             $config = array(
                 'useragent' => self::USERAGENT,
                 'timeout' => Mage::getStoreConfig('dripconnect_general/api_settings/timeout') / 1000,
@@ -49,7 +53,7 @@ class Drip_Connect_Model_ApiCalls_Base
 
             $this->_httpClient->setHeaders(array(
                 'Accept' => 'application/json',
-                'Content-Type' => 'application/vnd.api+json'
+                'Content-Type' => 'application/json'
             ));
 
             $this->_httpClient->setAuth(
