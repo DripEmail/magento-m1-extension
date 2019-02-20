@@ -9,9 +9,51 @@ class Drip_Connect_Model_Observer_Account
     const REGISTRY_KEY_OLD_DATA = 'oldcustomerdata';
     const REGISTRY_KEY_OLD_ADDR = 'oldcustomeraddress';
     const REGISTRY_KEY_SUBSCRIBER_PREV_STATE = 'oldsubscribtionstatus';
+    const REGISTRY_KEY_NEW_GUEST_SUBSCRIBER = 'newguestsubscriber';
 
     static $isAddressSaved = false;
     static $doNotUseAfterAddressSave = false;
+
+
+    /**
+     * guest subscribe on site
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function newGuestSubscriberAttempt($observer)
+    {
+        if (!Mage::helper('drip_connect')->isModuleActive()) {
+            return;
+        }
+        $email = Mage::app()->getRequest()->getParam('email');
+        $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($email);
+
+        Mage::unregister(self::REGISTRY_KEY_NEW_GUEST_SUBSCRIBER);
+        if (! $subscriber->getId()) {
+            Mage::register(self::REGISTRY_KEY_NEW_GUEST_SUBSCRIBER, true);
+        }
+    }
+
+    /**
+     * guest subscribe on site
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function newGuestSubscriberCreated($observer)
+    {
+        if (!Mage::helper('drip_connect')->isModuleActive()) {
+            return;
+        }
+
+        if (! Mage::registry(self::REGISTRY_KEY_NEW_GUEST_SUBSCRIBER)) {
+            return;
+        }
+
+        $email = Mage::app()->getRequest()->getParam('email');
+        $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($email);
+
+        $this->proceedGuestSubscriberNew($subscriber);
+    }
 
     /**
      * siave old customer subscribtion state
@@ -167,6 +209,25 @@ class Drip_Connect_Model_Observer_Account
         }
         $customer = $observer->getCustomer();
         $this->proceedAccountDelete($customer);
+    }
+
+    /**
+     * drip actions for customer account create
+     *
+     * @param Mage_Newsletter_Model_Subscriber $ubscriber
+     */
+    protected function proceedGuestSubscriberNew($subscriber)
+    {
+        $data = Drip_Connect_Helper_Data::prepareGuestSubscriberData($subscriber, false);
+        Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $data)->call();
+
+        $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
+            'email' => $subscriber->getSubscriberEmail(),
+            'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_NEW,
+            'properties' => array(
+                'source' => 'magento'
+            ),
+        ))->call();
     }
 
     /**
