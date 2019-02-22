@@ -96,7 +96,7 @@ class Drip_Connect_Model_Cron_Orders
                 'account' => $accountId,
             ))->call();
 
-            if ($response->getResponseCode() != 202) { // drip success code for this action
+            if (empty($response) || $response->getResponseCode() != 202) { // drip success code for this action
                 $result = false;
                 break;
             }
