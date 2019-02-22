@@ -38,10 +38,14 @@ class Drip_Connect_Model_ApiCalls_Response_Base
     /**
      * Get the HTTP response status code
      *
-     * @return int
+     * @return int|null
      */
     public function getResponseCode()
     {
+        if (empty($this->getResponse())) {
+            return null;
+        }
+
         return $this->getResponse()->getStatus();
     }
 }

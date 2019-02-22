@@ -76,6 +76,15 @@
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
                         </timeout>
+                        <batch_delay translate="label comment">
+                            <label>Batch delay</label>
+                            <comment>Delay in seconds between batch api calls (not recommended to have it lower than 72)</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </batch_delay>
                     </fields>
                 </api_settings>
                 <actions translate="label">
