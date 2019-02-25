@@ -54,22 +54,27 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * check if customer exists on the website
+     *
+     * @return bool
+     */
+    public function isCustomerExists($email, $websiteId = null)
+    {
+        if ($websiteId == null) {
+            $websiteId = Mage::app()->getStore()->getWebsiteId();
+        }
+
+        $customer = Mage::getModel("customer/customer")->setWebsiteId($websiteId)->loadByEmail($email);
+
+        return (bool) $customer->getId();
+    }
+
+    /**
      * @param $order
      *
      * @return array
      */
     public function prepareCustomerDataForGuestCheckout($order) {
-
-        $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($order->getCustomerEmail());
-        if (! $subscriber->getId()) {
-            $acceptsMarketing = 'no';
-        } else {
-            if ($subscriber->getSubscriberStatus() == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
-                $acceptsMarketing = 'yes';
-            } else {
-                $acceptsMarketing = 'no';
-            }
-        }
 
         return array (
             'email' => $order->getCustomerEmail(),
@@ -87,7 +92,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
                 'magento_account_created' => $order->getCreatedAt(),
                 'magento_customer_group' => 'Guest',
                 'magento_store' => $order->getStoreId(),
-                'accepts_marketing' => $acceptsMarketing,
+                'accepts_marketing' => 'no',
             ),
         );
     }
