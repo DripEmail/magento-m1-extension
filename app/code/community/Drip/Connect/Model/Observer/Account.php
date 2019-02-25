@@ -72,10 +72,14 @@ class Drip_Connect_Model_Observer_Account
 
         $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($customerEmail);
 
-        if ($subscriber->getSubscriberStatus() == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
-            $acceptsMarketing = 'yes';
-        } else {
+        if (! $subscriber->getId()) {
             $acceptsMarketing = 'no';
+        } else {
+            if ($subscriber->getSubscriberStatus() == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
+                $acceptsMarketing = 'yes';
+            } else {
+                $acceptsMarketing = 'no';
+            }
         }
 
         Mage::unregister(self::REGISTRY_KEY_SUBSCRIBER_PREV_STATE);
