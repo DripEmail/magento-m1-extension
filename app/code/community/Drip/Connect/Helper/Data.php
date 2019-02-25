@@ -59,6 +59,18 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      * @return array
      */
     public function prepareCustomerDataForGuestCheckout($order) {
+
+        $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($order->getCustomerEmail());
+        if (! $subscriber->getId()) {
+            $acceptsMarketing = 'no';
+        } else {
+            if ($subscriber->getSubscriberStatus() == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
+                $acceptsMarketing = 'yes';
+            } else {
+                $acceptsMarketing = 'no';
+            }
+        }
+
         return array (
             'email' => $order->getCustomerEmail(),
             'ip_address' => Mage::helper('core/http')->getRemoteAddr(),
@@ -75,7 +87,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
                 'magento_account_created' => $order->getCreatedAt(),
                 'magento_customer_group' => 'Guest',
                 'magento_store' => $order->getStoreId(),
-                'accepts_marketing' => 'no',
+                'accepts_marketing' => $acceptsMarketing,
             ),
         );
     }
