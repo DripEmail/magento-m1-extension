@@ -24,6 +24,7 @@ class Drip_Connect_Model_Cron_Orders
             try {
                 $result = $this->syncOrdersWithAccount($accountId);
             } catch (\Exception $e) {
+                Mage::logException($e);
                 $result = false;
             }
 

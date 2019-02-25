@@ -24,6 +24,7 @@ class Drip_Connect_Model_Cron_Customers
             try {
                 $result = $this->syncCustomersWithAccount($accountId);
             } catch (\Exception $e) {
+                Mage::logException($e);
                 $result = false;
             }
 
