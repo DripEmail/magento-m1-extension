@@ -23,6 +23,9 @@ class Drip_Connect_Model_Cron_Customers
         foreach ($this->accounts as $accountId => $stores) {
             try {
                 $result = $this->syncCustomersWithAccount($accountId);
+                if ($result) {
+                    $result = $this->syncGuestSubscribersWithAccount($accountId);
+                }
             } catch (\Exception $e) {
                 $result = false;
             }
@@ -56,6 +59,80 @@ class Drip_Connect_Model_Cron_Customers
                 $this->accounts[$account][] = $storeId;
             }
         }
+    }
+
+    /**
+     * @param int $accountId
+     *
+     * @return bool
+     */
+    protected function syncGuestSubscribersWithAccount($accountId)
+    {
+        $stores = $this->accounts[$accountId];
+        foreach ($stores as $storeId) {
+            Mage::helper('drip_connect')->setCustomersSyncStateToStore($storeId, Drip_Connect_Model_Source_SyncState::PROGRESS);
+        }
+
+        $result = true;
+        $page = 1;
+        do {
+            $collection = Mage::getModel('newsletter/subscriber')->getCollection()
+                ->addFieldToSelect('*')
+                ->addFieldToFilter('customer_id', 0) // need only guests b/c customers have already been processed
+                ->setPageSize(Drip_Connect_Model_ApiCalls_Helper::MAX_BATCH_SIZE)
+                ->setCurPage($page++)
+                ->load();
+
+            $batchCustomer = array();
+            $batchEvents = array();
+            foreach ($collection as $subscriber) {
+
+                $dataCustomer = Drip_Connect_Helper_Data::prepareGuestSubscriberData($subscriber);
+                $dataCustomer['tags'] = array('Synced from Magento');
+                $batchCustomer[] = $dataCustomer;
+
+                $dataEvents = array(
+                    'email' => $subscriber->getSubscriberEmail(),
+                    'action' => ($subscriber->getDrip()
+                        ? Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED
+                        : Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_NEW),
+                );
+                $batchEvents[] = $dataEvents;
+
+                if (!$subscriber->getDrip()) {
+                    $subscriber->setNeedToUpdate(1);
+                    $subscriber->setDrip(1);
+                }
+            }
+
+            $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Subscribers', array(
+                'batch' => $batchCustomer,
+                'account' => $accountId,
+            ))->call();
+
+            if (empty($response) || $response->getResponseCode() != 201) { // drip success code for this action
+                $result = false;
+                break;
+            }
+
+            $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Events', array(
+                'batch' => $batchEvents,
+                'account' => $accountId,
+            ))->call();
+
+            if (empty($response) || $response->getResponseCode() != 201) { // drip success code for this action
+                $result = false;
+                break;
+            }
+
+            foreach ($collection as $subscriber) {
+                if ($subscriber->getNeedToUpdate()) {
+                    $subscriber->save();
+                }
+            }
+        } while ($page <= $collection->getLastPageNumber());
+
+        return $result;
     }
 
     /**
