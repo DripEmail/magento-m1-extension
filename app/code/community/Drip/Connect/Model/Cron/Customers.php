@@ -27,6 +27,7 @@ class Drip_Connect_Model_Cron_Customers
                     $result = $this->syncGuestSubscribersWithAccount($accountId);
                 }
             } catch (\Exception $e) {
+                Mage::logException($e);
                 $result = false;
             }
 
@@ -147,6 +148,8 @@ class Drip_Connect_Model_Cron_Customers
             Mage::helper('drip_connect')->setCustomersSyncStateToStore($storeId, Drip_Connect_Model_Source_SyncState::PROGRESS);
         }
 
+        $delay = (int) Mage::getStoreConfig('dripconnect_general/api_settings/batch_delay');
+
         $result = true;
         $page = 1;
         do {
@@ -158,23 +161,14 @@ class Drip_Connect_Model_Cron_Customers
                 ->load();
 
             $batchCustomer = array();
-            $batchEvents = array();
             foreach ($collection as $customer) {
                 $dataCustomer = Drip_Connect_Helper_Data::prepareCustomerData($customer);
                 $dataCustomer['tags'] = array('Synced from Magento');
                 $batchCustomer[] = $dataCustomer;
 
-                $dataEvents = array(
-                    'email' => $customer->getEmail(),
-                    'action' => ($customer->getDrip()
-                        ? Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED
-                        : Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_NEW),
-                );
-                $batchEvents[] = $dataEvents;
-
                 if (!$customer->getDrip()) {
                     $customer->setNeedToUpdateAttribute(1);
-                    $customer->setDrip(1);
+                    $customer->setDrip(1);  // 'drip' flag on customer means it was sent to drip sometime
                 }
             }
 
@@ -183,17 +177,7 @@ class Drip_Connect_Model_Cron_Customers
                 'account' => $accountId,
             ))->call();
 
-            if ($response->getResponseCode() != 201) { // drip success code for this action
-                $result = false;
-                break;
-            }
-
-            $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Events', array(
-                'batch' => $batchEvents,
-                'account' => $accountId,
-            ))->call();
-
-            if ($response->getResponseCode() != 201) { // drip success code for this action
+            if (empty($response) || $response->getResponseCode() != 201) { // drip success code for this action
                 $result = false;
                 break;
             }
@@ -203,6 +187,9 @@ class Drip_Connect_Model_Cron_Customers
                     $customer->getResource()->saveAttribute($customer, 'drip');
                 }
             }
+
+            sleep($delay);
+
         } while ($page <= $collection->getLastPageNumber());
 
         return $result;
