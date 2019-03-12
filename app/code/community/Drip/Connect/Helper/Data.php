@@ -85,6 +85,24 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * check if subscriber exists on the store
+     *
+     * @return bool
+     */
+    public function isSubscriberExists($email, $storeId = null)
+    {
+        if ($storeId == null) {
+            $storeId = Mage::app()->getStore()->getId();
+        }
+
+        $collection = Mage::getModel('newsletter/subscriber')->getCollection()
+            ->addFieldToFilter('subscriber_email', $email)
+            ->addFieldToFilter('store_id', $storeId);
+
+        return (bool) $collection->getSize();
+    }
+
+    /**
      * check if customer exists on the website
      *
      * @return bool

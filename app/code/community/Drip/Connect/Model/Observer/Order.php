@@ -62,8 +62,12 @@ class Drip_Connect_Model_Observer_Order
                 return;
             }
 
-            //if guest checkout, create subscriber record
-            if ($order->getCustomerIsGuest() && ! Mage::helper('drip_connect')->isCustomerExists($order->getCustomerEmail())) {
+            // if guest checkout and there is no such user and there is no such subscriber
+            // create subscriber record
+            if ($order->getCustomerIsGuest()
+                && ! Mage::helper('drip_connect')->isCustomerExists($order->getCustomerEmail())
+                && ! Mage::helper('drip_connect')->isSubscriberExists($order->getCustomerEmail())
+            ) {
                 $customerData = Mage::helper('drip_connect')->prepareCustomerDataForGuestCheckout($order);
                 Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $customerData)->call();
             }
