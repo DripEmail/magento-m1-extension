@@ -196,6 +196,10 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      * @return string
      */
     public function priceAsCents($price) {
+        if (empty($price)) {
+            return '';
+        }
+
         return (int) (preg_replace("/[^0-9.]/", "", $price) * 100);
     }
 
