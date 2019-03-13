@@ -78,7 +78,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
             "email" => $this->email,
             "cart_id" => $quote->getId(),
             "grand_total" => Mage::helper('drip_connect')->priceAsCents($quote->getGrandTotal())/100,
-            "total_discounts" => Mage::helper('drip_connect')->priceAsCents($quote->getSubtotal() - $quote->getSubtotalWithDiscount())/100,
+            "total_discounts" => Mage::helper('drip_connect')->priceAsCents((float)$quote->getSubtotal() - (float)$quote->getSubtotalWithDiscount()) / 100,
             "currency" => $quote->getQuoteCurrencyCode(),
             "cart_url" => Mage::helper('checkout/cart')->getCartUrl(),
             'items' => $this->prepareQuoteItemsData($quote),
@@ -111,7 +111,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
                 'quantity' => $item->getQty(),
                 'price' => Mage::helper('drip_connect')->priceAsCents($item->getPrice())/100,
                 'discount' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount())/100,
-                'total' => $item->getQty() * Mage::helper('drip_connect')->priceAsCents($item->getPrice())/100,
+                'total' => Mage::helper('drip_connect')->priceAsCents((float)$item->getQty() * (float)$item->getPrice()) / 100,
                 'product_url' => $product->getProductUrl(),
                 'image_url' => Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()),
             );
