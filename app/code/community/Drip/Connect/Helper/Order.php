@@ -195,7 +195,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
                 'name' => $item->getName(),
                 'quantity' => $item->getQtyOrdered(),
                 'price' => Mage::helper('drip_connect')->priceAsCents($item->getPrice()),
-                'amount' => Mage::helper('drip_connect')->priceAsCents($item->getQtyOrdered() * $item->getPrice()),
+                'amount' => Mage::helper('drip_connect')->priceAsCents((float)$item->getQtyOrdered() * (float)$item->getPrice()),
                 'tax' => Mage::helper('drip_connect')->priceAsCents($item->getTaxAmount()),
                 'taxable' => (preg_match('/[123456789]/', $item->getTaxAmount()) ? 'true' : 'false'),
                 'discount' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount()),
