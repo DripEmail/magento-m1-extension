@@ -16,6 +16,28 @@ class Drip_Connect_Model_Observer_Account
 
 
     /**
+     * subscriber was saved
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function afterSubscriberSave($observer)
+    {
+        if (!Mage::helper('drip_connect')->isModuleActive()) {
+            return;
+        }
+        $request = Mage::app()->getRequest();
+        $controller = $request->getControllerName();
+        $action = $request->getActionName();
+
+        // treate only massactions executed from newsletter grig
+        // subscribe/unsubscribe massactions executed from customers grid get treated by customer's observers
+        if ($controller == 'newsletter_subscriber' && $action == 'massUnsubscribe') {
+            $subscriber = $observer->getSubscriber();
+            $this->proceedSubscriberSave($subscriber);
+        }
+    }
+
+    /**
      * subscriber was removed
      *
      * @param Varien_Event_Observer $observer
@@ -297,7 +319,22 @@ class Drip_Connect_Model_Observer_Account
     }
 
     /**
-     * drip actions for customer account delete
+     * drip actions for subscriber save
+     *
+     * @param Mage_Newsletter_Model_Subscriber $ubscriber
+     */
+    protected function proceedSubscriberSave($subscriber)
+    {
+        $data = Drip_Connect_Helper_Data::prepareGuestSubscriberData($subscriber);
+        Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $data)->call();
+
+        if ($subscriber->getSubscriberStatus() != Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
+            $this->unsubscribe($subscriber->getEmail());
+        }
+    }
+
+    /**
+     * drip actions for subscriber record delete
      *
      * @param Mage_Newsletter_Model_Subscriber $ubscriber
      */
