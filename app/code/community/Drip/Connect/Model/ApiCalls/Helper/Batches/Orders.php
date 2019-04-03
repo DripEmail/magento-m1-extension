@@ -12,19 +12,15 @@ class Drip_Connect_Model_ApiCalls_Helper_Batches_Orders
         }
         $this->apiClient = Mage::getModel('drip_connect/ApiCalls_Base', array(
             'endpoint' => $accountId.'/'.self::ENDPOINT_BATCH_ORDERS,
+            'v3' => true,
         ));
 
         $ordersInfo = [
             'orders' => $data['batch']
         ];
-        $batchesInfo = [
-            'batches' => [
-                $ordersInfo
-            ]
-        ];
 
         $this->request = Mage::getModel('drip_connect/ApiCalls_Request_Base')
             ->setMethod(Zend_Http_Client::POST)
-            ->setRawData(json_encode($batchesInfo));
+            ->setRawData(json_encode($ordersInfo));
     }
 }
