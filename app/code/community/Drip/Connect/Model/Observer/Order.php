@@ -136,20 +136,10 @@ class Drip_Connect_Model_Observer_Order
                     break;
                 }
                 // other states
-                $response = Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateOrder', array(
-                    'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
-                    'email' => $order->getCustomerEmail(),
-                    'action' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_CHANGE,
-                    'grand_total' => Mage::helper('drip_connect')->priceAsCents($order->getGrandTotal())/100,
-                    'order_id' => $order->getIncrementId(),
-                    'order_public_id' => $order->getIncrementId(),
-                    'properties' => array(
-                        'order_state' => $order->getState(),
-                        'order_status' => $order->getStatus(),
-                        'magento_source' => Mage::helper('drip_connect')->getArea(),
-                    ),
-                ))->call();
-
+                $response = Mage::getModel(
+                    'drip_connect/ApiCalls_Helper_CreateUpdateOrder',
+                    Mage::helper('drip_connect/order')->getOrderDataOther($order)
+                )->call();
         }
 
         $order->setIsAlreadyProcessed(true);
