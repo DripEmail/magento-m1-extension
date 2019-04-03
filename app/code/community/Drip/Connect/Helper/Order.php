@@ -206,8 +206,6 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
                 'product_id' => $item->getProductId(),
                 'sku' => $item->getSku(),
                 'name' => $item->getName(),
-                'categories' => $categories,
-
                 'quantity' => (float) $item->getQtyOrdered(),
                 'price' => Mage::helper('drip_connect')->priceAsCents($item->getPrice())/100,
                 'discounts' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount())/100,
