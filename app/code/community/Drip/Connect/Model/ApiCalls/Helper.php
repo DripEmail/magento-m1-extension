@@ -10,7 +10,7 @@ abstract class Drip_Connect_Model_ApiCalls_Helper
     const ENDPOINT_REFUNDS = 'refunds';
     const ENDPOINT_CART = 'shopper_activity/cart';
     const ENDPOINT_BATCH_SUBSCRIBERS = 'subscribers/batches';
-    const ENDPOINT_BATCH_ORDERS = 'orders/batches';
+    const ENDPOINT_BATCH_ORDERS = 'shopper_activity/order/batch';
     const ENDPOINT_BATCH_EVENTS = 'events/batches';
 
     const MAX_BATCH_SIZE = 1000;
