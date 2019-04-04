@@ -140,7 +140,9 @@ class Drip_Connect_Model_Observer_Account
         if (!$customer->isObjectNew()) {
             $orig = Mage::getModel('customer/customer')->load($customer->getId());
             $data = Drip_Connect_Helper_Data::prepareCustomerData($orig);
-            $data['custom_fields']['accepts_marketing'] = Mage::registry(self::REGISTRY_KEY_SUBSCRIBER_PREV_STATE);
+            if (Mage::registry(self::REGISTRY_KEY_SUBSCRIBER_PREV_STATE)) {
+                $data['custom_fields']['accepts_marketing'] = Mage::registry(self::REGISTRY_KEY_SUBSCRIBER_PREV_STATE);
+            }
             Mage::unregister(self::REGISTRY_KEY_OLD_DATA);
             Mage::register(self::REGISTRY_KEY_OLD_DATA, $data);
         } else {

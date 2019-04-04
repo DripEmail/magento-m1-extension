@@ -267,4 +267,13 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
         }
         Mage::app()->getStore($storeId)->resetConfig();
     }
+
+    /**
+     * @param string $date
+     */
+    public function formatDate($date)
+    {
+        $time = new DateTime($date);
+        return $time->format("Y-m-d\TH:i:s\Z");
+    }
 }
