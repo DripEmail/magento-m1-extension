@@ -19,7 +19,8 @@
         currency: "<?= Mage::app()->getStore()->getCurrentCurrencyCode() ?>",
         product_url: "<?= $product->getProductUrl() ?>",
         image_url: "<?= Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()) ?>",
-        source: "magento"
+        source: "magento",
+        version: "Magento <?=Mage::getVersion()?>, Drip Extension <?=Mage::getConfig()->getModuleConfig('Drip_Connect')->version?>"
     }]);
     </script>
     <!-- end Drip track -->
