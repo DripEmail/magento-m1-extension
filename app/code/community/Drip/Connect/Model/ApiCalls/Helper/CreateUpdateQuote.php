@@ -14,8 +14,10 @@ class Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote
             'v3' => true,
         ));
 
-        $data['version'] = 'Magento ' . Mage::getVersion() . ', '
-                         . 'Drip Extension ' . Mage::getConfig()->getModuleConfig('Drip_Connect')->version;
+        if (!empty($data) && is_array($data)) {
+            $data['version'] = 'Magento ' . Mage::getVersion() . ', '
+                             . 'Drip Extension ' . Mage::getConfig()->getModuleConfig('Drip_Connect')->version;
+        }
 
         $this->request = Mage::getModel('drip_connect/ApiCalls_Request_Base')
             ->setMethod(Zend_Http_Client::POST)
