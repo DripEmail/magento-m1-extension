@@ -7,6 +7,34 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     const FULFILLMENT_YES = 'fulfilled';
 
     /**
+     * prepare array of order data
+     *
+     * @param Mage_Sales_Model_Order $order
+     *
+     * @return array
+     */
+    protected function getCommonOrderData($order)
+    {
+        $data = array(
+            'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
+            'email' => $order->getCustomerEmail(),
+            'order_id' => $order->getIncrementId(),
+            'order_public_id' => $order->getIncrementId(),
+            'grand_total' => Mage::helper('drip_connect')->priceAsCents($order->getGrandTotal()) / 100,
+            'total_discounts' => Mage::helper('drip_connect')->priceAsCents($order->getDiscountAmount()) / 100,
+            'total_taxes' => Mage::helper('drip_connect')->priceAsCents($order->getTaxAmount()) / 100,
+            'total_shipping' => Mage::helper('drip_connect')->priceAsCents($order->getShippingAmount()) / 100,
+            'currency' => $order->getOrderCurrencyCode(),
+            'occurred_at' => Mage::helper('drip_connect')->formatDate($order->getUpdatedAt()),
+            'items' => $this->getOrderItemsData($order),
+            'billing_address' => $this->getOrderBillingData($order),
+            'shipping_address' => $this->getOrderShippingData($order),
+        );
+
+        return $data;
+    }
+
+    /**
      * prepare array of order data we use to send in drip for new orders
      *
      * @param Mage_Sales_Model_Order $order
@@ -15,23 +43,8 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
      */
     public function getOrderDataNew($order)
     {
-        $data = array(
-            'email' => $order->getCustomerEmail(),
-            'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
-            'upstream_id' => $order->getIncrementId(),
-            'identifier' => $order->getIncrementId(),
-            'amount' => Mage::helper('drip_connect')->priceAsCents($order->getGrandTotal()),
-            'tax' => Mage::helper('drip_connect')->priceAsCents($order->getTaxAmount()),
-            'fees' => Mage::helper('drip_connect')->priceAsCents($order->getShippingAmount()),
-            'discount' => Mage::helper('drip_connect')->priceAsCents($order->getDiscountAmount()),
-            'currency_code' => $order->getOrderCurrencyCode(),
-            'items' => $this->getOrderItemsData($order),
-            'billing_address' => $this->getOrderBillingData($order),
-            'shipping_address' => $this->getOrderShippingData($order),
-            'properties' => array(
-                'magento_source' => Mage::helper('drip_connect')->getArea(),
-            ),
-        );
+        $data = $this->getCommonOrderData($order);
+        $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_NEW;
 
         return $data;
     }
@@ -45,15 +58,8 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
      */
     public function getOrderDataCompleted($order)
     {
-        $data = array(
-            'email' => $order->getCustomerEmail(),
-            'amount' => Mage::helper('drip_connect')->priceAsCents($order->getGrandTotal()),
-            'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
-            'upstream_id' => $order->getIncrementId(),
-            'fulfillment_state' => $this->getOrderFulfillment($order),
-            'billing_address' => $this->getOrderBillingData($order),
-            'shipping_address' => $this->getOrderShippingData($order),
-        );
+        $data = $this->getCommonOrderData($order);
+        $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_FULFILL;
 
         return $data;
     }
@@ -67,12 +73,8 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
      */
     public function getOrderDataCanceled($order)
     {
-        $data = array(
-            'email' => $order->getCustomerEmail(),
-            'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
-            'upstream_id' => $order->getIncrementId(),
-            'cancelled_at' => $order->getUpdatedAt(),
-        );
+        $data = $this->getCommonOrderData($order);
+        $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_CANCEL;
 
         return $data;
     }
@@ -91,11 +93,29 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
         $refundId = $refunds->getLastItem()->getIncrementId();
 
         $data = array(
-            'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateRefund::PROVIDER_NAME,
-            'order_upstream_id' => $order->getIncrementId(),
-            'upstream_id' => $refundId,
-            'amount' => $refundValue,
+            'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
+            'email' => $order->getCustomerEmail(),
+            'action' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_REFUND,
+            'order_id' => $order->getIncrementId(),
+            'order_public_id' => $order->getIncrementId(),
+            'refund_amount' => $refundValue / 100,
+            'occurred_at' => Mage::helper('drip_connect')->formatDate($order->getUpdatedAt()),
         );
+
+        return $data;
+    }
+
+    /**
+     * prepare array of order data we use to send in drip for all other states
+     *
+     * @param Mage_Sales_Model_Order $order
+     *
+     * @return array
+     */
+    public function getOrderDataOther($order)
+    {
+        $data = $this->getCommonOrderData($order);
+        $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_CHANGE;
 
         return $data;
     }
@@ -162,18 +182,16 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
         $address = Mage::getModel('sales/order_address')->load($addressId);
 
         return array(
-            'name' => $address->getName(),
-            'first_name' => $address->getFirstname(),
-            'last_name' => $address->getLastname(),
-            'company' => $address->getCompany(),
-            'address_1' => $address->getStreet1(),
-            'address_2' => $address->getStreet2(),
-            'city' => $address->getCity(),
-            'state' => $address->getRegion(),
-            'zip' => $address->getPostcode(),
-            'country' => $address->getCountryId(),
-            'phone' => $address->getTelephone(),
-            'email' => $address->getEmail(),
+            'first_name' => (string) $address->getFirstname(),
+            'last_name' => (string) $address->getLastname(),
+            'company' => (string) $address->getCompany(),
+            'address_1' => (string) $address->getStreet1(),
+            'address_2' => (string) $address->getStreet2(),
+            'city' => (string) $address->getCity(),
+            'state' => (string) $address->getRegion(),
+            'postal_code' => (string) $address->getPostcode(),
+            'country' => (string) $address->getCountryId(),
+            'phone' => (string) $address->getTelephone(),
         );
     }
 
@@ -193,19 +211,21 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
                 'product_id' => $item->getProductId(),
                 'sku' => $item->getSku(),
                 'name' => $item->getName(),
-                'quantity' => $item->getQtyOrdered(),
-                'price' => Mage::helper('drip_connect')->priceAsCents($item->getPrice()),
-                'amount' => Mage::helper('drip_connect')->priceAsCents((float)$item->getQtyOrdered() * (float)$item->getPrice()),
-                'tax' => Mage::helper('drip_connect')->priceAsCents($item->getTaxAmount()),
-                'taxable' => (preg_match('/[123456789]/', $item->getTaxAmount()) ? 'true' : 'false'),
-                'discount' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount()),
+                'quantity' => (float) $item->getQtyOrdered(),
+                'price' => Mage::helper('drip_connect')->priceAsCents($item->getPrice())/100,
+                'discounts' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount())/100,
+                'total' => Mage::helper('drip_connect')->priceAsCents((float)$item->getQtyOrdered() * (float)$item->getPrice()) / 100,
+                'taxes' => Mage::helper('drip_connect')->priceAsCents($item->getTaxAmount()) / 100,
             );
             if (!empty($item->getProduct()->getId())) {
                 $product = Mage::getModel('catalog/product')->load($item->getProduct()->getId());
-                $group['properties'] = array(
-                    'product_url' => $item->getProduct()->getProductUrl(),
-                    'product_image_url' => Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()),
-                );
+                $categories = explode(',', Mage::helper('drip_connect')->getProductCategoryNames($product));
+                if (empty($categories)) {
+                    $categories = [];
+                }
+                $group['categories'] = $categories;
+                $group['product_url'] = $item->getProduct()->getProductUrl();
+                $group['image_url'] = Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail());
             }
             if ($isRefund) {
                 $group['refund_amount'] = Mage::helper('drip_connect')->priceAsCents($item->getAmountRefunded());
