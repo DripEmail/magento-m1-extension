@@ -29,6 +29,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
             'items' => $this->getOrderItemsData($order),
             'billing_address' => $this->getOrderBillingData($order),
             'shipping_address' => $this->getOrderShippingData($order),
+            'items_count' => floatval($order->getTotalQtyOrdered()),
             'magento_source' => Mage::helper('drip_connect')->getArea(),
         );
 
