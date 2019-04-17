@@ -29,6 +29,22 @@
             </drip_connect_setup>
         </resources>
         <events>
+            <newsletter_subscriber_save_commit_after>
+                <observers>
+                    <drip_connect_newsletter_subscriber_save_commit_after>
+                        <class>drip_connect/observer_account</class>
+                        <method>afterSubscriberSave</method>
+                    </drip_connect_newsletter_subscriber_save_commit_after>
+                </observers>
+            </newsletter_subscriber_save_commit_after>
+            <newsletter_subscriber_delete_commit_after>
+                <observers>
+                    <drip_connect_newsletter_subscriber_delete_commit_after>
+                        <class>drip_connect/observer_account</class>
+                        <method>afterSubscriberDelete</method>
+                    </drip_connect_newsletter_subscriber_delete_commit_after>
+                </observers>
+            </newsletter_subscriber_delete_commit_after>
             <controller_action_predispatch_newsletter_subscriber_new>
                 <observers>
                     <drip_connect_controller_action_predispatch_newsletter_subscriber_new>

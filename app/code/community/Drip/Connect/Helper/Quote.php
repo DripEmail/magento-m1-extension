@@ -82,6 +82,8 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
             "currency" => $quote->getQuoteCurrencyCode(),
             "cart_url" => Mage::helper('checkout/cart')->getCartUrl(),
             'items' => $this->prepareQuoteItemsData($quote),
+            'items_count' => floatval($quote->getItemsQty()),
+            'magento_source' => Mage::helper('drip_connect')->getArea(),
         );
 
         return $data;
