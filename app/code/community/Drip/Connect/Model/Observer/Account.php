@@ -164,7 +164,7 @@ class Drip_Connect_Model_Observer_Account
         if (Mage::registry(self::REGISTRY_KEY_IS_NEW)) {
             $this->proceedAccountNew($customer);
             if (! $customer->getIsSubscribed()) {
-                $this->unsubscribe($customer);
+                $this->unsubscribe($customer->getEmail());
             }
         } else {
             if ($this->isCustomerChanged($customer)) {
