@@ -24,11 +24,11 @@ class Drip_Connect_CartController extends Mage_Core_Controller_Front_Action
             return;
         }
 
-        /*if ($secureKey !== Mage::helper('drip_connect')->getSecureKey($quoteId, $storeId)) {
+        if ($secureKey !== Mage::helper('drip_connect')->getSecureKey($quoteId, $storeId)) {
             Mage::getSingleton('core/session')->addError(Mage::helper('drip_connect')->__('Link is broken'));
             $this->_redirect('/');
             return;
-        }*/
+        }
 
         $store = Mage::getSingleton('core/store')->load($storeId);
         if (! $store->getId()) {
