@@ -113,6 +113,14 @@
     </global>
     <frontend>
         <events>
+            <sales_quote_merge_before>
+                <observers>
+                    <drip_connect_sales_quote_merge_before>
+                        <class>drip_connect/observer_quote</class>
+                        <method>clearCartOnLogin</method>
+                    </drip_connect_sales_quote_merge_before>
+                </observers>
+            </sales_quote_merge_before>
             <!--<customer_address_save_before>
                 <observers>
                     <drip_connect_customer_address_save_before>
@@ -187,6 +195,15 @@
                 </drip_connect>
             </updates>
         </layout>
+        <routers>
+            <drip>
+                <use>standard</use>
+                <args>
+                    <module>Drip_Connect</module>
+                    <frontName>drip</frontName>
+                </args>
+            </drip>
+        </routers>
     </frontend>
     <admin>
         <routers>
