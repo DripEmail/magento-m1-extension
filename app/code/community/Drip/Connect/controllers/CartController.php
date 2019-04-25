@@ -12,8 +12,6 @@ class Drip_Connect_CartController extends Mage_Core_Controller_Front_Action
             return;
         }
 
-        Mage::getSingleton('customer/session')->setIsAbandonedCartProcessed(1);
-
         $quoteId = Mage::app()->getRequest()->getParam(Drip_Connect_Helper_Data::QUOTE_KEY);
         $storeId = Mage::app()->getRequest()->getParam(Drip_Connect_Helper_Data::STORE_KEY);
         $secureKey = Mage::app()->getRequest()->getParam(Drip_Connect_Helper_Data::SECURE_KEY);
