@@ -5,7 +5,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
     const QUOTE_KEY = 'q';
     const STORE_KEY = 's';
     const SECURE_KEY = 'k';
-    const SALT = 'somedefaultsaltstring';
+    const SALT = 'kjs5hds%$#zgf';
 
     /**
      * check if module active
@@ -289,9 +289,12 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     protected function getSalt()
     {
-        // todo create config field to have different salt values for every app
+        $salt = Mage::getStoreConfig('dripconnect_general/module_settings/salt');
+        if (empty(trim($salt))) {
+            $salt = self::SALT;
+        }
 
-        return self::SALT;
+        return $salt;
     }
 
     /**
