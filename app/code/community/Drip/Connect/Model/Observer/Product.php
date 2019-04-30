@@ -50,6 +50,18 @@ class Drip_Connect_Model_Observer_Product
         Mage::unregister(Drip_Connect_Helper_Product::REGISTRY_KEY_OLD_DATA);
     }
 
+    /**
+     * @param Varien_Event_Observer $observer
+     */
+    public function afterDelete($observer)
+    {
+        if (!Mage::helper('drip_connect')->isModuleActive()) {
+            return;
+        }
+        $product = $observer->getProduct();
+
+        $this->proceedProductDelete($product);
+    }
 
     /**
      * drip actions for product create
@@ -72,6 +84,16 @@ class Drip_Connect_Model_Observer_Product
     }
 
     /**
+     * drip actions for product delete
+     *
+     * @param Mage_Catalog_Model_Product $product
+     */
+    protected function proceedProductDelete($product)
+    {
+        Mage::helper('drip_connect/product')->proceedProductDelete($product);
+    }
+
+    /**
      * compare orig and new data
      *
      * @param Mage_Catalog_Model_Product $product
@@ -82,7 +104,6 @@ class Drip_Connect_Model_Observer_Product
         unset($oldData['occurred_at']);
         $newData = Mage::helper('drip_connect/product')->prepareData($product);
         unset($newData['occurred_at']);
-
         return (serialize($oldData) != serialize($newData));
     }
 }

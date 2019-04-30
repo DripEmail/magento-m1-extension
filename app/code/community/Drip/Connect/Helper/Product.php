@@ -62,6 +62,18 @@ class Drip_Connect_Helper_Product extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * drip actions when product is deleted
+     *
+     * @param Mage_Catalog_Model_Product $product
+     */
+    public function proceedProductDelete($product)
+    {
+        $data = $this->prepareData($product);
+        $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateProduct::PRODUCT_CHANGED;
+        //Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateProduct', $data)->call();
+    }
+
+    /**
      * return brand name for the given product
      *
      * @param Magento_Catalog_Model_Product $product
