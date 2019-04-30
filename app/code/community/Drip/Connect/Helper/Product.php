@@ -46,7 +46,7 @@ class Drip_Connect_Helper_Product extends Mage_Core_Helper_Abstract
     {
         $data = $this->prepareData($product);
         $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateProduct::PRODUCT_NEW;
-        //Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateProduct', $data)->call();
+        Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateProduct', $data)->call();
     }
 
     /**
@@ -58,7 +58,7 @@ class Drip_Connect_Helper_Product extends Mage_Core_Helper_Abstract
     {
         $data = $this->prepareData($product);
         $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateProduct::PRODUCT_CHANGED;
-        //Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateProduct', $data)->call();
+        Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateProduct', $data)->call();
     }
 
     /**
@@ -70,7 +70,7 @@ class Drip_Connect_Helper_Product extends Mage_Core_Helper_Abstract
     {
         $data = $this->prepareData($product);
         $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateProduct::PRODUCT_CHANGED;
-        //Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateProduct', $data)->call();
+        Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateProduct', $data)->call();
     }
 
     /**
