@@ -199,6 +199,34 @@
             </adminhtml>
         </routers>
     </admin>
+    <adminhtml>
+        <events>
+            <catalog_product_save_before>
+                <observers>
+                    <drip_connect_catalog_product_save_before>
+                        <class>drip_connect/observer_product</class>
+                        <method>beforeSave</method>
+                    </drip_connect_catalog_product_save_before>
+                </observers>
+            </catalog_product_save_before>
+            <catalog_product_save_after>
+                <observers>
+                    <drip_connect_catalog_product_save_after>
+                        <class>drip_connect/observer_product</class>
+                        <method>afterSave</method>
+                    </drip_connect_catalog_product_save_after>
+                </observers>
+            </catalog_product_save_after>
+            <catalog_product_delete_after>
+                <observers>
+                    <drip_connect_catalog_product_delete_commit_after>
+                        <class>drip_connect/observer_product</class>
+                        <method>afterDelete</method>
+                    </drip_connect_catalog_product_delete_commit_after>
+                </observers>
+            </catalog_product_delete_after>
+        </events>
+    </adminhtml>
     <default>
         <dripconnect_general>
             <module_settings>

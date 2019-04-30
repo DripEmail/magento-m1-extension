@@ -276,4 +276,20 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
         $time = new DateTime($date);
         return $time->format("Y-m-d\TH:i:s\Z");
     }
+
+    /**
+     * get store id which is currently being edited
+     *
+     * @return int
+     */
+    public function getAdminEditStoreId()
+    {
+        $storeId = Mage::app()->getRequest()->getParam('store');
+
+        if (empty($storeId)) {
+            $storeId = 0;
+        }
+
+        return $storeId;
+    }
 }
