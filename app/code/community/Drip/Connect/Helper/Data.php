@@ -321,4 +321,20 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
             self::SECURE_KEY => $this->getSecureKey($quote->getId(), $quote->getStoreId()),
         ]);
     }
+
+    /**
+     * get store id which is currently being edited
+     *
+     * @return int
+     */
+    public function getAdminEditStoreId()
+    {
+        $storeId = Mage::app()->getRequest()->getParam('store');
+
+        if (empty($storeId)) {
+            $storeId = 0;
+        }
+
+        return $storeId;
+    }
 }
