@@ -38,6 +38,7 @@ class Drip_Connect_Model_Observer_Product
             return;
         }
         $product = $observer->getProduct();
+        $product->load($product->getId());
         if (Mage::registry(Drip_Connect_Helper_Product::REGISTRY_KEY_IS_NEW)) {
             $this->proceedProductNew($product);
         } else {
@@ -81,6 +82,7 @@ class Drip_Connect_Model_Observer_Product
         unset($oldData['occurred_at']);
         $newData = Mage::helper('drip_connect/product')->prepareData($product);
         unset($newData['occurred_at']);
+
         return (serialize($oldData) != serialize($newData));
     }
 }

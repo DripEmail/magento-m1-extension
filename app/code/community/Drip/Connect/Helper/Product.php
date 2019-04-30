@@ -23,8 +23,10 @@ class Drip_Connect_Helper_Product extends Mage_Core_Helper_Abstract
             "price" => Mage::helper('drip_connect')->priceAsCents($product->getFinalPrice())/100,
             "inventory" => (float) $this->getStockQty($product),
             "product_url" => $this->getProductUrl($product),
-            "image_url" => $this->getProductImageUrl($product),
         );
+        if ($imageUrl = $this->getProductImageUrl($product)) {
+            $data["image_url"] = $imageUrl;
+        }
         if (count($categories) && !empty($categories[0])) {
             $data["categories"] = $categories;
         }
@@ -48,7 +50,7 @@ class Drip_Connect_Helper_Product extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * drip actions product getc changed
+     * drip actions when product gets changed
      *
      * @param Mage_Catalog_Model_Product $product
      */
@@ -120,6 +122,7 @@ class Drip_Connect_Helper_Product extends Mage_Core_Helper_Abstract
                 $defaultStoreCode = $website->getDefaultStore()->getCode();
                 $product->setStoreId($defaultStoreId);
                 $needRevert = true;
+                break;
             }
         }
         $url = $product->getProductUrl(false);
@@ -143,6 +146,11 @@ class Drip_Connect_Helper_Product extends Mage_Core_Helper_Abstract
      */
     public function getProductImageUrl($product)
     {
-        return Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getThumbnail());
+        $imageUrl = '';
+        if ($product->getThumbnail() != 'no_selection') {
+            $imageUrl = Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getThumbnail());
+        }
+
+        return $imageUrl;
     }
 }
