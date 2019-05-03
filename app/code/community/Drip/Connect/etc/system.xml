@@ -42,6 +42,15 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </is_enabled>
+                        <salt translate="label comment">
+                            <label>Security Hash</label>
+                            <comment>Put any random string here. If value is 'some default string' replace it with something else. This is used to create abandoned cart links.</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </salt>
                     </fields>
                 </module_settings>
                 <api_settings translate="label">
