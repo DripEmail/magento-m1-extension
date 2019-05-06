@@ -69,7 +69,7 @@ class Drip_Connect_Helper_Product extends Mage_Core_Helper_Abstract
     public function proceedProductDelete($product)
     {
         $data = $this->prepareData($product);
-        $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateProduct::PRODUCT_CHANGED;
+        $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateProduct::PRODUCT_DELETED;
         Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateProduct', $data)->call();
     }
 
