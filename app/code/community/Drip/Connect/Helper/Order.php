@@ -100,6 +100,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
             'action' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_REFUND,
             'order_id' => $order->getIncrementId(),
             'order_public_id' => $order->getIncrementId(),
+            'grand_total' => Mage::helper('drip_connect')->priceAsCents($order->getGrandTotal()) / 100,
             'refund_amount' => $refundValue / 100,
             'occurred_at' => Mage::helper('drip_connect')->formatDate($order->getUpdatedAt()),
         );
