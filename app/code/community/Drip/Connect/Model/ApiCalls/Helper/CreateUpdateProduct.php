@@ -5,6 +5,7 @@ class Drip_Connect_Model_ApiCalls_Helper_CreateUpdateProduct
 {
     const PRODUCT_NEW = 'created';
     const PRODUCT_CHANGED = 'updated';
+    const PRODUCT_DELETED = 'deleted';
 
     public function __construct($data = null)
     {
