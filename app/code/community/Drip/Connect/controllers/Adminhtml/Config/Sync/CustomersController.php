@@ -7,7 +7,7 @@ class Drip_Connect_Adminhtml_Config_Sync_CustomersController
     {
         return Mage::getSingleton('admin/session')->isAllowed('dripconnect_general');
     }
-    
+
     /**
      * prepare and send customers data
      *
@@ -20,5 +20,19 @@ class Drip_Connect_Adminhtml_Config_Sync_CustomersController
         Mage::helper('drip_connect')->setCustomersSyncStateToStore($storeId, Drip_Connect_Model_Source_SyncState::QUEUED);
 
         $this->getResponse()->setBody(Drip_Connect_Model_Source_SyncState::QUEUED);
+    }
+
+    /**
+     * reset sync status
+     *
+     * @return void
+     */
+    public function resetStateAction()
+    {
+        $storeId = $this->getRequest()->getParam('store_id');
+
+        Mage::helper('drip_connect')->setCustomersSyncStateToStore($storeId, Drip_Connect_Model_Source_SyncState::READY);
+
+        $this->getResponse()->setBody(Drip_Connect_Model_Source_SyncState::READY);
     }
 }
