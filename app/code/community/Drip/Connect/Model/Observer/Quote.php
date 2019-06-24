@@ -78,4 +78,43 @@ class Drip_Connect_Model_Observer_Quote
         Mage::unregister(Drip_Connect_Helper_Quote::REGISTRY_KEY_CUSTOMER_REGISTERED_OR_LOGGED_IN_WITH_EMTPY_QUOTE);
     }
 
+    /**
+     * If user came from abandoned-cart email,
+     * we need to clear his auth cart on login before merging with guest cart,
+     * b/c guest cart has abandoned products
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function clearCartOnLogin(Varien_Event_Observer $observer)
+    {
+        if (! Mage::helper('drip_connect')->isModuleActive()) {
+            return;
+        }
+
+        if ($this->isIgnoreMerge()) {
+            return;
+        }
+
+        if (! empty(Mage::getSingleton('customer/session')->getIsAbandonedCartGuest())) {
+            $observer->getEvent()->getQuote()->removeAllItems();
+            Mage::getSingleton('customer/session')->unsIsAbandonedCartGuest();
+        }
+    }
+
+    /**
+     * check if current handler should be ignored for clear cart on quote merge
+     *
+     * @return bool
+     */
+    protected function isIgnoreMerge()
+    {
+        $request = Mage::app()->getRequest();
+        $route = $request->getRouteName();
+        $controller = $request->getControllerName();
+        $action = $request->getActionName();
+
+        return in_array($route.'_'.$controller.'_'.$action, [
+            'drip_cart_index'
+        ]);
+    }
 }
