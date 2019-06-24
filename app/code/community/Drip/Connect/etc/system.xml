@@ -181,6 +181,29 @@
                                 <is_enabled>1</is_enabled>
                             </depends>
                         </log_rotation_period>
+                        <support_email translate="label">
+                            <label>Email logs to support</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <is_enabled>1</is_enabled>
+                            </depends>
+                        </support_email>
+                        <support_email_send translate="label comment button_label">
+                            <button_label>Send Logs</button_label>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>drip_connect/adminhtml_system_config_sendlogs</frontend_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <is_enabled>1</is_enabled>
+                            </depends>
+                        </support_email_send>
                         <last_log_archive translate="label">
                             <label>Last Log Archive Timestamp</label>
                             <frontend_type>text</frontend_type>
