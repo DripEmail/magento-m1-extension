@@ -110,6 +110,15 @@
                 </observers>
             </sales_order_save_commit_after>
         </events>
+        <template>
+            <email>
+                <drip_connect_sendlogs_template>
+                    <label>Drip Send Logs</label>
+                    <file>drip/sendlogs_template.html</file>
+                    <type>html</type>
+                </drip_connect_sendlogs_template>
+            </email>
+        </template>
     </global>
     <frontend>
         <events>
