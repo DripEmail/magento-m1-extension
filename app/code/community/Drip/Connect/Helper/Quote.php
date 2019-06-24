@@ -51,7 +51,9 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
     {
         $data = $this->prepareQuoteData($quote);
         $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote::QUOTE_NEW;
-        Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateQuote', $data)->call();
+        if (count($data['items'])) {
+            Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateQuote', $data)->call();
+        }
     }
 
     /**
@@ -80,7 +82,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
             "grand_total" => Mage::helper('drip_connect')->priceAsCents($quote->getGrandTotal())/100,
             "total_discounts" => Mage::helper('drip_connect')->priceAsCents((float)$quote->getSubtotal() - (float)$quote->getSubtotalWithDiscount()) / 100,
             "currency" => $quote->getQuoteCurrencyCode(),
-            "cart_url" => Mage::helper('checkout/cart')->getCartUrl(),
+            "cart_url" => Mage::helper('drip_connect')->getAbandonedCartUrl($quote),
             'items' => $this->prepareQuoteItemsData($quote),
             'items_count' => floatval($quote->getItemsQty()),
             'magento_source' => Mage::helper('drip_connect')->getArea(),
@@ -159,4 +161,16 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
         return ! (bool) $this->email;
     }
 
+    /**
+     * @param Mage_Sales_Model_Quote $oldQuote
+     */
+    public function recreateCartFromQuote($oldQuote)
+    {
+        $quote = Mage::getSingleton('checkout/session')->getQuote();
+        $checkoutSession = Mage::getSingleton('checkout/session');
+        $quote->removeAllItems();
+        $quote->merge($oldQuote);
+        $quote->collectTotals()->save();
+        $checkoutSession->setQuoteId($quote->getId());
+    }
 }
