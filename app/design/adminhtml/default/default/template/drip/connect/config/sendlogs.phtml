@@ -1,0 +1,48 @@
+<?php
+/**
+ * @see Drip_Connect_Block_Adminhtml_System_Config_Sendlogs
+ */
+?>
+<script type="text/javascript">
+//<![CDATA[
+    function sendLogs() {
+
+        var elem = $('<?=$this->getHtmlId()?>'),
+            res = $('send_logs_result'),
+            message = '';
+
+        elem.addClassName('disabled').setAttribute('disabled', 'disabled');
+
+        params = {
+            store_id: '<?=$this->getStoreId()?>',
+        };
+
+        new Ajax.Request('<?=$this->getAjaxUrl()?>', {
+            parameters: params,
+            onSuccess: function(response) {
+                response = JSON.parse(response.responseText);
+                if (response.status == <?php echo Drip_Connect_Helper_Logs::SENDLOGS_RESPONSE_OK ?>) {
+                    res.removeClassName('error');
+                } else {
+                    res.addClassName('error');
+                }
+                elem.removeClassName('disabled').removeAttribute('disabled');
+                message = response.message;
+            },
+            onFailure: function() {
+                res.addClassName('error');
+                res.update(result);
+                elem.removeClassName('disabled').removeAttribute('disabled');
+                message = '<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Data send error')) ?>';
+            },
+            onComplete: function() {
+                res.update(message);
+            }
+        });
+    }
+//]]>
+</script>
+<button onclick="javascript:sendLogs(); return false;" type="button" id="<?= $this->getHtmlId() ?>" class="scalable">
+    <?= $this->escapeHtml($this->getButtonLabel()) ?>
+</button>
+<b id="send_logs_result"></b>
