@@ -1,0 +1,33 @@
+<?php
+/**
+ * @see Drip_Connect_Block_Adminhtml_System_Config_Sync_Orders_Reset
+ */
+?>
+<script type="text/javascript">
+//<![CDATA[
+    function resetSyncOrdersState() {
+
+        var elem = $('<?=$this->getHtmlId()?>');
+
+        elem.addClassName('disabled').setAttribute('disabled', 'disabled');
+
+        params = {
+            account_id: '<?=$this->getAccountId()?>',
+            store_id: '<?=$this->getStoreId()?>',
+        };
+
+        new Ajax.Request('<?=$this->getAjaxUrl()?>', {
+            parameters: params,
+            onSuccess: function(response) {
+                document.location.reload(true);
+            },
+            onFailure: function() {
+                alert('error occured while reseting sync status');
+            }
+        });
+    }
+//]]>
+</script>
+<button onclick="javascript:resetSyncOrdersState(); return false;" type="button" id="<?= $this->getHtmlId() ?>" class="scalable delete">
+    <?= $this->escapeHtml($this->getButtonLabel()) ?>
+</button>
