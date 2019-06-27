@@ -52,7 +52,7 @@ class Drip_Connect_Helper_Logs extends Mage_Core_Helper_Abstract
                 }
 
                 if ($zipOpen !== TRUE) {
-                    Mage::log("can't creta zip file for ".$zipPath);
+                    Mage::log("can't create zip file for ".$zipPath);
                     continue;
                 }
 
@@ -74,7 +74,7 @@ class Drip_Connect_Helper_Logs extends Mage_Core_Helper_Abstract
         do {
             $total = 0;
             foreach ($dataToSend as $fileData) {
-                $total += $fileData[size];
+                $total += $fileData['size'];
             }
 
             if ($total > self::MAX_TOAL_ZIP_SIZE) {
