@@ -103,6 +103,15 @@
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
                         </batch_delay>
+                        <memory_limit translate="label comment">
+                            <label>Memory Limit</label>
+                            <comment>Memory Limit in Mb</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </memory_limit>
                     </fields>
                 </api_settings>
                 <actions translate="label">
