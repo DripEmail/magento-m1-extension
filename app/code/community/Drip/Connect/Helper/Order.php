@@ -16,21 +16,21 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     protected function getCommonOrderData($order)
     {
         $data = array(
-            'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
-            'email' => $order->getCustomerEmail(),
-            'order_id' => $order->getIncrementId(),
-            'order_public_id' => $order->getIncrementId(),
+            'provider' => (string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
+            'email' => (string) $order->getCustomerEmail(),
+            'order_id' => (string) $order->getIncrementId(),
+            'order_public_id' => (string) $order->getIncrementId(),
             'grand_total' => Mage::helper('drip_connect')->priceAsCents($order->getGrandTotal()) / 100,
             'total_discounts' => Mage::helper('drip_connect')->priceAsCents($order->getDiscountAmount()) / 100,
             'total_taxes' => Mage::helper('drip_connect')->priceAsCents($order->getTaxAmount()) / 100,
             'total_shipping' => Mage::helper('drip_connect')->priceAsCents($order->getShippingAmount()) / 100,
-            'currency' => $order->getOrderCurrencyCode(),
-            'occurred_at' => Mage::helper('drip_connect')->formatDate($order->getUpdatedAt()),
+            'currency' => (string) $order->getOrderCurrencyCode(),
+            'occurred_at' => (string) Mage::helper('drip_connect')->formatDate($order->getUpdatedAt()),
             'items' => $this->getOrderItemsData($order),
             'billing_address' => $this->getOrderBillingData($order),
             'shipping_address' => $this->getOrderShippingData($order),
             'items_count' => floatval($order->getTotalQtyOrdered()),
-            'magento_source' => Mage::helper('drip_connect')->getArea(),
+            'magento_source' => (string) Mage::helper('drip_connect')->getArea(),
         );
 
         return $data;
@@ -46,7 +46,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     public function getOrderDataNew($order)
     {
         $data = $this->getCommonOrderData($order);
-        $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_NEW;
+        $data['action'] = (string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_NEW;
 
         return $data;
     }
@@ -61,7 +61,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     public function getOrderDataCompleted($order)
     {
         $data = $this->getCommonOrderData($order);
-        $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_FULFILL;
+        $data['action'] = (string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_FULFILL;
 
         return $data;
     }
@@ -76,7 +76,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     public function getOrderDataCanceled($order)
     {
         $data = $this->getCommonOrderData($order);
-        $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_CANCEL;
+        $data['action'] = (string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_CANCEL;
 
         return $data;
     }
@@ -95,14 +95,14 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
         $refundId = $refunds->getLastItem()->getIncrementId();
 
         $data = array(
-            'provider' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
-            'email' => $order->getCustomerEmail(),
-            'action' => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_REFUND,
-            'order_id' => $order->getIncrementId(),
-            'order_public_id' => $order->getIncrementId(),
+            'provider' => (string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
+            'email' => (string) $order->getCustomerEmail(),
+            'action' => (string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_REFUND,
+            'order_id' => (string) $order->getIncrementId(),
+            'order_public_id' => (string) $order->getIncrementId(),
             'grand_total' => Mage::helper('drip_connect')->priceAsCents($order->getGrandTotal()) / 100,
             'refund_amount' => $refundValue / 100,
-            'occurred_at' => Mage::helper('drip_connect')->formatDate($order->getUpdatedAt()),
+            'occurred_at' => (string) Mage::helper('drip_connect')->formatDate($order->getUpdatedAt()),
         );
 
         return $data;
@@ -118,7 +118,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     public function getOrderDataOther($order)
     {
         $data = $this->getCommonOrderData($order);
-        $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_CHANGE;
+        $data['action'] = (string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_CHANGE;
 
         return $data;
     }
@@ -211,9 +211,9 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
         $data = array();
         foreach ($order->getAllItems() as $item) {
             $group = array(
-                'product_id' => $item->getProductId(),
-                'sku' => $item->getSku(),
-                'name' => $item->getName(),
+                'product_id' => (string) $item->getProductId(),
+                'sku' => (string) $item->getSku(),
+                'name' => (string) $item->getName(),
                 'quantity' => (float) $item->getQtyOrdered(),
                 'price' => Mage::helper('drip_connect')->priceAsCents($item->getPrice())/100,
                 'discounts' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount())/100,
@@ -227,8 +227,8 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
                     $categories = [];
                 }
                 $group['categories'] = $categories;
-                $group['product_url'] = $item->getProduct()->getProductUrl();
-                $group['image_url'] = Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail());
+                $group['product_url'] = (string) $item->getProduct()->getProductUrl();
+                $group['image_url'] = (string) Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail());
             }
             if ($isRefund) {
                 $group['refund_amount'] = Mage::helper('drip_connect')->priceAsCents($item->getAmountRefunded());
