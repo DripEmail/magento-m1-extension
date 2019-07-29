@@ -18,6 +18,8 @@ class Drip_Connect_Model_Cron_Orders
      */
     public function syncOrders()
     {
+        ini_set('memory_limit', Mage::getStoreConfig('dripconnect_general/api_settings/memory_limit'));
+
         $this->getAccountsToSyncOrders();
 
         foreach ($this->accounts as $accountId => $stores) {
