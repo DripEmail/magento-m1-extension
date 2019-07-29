@@ -38,8 +38,8 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         $data = array (
-            'email' => $subscriber->getSubscriberEmail(),
-            'ip_address' => Mage::helper('core/http')->getRemoteAddr(),
+            'email' => (string) $subscriber->getSubscriberEmail(),
+            'ip_address' => (string) Mage::helper('core/http')->getRemoteAddr(),
             'custom_fields' => array(
                 'accepts_marketing' => $acceptsMarketing,
             ),
@@ -66,9 +66,9 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
             $newEmail = '';
         }
         $data = array (
-            'email' => $customer->getEmail(),
+            'email' => (string) $customer->getEmail(),
             'new_email' => ($newEmail ? $newEmail : ''),
-            'ip_address' => Mage::helper('core/http')->getRemoteAddr(),
+            'ip_address' => (string) Mage::helper('core/http')->getRemoteAddr(),
             'custom_fields' => array(
                 'first_name' => $customer->getFirstname(),
                 'last_name' => $customer->getLastname(),
@@ -131,8 +131,8 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
     public function prepareCustomerDataForGuestCheckout($order) {
 
         return array (
-            'email' => $order->getCustomerEmail(),
-            'ip_address' => Mage::helper('core/http')->getRemoteAddr(),
+            'email' => (string) $order->getCustomerEmail(),
+            'ip_address' => (string) Mage::helper('core/http')->getRemoteAddr(),
             'custom_fields' => array(
                 'first_name' => $order->getCustomerFirstname(),
                 'last_name' => $order->getCustomerLastname(),
