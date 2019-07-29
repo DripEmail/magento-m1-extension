@@ -96,17 +96,19 @@ class Drip_Connect_Model_Cron_Orders
                 $batch[] = $data;
             }
 
-            $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Orders', array(
-                'batch' => $batch,
-                'account' => $accountId,
-            ))->call();
+            if (count($batch)) {
+                $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Orders', array(
+                    'batch' => $batch,
+                    'account' => $accountId,
+                ))->call();
 
-            if (empty($response) || $response->getResponseCode() != 202) { // drip success code for this action
-                $result = false;
-                break;
+                if (empty($response) || $response->getResponseCode() != 202) { // drip success code for this action
+                    $result = false;
+                    break;
+                }
+
+                sleep($delay);
             }
-
-            sleep($delay);
 
         } while ($page <= $collection->getLastPageNumber());
 
