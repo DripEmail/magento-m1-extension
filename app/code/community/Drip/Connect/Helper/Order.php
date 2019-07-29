@@ -239,4 +239,20 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
 
         return $data;
     }
+
+    /**
+     * check if given order can be sent to drip
+     *
+     * @param Mage_Sales_Model_Order $order
+     *
+     * @return bool
+     */
+    public function isCanBeSent($order)
+    {
+        if (empty($order->getCustomerEmail())) {
+            return false;
+        }
+
+        return true;
+    }
 }
