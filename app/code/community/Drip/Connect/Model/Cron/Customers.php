@@ -106,30 +106,34 @@ class Drip_Connect_Model_Cron_Customers
                 }
             }
 
-            $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Subscribers', array(
-                'batch' => $batchCustomer,
-                'account' => $accountId,
-            ))->call();
+            if (count($batchCustomer)) {
+                $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Subscribers', array(
+                    'batch' => $batchCustomer,
+                    'account' => $accountId,
+                ))->call();
 
-            if (empty($response) || $response->getResponseCode() != 201) { // drip success code for this action
-                $result = false;
-                break;
-            }
-
-            $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Events', array(
-                'batch' => $batchEvents,
-                'account' => $accountId,
-            ))->call();
-
-            if (empty($response) || $response->getResponseCode() != 201) { // drip success code for this action
-                $result = false;
-                break;
-            }
-
-            foreach ($collection as $subscriber) {
-                if ($subscriber->getNeedToUpdate()) {
-                    $subscriber->save();
+                if (empty($response) || $response->getResponseCode() != 201) { // drip success code for this action
+                    $result = false;
+                    break;
                 }
+
+                $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Events', array(
+                    'batch' => $batchEvents,
+                    'account' => $accountId,
+                ))->call();
+
+                if (empty($response) || $response->getResponseCode() != 201) { // drip success code for this action
+                    $result = false;
+                    break;
+                }
+
+                foreach ($collection as $subscriber) {
+                    if ($subscriber->getNeedToUpdate()) {
+                        $subscriber->save();
+                    }
+                }
+
+                sleep($delay);
             }
         } while ($page <= $collection->getLastPageNumber());
 
@@ -172,23 +176,25 @@ class Drip_Connect_Model_Cron_Customers
                 }
             }
 
-            $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Subscribers', array(
-                'batch' => $batchCustomer,
-                'account' => $accountId,
-            ))->call();
+            if (count($batchCustomer)) {
+                $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Subscribers', array(
+                    'batch' => $batchCustomer,
+                    'account' => $accountId,
+                ))->call();
 
-            if (empty($response) || $response->getResponseCode() != 201) { // drip success code for this action
-                $result = false;
-                break;
-            }
-
-            foreach ($collection as $customer) {
-                if ($customer->getNeedToUpdateAttribute()) {
-                    $customer->getResource()->saveAttribute($customer, 'drip');
+                if (empty($response) || $response->getResponseCode() != 201) { // drip success code for this action
+                    $result = false;
+                    break;
                 }
-            }
 
-            sleep($delay);
+                foreach ($collection as $customer) {
+                    if ($customer->getNeedToUpdateAttribute()) {
+                        $customer->getResource()->saveAttribute($customer, 'drip');
+                    }
+                }
+
+                sleep($delay);
+            }
 
         } while ($page <= $collection->getLastPageNumber());
 
