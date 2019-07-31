@@ -8,6 +8,8 @@ class Drip_Connect_Model_ApiCalls_Base
      */
     public function __construct(array $options)
     {
+        $storeId = empty($options['store_id']) ? Mage::helper('core')->getStoreId() : $options['store_id'];
+
         if (isset($options['response_model'])) {
             $this->_responseModel = $options['response_model'];
         } else {
@@ -21,7 +23,7 @@ class Drip_Connect_Model_ApiCalls_Base
         if (isset($options['behavior'])) {
             $this->_behavior = $options['behavior'];
         } else {
-            $this->_behavior = Mage::getStoreConfig('dripconnect_general/api_settings/behavior');
+            $this->_behavior = Mage::getStoreConfig('dripconnect_general/api_settings/behavior', $storeId);
         }
 
         if (isset($options['http_client'])) {
@@ -32,14 +34,14 @@ class Drip_Connect_Model_ApiCalls_Base
             } else {
                 $endpoint = '';
             }
-            $url = Mage::getStoreConfig('dripconnect_general/api_settings/url').$endpoint;
+            $url = Mage::getStoreConfig('dripconnect_general/api_settings/url', $storeId).$endpoint;
 
             if (!empty($options['v3'])) {
                 $url = str_replace('/v2/', '/v3/', $url);
             }
             $config = array(
                 'useragent' => self::USERAGENT,
-                'timeout' => Mage::getStoreConfig('dripconnect_general/api_settings/timeout') / 1000,
+                'timeout' => Mage::getStoreConfig('dripconnect_general/api_settings/timeout', $storeId) / 1000,
             );
             if (!empty($options['config']) && is_array($options['config'])) {
                 $config = array_merge($config, $options['config']);
@@ -57,7 +59,7 @@ class Drip_Connect_Model_ApiCalls_Base
             ));
 
             $this->_httpClient->setAuth(
-                Mage::getStoreConfig('dripconnect_general/api_settings/api_key'),
+                Mage::getStoreConfig('dripconnect_general/api_settings/api_key', $storeId),
                 '',
                 Zend_Http_Client::AUTH_BASIC
             );
