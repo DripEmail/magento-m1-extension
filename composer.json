@@ -2,7 +2,7 @@
     "name": "drip/connect",
     "description": "Drip Connect M1 module",
     "type": "magento-module",
-    "version": "1.5.0",
+    "version": "1.6.2",
     "authors": [
         {
             "name": "dev",
