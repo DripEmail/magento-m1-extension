@@ -76,6 +76,8 @@ class Drip_Connect_Model_Cron_Customers
             Mage::helper('drip_connect')->setCustomersSyncStateToStore($storeId, Drip_Connect_Model_Source_SyncState::PROGRESS);
         }
 
+        $delay = (int) Mage::getStoreConfig('dripconnect_general/api_settings/batch_delay');
+
         $result = true;
         $page = 1;
         do {
@@ -137,6 +139,7 @@ class Drip_Connect_Model_Cron_Customers
 
                 sleep($delay);
             }
+            
         } while ($page <= $collection->getLastPageNumber());
 
         return $result;

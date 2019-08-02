@@ -140,7 +140,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
         $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
         $newData = Mage::helper('drip_connect/quote')->prepareQuoteData($quote);
 
-        return (serialize($oldData) != serialize($newData));
+        return (Mage::helper('core')->jsonEncode($oldData) != Mage::helper('core')->jsonEncode($newData));
     }
 
     /**

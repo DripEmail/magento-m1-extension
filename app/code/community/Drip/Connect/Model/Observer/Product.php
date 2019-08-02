@@ -104,6 +104,7 @@ class Drip_Connect_Model_Observer_Product
         unset($oldData['occurred_at']);
         $newData = Mage::helper('drip_connect/product')->prepareData($product);
         unset($newData['occurred_at']);
-        return (serialize($oldData) != serialize($newData));
+
+        return (Mage::helper('core')->jsonEncode($oldData) != Mage::helper('core')->jsonEncode($newData));
     }
 }
