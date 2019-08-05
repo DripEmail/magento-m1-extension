@@ -33,6 +33,9 @@ abstract class Drip_Connect_Model_Restapi_Abstract
     /** @var string */
     protected $_logSettingsXpath = 'dripconnect_general/log_settings';
 
+    /** @var int */
+    protected $storeId = 0;
+
     /**
      * Makes API call and returns response object.
      *
@@ -128,6 +131,14 @@ abstract class Drip_Connect_Model_Restapi_Abstract
     }
 
     /**
+     * @param int $storeId
+     */
+    protected function setStoreId(int $storeId)
+    {
+        $this->storeId = $storeId;
+    }
+
+    /**
      * Call the API
      *
      * @param $request
@@ -190,7 +201,7 @@ abstract class Drip_Connect_Model_Restapi_Abstract
     public function getLogSettings()
     {
         $settings = new Varien_Object();
-        $settings->setData(Mage::getStoreConfig($this->_logSettingsXpath));
+        $settings->setData(Mage::getStoreConfig($this->_logSettingsXpath, $this->storeId));
         return $settings;
     }
 
@@ -229,7 +240,12 @@ abstract class Drip_Connect_Model_Restapi_Abstract
         $logFile = $logDir . DS . $this->_logFilename;
         $lastCreation = $this->getLogSettings()->getLastLogArchive();
         if (is_file($logFile) && $period && $lastCreation + $period < time()) {
-            Mage::getConfig()->saveConfig($this->_logSettingsXpath.'/last_log_archive', time());
+            if ($this->storeId != 0) {
+                $scope = 'stores';
+            } else {
+                $scope = 'default';
+            }
+            Mage::getConfig()->saveConfig($this->_logSettingsXpath.'/last_log_archive', time(), $scope, $this->storeId);
             $archive = new Mage_Archive();
             $archive->pack($logFile, $archiveDir.'archive'.date('Y-m-d-H-i-s').'.tgz');
             unlink($logFile);

@@ -10,6 +10,8 @@ class Drip_Connect_Model_ApiCalls_Base
     {
         $storeId = empty($options['store_id']) ? Mage::helper('core')->getStoreId() : $options['store_id'];
 
+        $this->setStoreId($storeId);
+
         if (isset($options['response_model'])) {
             $this->_responseModel = $options['response_model'];
         } else {
