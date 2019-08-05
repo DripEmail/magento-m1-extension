@@ -57,6 +57,10 @@ class Drip_Connect_Model_Observer_Order
             return;
         }
 
+        if (! Mage::helper('drip_connect/order')->isCanBeSent($order)) {
+            return;
+        }
+
         if ($this->isOrderNew($order)) {
             if ($this->isSameState($order)) {
                 return;
