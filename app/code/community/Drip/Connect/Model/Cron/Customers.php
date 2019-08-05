@@ -35,12 +35,6 @@ class Drip_Connect_Model_Cron_Customers
                 continue;
             }
 
-            // can already be in progress if store sync had been started with
-            // its own button just before the default sync was also launched
-            if (Mage::getStoreConfig('dripconnect_general/actions/sync_customers_data_state', $storeId) == Drip_Connect_Model_Source_SyncState::PROGRESS) {
-                continue;
-            }
-
             try {
                 $result = $this->syncCustomersForStore($storeId);
                 if ($result) {
@@ -89,10 +83,10 @@ class Drip_Connect_Model_Cron_Customers
         $result = true;
         $page = 1;
         do {
-            // todo filter by website\store ??
             $collection = Mage::getModel('newsletter/subscriber')->getCollection()
                 ->addFieldToSelect('*')
                 ->addFieldToFilter('customer_id', 0) // need only guests b/c customers have already been processed
+                ->addFieldToFilter('store_id', $storeId)
                 ->setPageSize(Drip_Connect_Model_ApiCalls_Helper::MAX_BATCH_SIZE)
                 ->setCurPage($page++)
                 ->load();
@@ -164,13 +158,15 @@ class Drip_Connect_Model_Cron_Customers
 
         $delay = (int) Mage::getStoreConfig('dripconnect_general/api_settings/batch_delay');
 
+        $websiteId = Mage::app()->getStore($storeId)->getWebsiteId();
+
         $result = true;
         $page = 1;
         do {
-            // todo filter by website\store ??
             $collection = Mage::getModel('customer/customer')
                 ->getCollection()
                 ->addAttributeToSelect('*')
+                ->addFieldToFilter('website_id', ['in' => [0, $websiteId]])
                 ->setPageSize(Drip_Connect_Model_ApiCalls_Helper::MAX_BATCH_SIZE)
                 ->setCurPage($page++)
                 ->load();

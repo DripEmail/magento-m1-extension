@@ -34,12 +34,6 @@ class Drip_Connect_Model_Cron_Orders
                 continue;
             }
 
-            // can already be in progress if store sync had been started with
-            // its own button just before the default sync was also launched
-            if (Mage::getStoreConfig('dripconnect_general/actions/sync_orders_data_state', $storeId) == Drip_Connect_Model_Source_SyncState::PROGRESS) {
-                continue;
-            }
-
             try {
                 $result = $this->syncOrdersForStore($storeId);
             } catch (\Exception $e) {
