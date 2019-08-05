@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-    <name>Drip_Connect</name>
+    <name>Drip</name>
     <version>1.7.0</version>
     <stability>stable</stability>
     <license>GNU Lesser General Public License 3.0</license>
