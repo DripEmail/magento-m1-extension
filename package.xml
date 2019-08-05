@@ -19,10 +19,188 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
     <notes>- Sync customers and orders to Drip&#xD;
 - Automatically set up site tracking with Drip's JS snippet&#xD;
 - Trigger custom events to Drip to enable ecommerce automation</notes>
-    <authors><author><name>Drip</name><user>getdrip</user><email>magento@drip.com</email></author></authors>
+    <authors>
+        <author>
+            <name>Drip</name>
+            <user>getdrip</user>
+            <email>magento@drip.com</email>
+        </author>
+    </authors>
     <date>2019-07-31</date>
     <time>11:05:43</time>
-    <contents><target name="magecommunity"><dir name="Drip"><dir name="Connect"><dir name="Block"><dir name="Adminhtml"><dir name="System"><dir name="Config"><dir name="Sync"><file name="Customers.php" hash="46c80bc269ec46585ee2eec29136bbe6"/><file name="Orders.php" hash="03c63f13bdd64b188bd6227068a39d2a"/></dir><file name="Version.php" hash="ce15b903b8a10d08e91a6d3680246c0f"/></dir></dir></dir></dir><dir name="Helper"><file name="Data.php" hash="3372cd32dd52f4b586334b900a7dd4b4"/><file name="Order.php" hash="b674ce4df52c316eb1f430c0dd56b45c"/><file name="Product.php" hash="e365a5bc6f31f5d17b576fc43ea6acce"/><file name="Quote.php" hash="17c84db5568db0a9b97ff01d0f546eb1"/></dir><dir name="Model"><dir name="ApiCalls"><file name="Base.php" hash="37f8f6499a34dfbf9593c2a2f5bd6c43"/><dir name="Helper"><dir name="Batches"><file name="Events.php" hash="3fed10bd4e3c4651c36408c932d70905"/><file name="Orders.php" hash="b4848bb0c21b9b3a72d56f38ddddacea"/><file name="Subscribers.php" hash="e8b5216b2b0809e8bf65e763b65e044d"/><file name=".Orders.php.swp" hash="65aa0e7e98415b8718cd0b770fdd7593"/></dir><file name="CreateUpdateOrder.php" hash="4e1ae7c5bdc624f6748037e8ca647e6c"/><file name="CreateUpdateProduct.php" hash="ccf512e25c9094366e864696be33b10a"/><file name="CreateUpdateQuote.php" hash="726c2e0aa4e9f2dd49602f4c65e8227f"/><file name="CreateUpdateRefund.php" hash="f65123a8769b09154c1151a3892abeef"/><file name="CreateUpdateSubscriber.php" hash="f73f8e2eca14f1ef0d111a26295f9702"/><file name="GetProjectList.php" hash="60cd99bc8bc0eacfd02bda01a3286585"/><file name="GetSubscriberList.php" hash="8f345fd3ba905a422d7c4325915a9adb"/><file name="RecordAnEvent.php" hash="3a7146f60792ce14c4cbc762876dab8d"/><file name="UnsubscribeSubscriber.php" hash="41e76ac87d895da2c9efb878d8e71274"/></dir><file name="Helper.php" hash="a0fbeed59c5233f01afabaf356787cdd"/><dir name="Request"><file name="Base.php" hash="6430d8c4c92c0453318df9a27823e35d"/></dir><dir name="Response"><file name="Base.php" hash="4b9e5ffc44f8e92e71cc87bdca3b1573"/></dir><file name=".Base.php.swp" hash="d64eebe36e0bed700dfff8c203fcb00d"/></dir><dir name="Cron"><file name="Customers.php" hash="b58f62820ccd347d06777ca54fc0bd8a"/><file name="Orders.php" hash="0d8169cf42206c380db880f056168bf7"/><file name=".Orders.php.swp" hash="5d7e1e28c3def41c44e3c10fba0051e4"/></dir><dir name="Http"><file name="Client.php" hash="2a5bb7ca065531f08f66cb1f060d5296"/></dir><dir name="Observer"><file name="Account.php" hash="10d0a04392ce243617b0cf20cf985691"/><file name="Customer.php" hash="d04d968d5184ea5859c4046c4a9bc659"/><file name="Order.php" hash="961b4850ff34233556756dd26ea8b362"/><file name="Product.php" hash="a2782a83b0ac055c54b157a2b19fbb76"/><file name="Quote.php" hash="5c687e1fedbc3b68c55f47a79b43f646"/><file name="Wishlist.php" hash="0895bc9c86cad3c0f6b9426899b92375"/></dir><dir name="Restapi"><file name="Abstract.php" hash="f658a2a31417e6d0363979acf18ec222"/><dir name="Request"><file name="Interface.php" hash="5e403bb6699b8921f91b3ccaf6e86c3a"/></dir><dir name="Response"><file name="Abstract.php" hash="fb114477055482cc811bd56a8779590f"/><file name="Interface.php" hash="d05b69c0ff4a064be22ae7f19a5411de"/></dir></dir><dir name="Source"><file name="Behavior.php" hash="6968948cf9eae571820b300ea17ced2b"/><file name="SyncState.php" hash="1775a87e9dc3c05ecc9661314972caac"/></dir></dir><dir name="controllers"><dir name="Adminhtml"><dir name="Config"><dir name="Sync"><file name="CustomersController.php" hash="e10a8dcbac6f2a0a80a6b6b62d57ad8e"/><file name="OrdersController.php" hash="38071443e41e7e1468833487d3c688a8"/></dir></dir></dir><file name="CartController.php" hash="d7c89b1d68e875d375fa5608cf34c680"/></dir><dir name="data"><dir name="drip_connect_setup"><file name="data-upgrade-0.1.0-0.2.0.php" hash="1b1223e0a57fb19a245138811ddd0d12"/><file name="data-upgrade-0.2.0-0.3.0.php" hash="110093d5e2104f025f244ac453b77905"/><file name="data-upgrade-1.5.0-1.5.2.php" hash="263714be0b2e3d8199d7f3a96c89dc22"/></dir></dir><dir name="etc"><file name="adminhtml.xml" hash="d4f35cee5cd38366de6ba2e6df312bf6"/><file name="config.xml" hash="880550ad8ac10fde72efcd800e16b60e"/><file name="system.xml" hash="30c0281b55ae6208c069922419566ed9"/></dir><dir name="sql"><dir name="drip_connect_setup"><file name="upgrade-1.2.7-1.3.0.php" hash="659b341c173215cb32caeadd8683f800"/></dir></dir></dir></dir></target><target name="mageetc"><dir name="modules"><file name="Drip_Connect.xml" hash="aaf0a49b0b7b8d7743831a961061e615"/></dir></target><target name="magedesign"><dir name="frontend"><dir name="base"><dir name="default"><dir name="layout"><dir name="drip"><file name="connect.xml" hash="b1c5b35a65ba26578de5b9f4f047a1cf"/></dir></dir><dir name="template"><dir name="drip"><file name="footer_js.phtml" hash="d14d363c736b35caed5740475e79205a"/><file name="pdp_tracking.phtml" hash="3ac7d7112122e6498d66c4b6c3ca1d57"/></dir></dir></dir></dir></dir><dir name="adminhtml"><dir name="default"><dir name="default"><dir name="template"><dir name="drip"><dir name="connect"><dir name="config"><dir name="sync"><file name="customers.phtml" hash="7e6bd245f91a9f94a3e1aa89805c06b0"/><file name="orders.phtml" hash="02a1c99800969fb7d2dc71cc25c7049c"/></dir></dir></dir></dir></dir></dir></dir></dir></target></contents>
+    <contents>
+        <target name="magecommunity">
+            <dir name="Drip">
+                <dir name="Connect">
+                    <dir name="Block">
+                        <dir name="Adminhtml">
+                            <dir name="System">
+                                <dir name="Config">
+                                    <dir name="Sync">
+                                        <file name="Customers.php" hash="46c80bc269ec46585ee2eec29136bbe6"/>
+                                        <dir name="Customers">
+                                            <file name="Reset.php" hash="9658e454a47058069414b210752f2ba4"/>
+                                        </dir>
+                                        <file name="Orders.php" hash="03c63f13bdd64b188bd6227068a39d2a"/>
+                                        <dir name="Orders">
+                                            <file name="Reset.php" hash="a1320431e3a04c3382c724e4e8b0517d"/>
+                                        </dir>
+                                    </dir>
+                                    <file name="Version.php" hash="ce15b903b8a10d08e91a6d3680246c0f"/>
+                                </dir>
+                            </dir>
+                        </dir>
+                    </dir>
+                    <dir name="Helper">
+                        <file name="Data.php" hash="c2ab87064ff0884c5f0b2b8bc2b960b5"/>
+                        <file name="Order.php" hash="6766119ff758ce2cd950946c514caf65"/>
+                        <file name="Product.php" hash="e365a5bc6f31f5d17b576fc43ea6acce"/>
+                        <file name="Quote.php" hash="91a400f27a59cf3a4dee66347d771a06"/>
+                    </dir>
+                    <dir name="Model">
+                        <dir name="ApiCalls">
+                            <file name="Base.php" hash="37f8f6499a34dfbf9593c2a2f5bd6c43"/>
+                            <file name="Helper.php" hash="a0fbeed59c5233f01afabaf356787cdd"/>
+                            <dir name="Helper">
+                                <dir name="Batches">
+                                    <file name="Events.php" hash="3fed10bd4e3c4651c36408c932d70905"/>
+                                    <file name="Orders.php" hash="b4848bb0c21b9b3a72d56f38ddddacea"/>
+                                    <file name="Subscribers.php" hash="e8b5216b2b0809e8bf65e763b65e044d"/>
+                                </dir>
+                                <file name="CreateUpdateOrder.php" hash="4e1ae7c5bdc624f6748037e8ca647e6c"/>
+                                <file name="CreateUpdateProduct.php" hash="ccf512e25c9094366e864696be33b10a"/>
+                                <file name="CreateUpdateQuote.php" hash="726c2e0aa4e9f2dd49602f4c65e8227f"/>
+                                <file name="CreateUpdateRefund.php" hash="f65123a8769b09154c1151a3892abeef"/>
+                                <file name="CreateUpdateSubscriber.php" hash="f73f8e2eca14f1ef0d111a26295f9702"/>
+                                <file name="GetProjectList.php" hash="60cd99bc8bc0eacfd02bda01a3286585"/>
+                                <file name="GetSubscriberList.php" hash="8f345fd3ba905a422d7c4325915a9adb"/>
+                                <file name="RecordAnEvent.php" hash="3a7146f60792ce14c4cbc762876dab8d"/>
+                                <file name="UnsubscribeSubscriber.php" hash="41e76ac87d895da2c9efb878d8e71274"/>
+                            </dir>
+                            <dir name="Request">
+                                <file name="Base.php" hash="6430d8c4c92c0453318df9a27823e35d"/>
+                            </dir>
+                            <dir name="Response">
+                                <file name="Base.php" hash="4b9e5ffc44f8e92e71cc87bdca3b1573"/>
+                            </dir>
+                        </dir>
+                        <dir name="Cron">
+                            <file name="Customers.php" hash="27edebd129d7eed383309e08205db53a"/>
+                            <file name="Orders.php" hash="2de6baa580d3e7d7bcfcfb145417c168"/>
+                        </dir>
+                        <dir name="Http">
+                            <file name="Client.php" hash="2a5bb7ca065531f08f66cb1f060d5296"/>
+                        </dir>
+                        <dir name="Observer">
+                            <file name="Account.php" hash="3c8add2cf8a7184420d671a5f1996d17"/>
+                            <file name="Customer.php" hash="d04d968d5184ea5859c4046c4a9bc659"/>
+                            <file name="Order.php" hash="5bcedf0fcecfc5aee855a3c957272921"/>
+                            <file name="Product.php" hash="948c8c5f4c603a8f2d699136a9b2b891"/>
+                            <file name="Quote.php" hash="5c687e1fedbc3b68c55f47a79b43f646"/>
+                            <file name="Wishlist.php" hash="0895bc9c86cad3c0f6b9426899b92375"/>
+                        </dir>
+                        <dir name="Restapi">
+                            <file name="Abstract.php" hash="f658a2a31417e6d0363979acf18ec222"/>
+                            <dir name="Request">
+                                <file name="Interface.php" hash="5e403bb6699b8921f91b3ccaf6e86c3a"/>
+                            </dir>
+                            <dir name="Response">
+                                <file name="Abstract.php" hash="fb114477055482cc811bd56a8779590f"/>
+                                <file name="Interface.php" hash="d05b69c0ff4a064be22ae7f19a5411de"/>
+                            </dir>
+                        </dir>
+                        <dir name="Source">
+                            <file name="Behavior.php" hash="6968948cf9eae571820b300ea17ced2b"/>
+                            <file name="SyncState.php" hash="1775a87e9dc3c05ecc9661314972caac"/>
+                        </dir>
+                    </dir>
+                    <dir name="controllers">
+                        <dir name="Adminhtml">
+                            <dir name="Config">
+                                <dir name="Sync">
+                                    <file name="CustomersController.php" hash="63d4af07cb208f4c51e2e3f2a5af894b"/>
+                                    <file name="OrdersController.php" hash="18da0e10be6dcf656554119c0e6adab8"/>
+                                </dir>
+                            </dir>
+                        </dir>
+                        <file name="CartController.php" hash="d7c89b1d68e875d375fa5608cf34c680"/>
+                    </dir>
+                    <dir name="data">
+                        <dir name="drip_connect_setup">
+                            <file name="data-upgrade-0.1.0-0.2.0.php" hash="1b1223e0a57fb19a245138811ddd0d12"/>
+                            <file name="data-upgrade-0.2.0-0.3.0.php" hash="110093d5e2104f025f244ac453b77905"/>
+                            <file name="data-upgrade-1.5.0-1.5.2.php" hash="263714be0b2e3d8199d7f3a96c89dc22"/>
+                        </dir>
+                    </dir>
+                    <dir name="etc">
+                        <file name="adminhtml.xml" hash="d4f35cee5cd38366de6ba2e6df312bf6"/>
+                        <file name="config.xml" hash="6c0d1c98073bf51eafcc8562911f86b8"/>
+                        <file name="system.xml" hash="91acedac1d8b9c0646b8cdc46a08fe79"/>
+                    </dir>
+                    <dir name="sql">
+                        <dir name="drip_connect_setup">
+                            <file name="upgrade-1.2.7-1.3.0.php" hash="659b341c173215cb32caeadd8683f800"/>
+                        </dir>
+                    </dir>
+                </dir>
+            </dir>
+        </target>
+        <target name="mageetc">
+            <dir name="modules">
+                <file name="Drip_Connect.xml" hash="aaf0a49b0b7b8d7743831a961061e615"/>
+            </dir>
+        </target>
+        <target name="magedesign">
+            <dir name="adminhtml">
+                <dir name="default">
+                    <dir name="default">
+                        <dir name="template">
+                            <dir name="drip">
+                                <dir name="connect">
+                                    <dir name="config">
+                                        <dir name="sync">
+                                            <file name="customers.phtml" hash="7e6bd245f91a9f94a3e1aa89805c06b0"/>
+                                            <dir name="customers">
+                                                <file name="reset.phtml" hash="72e8db65a675354b6d9ba19a6cc1a759"/>
+                                            </dir>
+                                            <file name="orders.phtml" hash="02a1c99800969fb7d2dc71cc25c7049c"/>
+                                            <dir name="orders">
+                                                <file name="reset.phtml" hash="aa99ec5752f4aa463abfda9a2668ac6d"/>
+                                            </dir>
+                                        </dir>
+                                    </dir>
+                                </dir>
+                            </dir>
+                        </dir>
+                    </dir>
+                </dir>
+            </dir>
+            <dir name="frontend">
+                <dir name="base">
+                    <dir name="default">
+                        <dir name="layout">
+                            <dir name="drip">
+                                <file name="connect.xml" hash="b1c5b35a65ba26578de5b9f4f047a1cf"/>
+                            </dir>
+                        </dir>
+                        <dir name="template">
+                            <dir name="drip">
+                                <file name="footer_js.phtml" hash="d14d363c736b35caed5740475e79205a"/>
+                                <file name="pdp_tracking.phtml" hash="3ac7d7112122e6498d66c4b6c3ca1d57"/>
+                            </dir>
+                        </dir>
+                    </dir>
+                </dir>
+            </dir>
+        </target>
+    </contents>
     <compatible/>
-    <dependencies><required><php><min>5.6.0</min><max>7.2.0</max></php></required></dependencies>
+    <dependencies>
+        <required>
+            <php>
+                <min>5.6.0</min>
+                <max>7.2.0</max>
+            </php>
+        </required>
+    </dependencies>
 </package>
