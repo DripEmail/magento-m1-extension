@@ -19,7 +19,7 @@ class Drip_Connect_Model_Cron_Customers
     public function syncCustomers()
     {
         ini_set('memory_limit', Mage::getStoreConfig('dripconnect_general/api_settings/memory_limit'));
-        
+
         $this->getAccountsToSyncCustomers();
 
         foreach ($this->accounts as $accountId => $stores) {
@@ -139,7 +139,7 @@ class Drip_Connect_Model_Cron_Customers
 
                 sleep($delay);
             }
-            
+
         } while ($page <= $collection->getLastPageNumber());
 
         return $result;
