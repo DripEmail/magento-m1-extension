@@ -375,7 +375,7 @@ class Drip_Connect_Model_Observer_Account
         $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
         $newData = Drip_Connect_Helper_Data::prepareCustomerData($customer);
 
-        return (serialize($oldData) != serialize($newData));
+        return (Mage::helper('core')->jsonEncode($oldData) != Mage::helper('core')->jsonEncode($newData));
     }
 
     /**
@@ -405,7 +405,7 @@ class Drip_Connect_Model_Observer_Account
         $oldData = Mage::registry(self::REGISTRY_KEY_OLD_ADDR);
         $newData = $this->getAddressFields($address);
 
-        return (serialize($oldData) != serialize($newData));
+        return (Mage::helper('core')->jsonEncode($oldData) != Mage::helper('core')->jsonEncode($newData));
     }
 
     /**

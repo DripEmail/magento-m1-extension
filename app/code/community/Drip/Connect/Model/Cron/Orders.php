@@ -18,6 +18,8 @@ class Drip_Connect_Model_Cron_Orders
      */
     public function syncOrders()
     {
+        ini_set('memory_limit', Mage::getStoreConfig('dripconnect_general/api_settings/memory_limit'));
+
         $this->getAccountsToSyncOrders();
 
         foreach ($this->accounts as $accountId => $stores) {
@@ -89,9 +91,16 @@ class Drip_Connect_Model_Cron_Orders
 
             $batch = array();
             foreach ($collection as $order) {
-                $data = Mage::helper('drip_connect/order')->getOrderDataNew($order);
-                $data['occurred_at'] = Mage::helper('drip_connect')->formatDate($order->getCreatedAt());
-                $batch[] = $data;
+                if (Mage::helper('drip_connect/order')->isCanBeSent($order)) {
+                    $data = Mage::helper('drip_connect/order')->getOrderDataNew($order);
+                    $data['occurred_at'] = Mage::helper('drip_connect')->formatDate($order->getCreatedAt());
+                    $batch[] = $data;
+                } else {
+                    Mage::log(sprintf(
+                        "Order with id %s can't be sent to Drip",
+                        $order->getId()
+                    ));
+                }
             }
 
             if (count($batch)) {
