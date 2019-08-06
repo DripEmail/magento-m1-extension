@@ -240,12 +240,8 @@ abstract class Drip_Connect_Model_Restapi_Abstract
         $logFile = $logDir . DS . $this->_logFilename;
         $lastCreation = $this->getLogSettings()->getLastLogArchive();
         if (is_file($logFile) && $period && $lastCreation + $period < time()) {
-            if ($this->storeId != 0) {
-                $scope = 'stores';
-            } else {
-                $scope = 'default';
-            }
-            Mage::getConfig()->saveConfig($this->_logSettingsXpath.'/last_log_archive', time(), $scope, $this->storeId);
+            //leave default scope for this setting b/c we use one log file for all stores
+            Mage::getConfig()->saveConfig($this->_logSettingsXpath.'/last_log_archive', time());
             $archive = new Mage_Archive();
             $archive->pack($logFile, $archiveDir.'archive'.date('Y-m-d-H-i-s').'.tgz');
             unlink($logFile);
