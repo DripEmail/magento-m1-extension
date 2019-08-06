@@ -263,11 +263,17 @@ class Drip_Connect_Model_Observer_Account
      */
     protected function proceedGuestSubscriberNew($subscriber)
     {
+        $email = $subscriber->getSubscriberEmail();
+        if (empty($email)) {
+            Mage::log("Skipping guest subscriber create due to blank email", Zend_Log::NOTICE);
+            return;
+        }
+
         $data = Drip_Connect_Helper_Data::prepareGuestSubscriberData($subscriber, false);
         Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $data)->call();
 
         $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-            'email' => $subscriber->getSubscriberEmail(),
+            'email' => $email,
             'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_NEW,
             'properties' => array(
                 'source' => 'magento'
@@ -282,11 +288,17 @@ class Drip_Connect_Model_Observer_Account
      */
     protected function proceedAccountNew($customer)
     {
+        $email = $customer->getEmail();
+        if (empty($email)) {
+            Mage::log("Skipping guest subscriber create due to blank email", Zend_Log::NOTICE);
+            return;
+        }
+
         $customerData = Drip_Connect_Helper_Data::prepareCustomerData($customer, false);
         Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $customerData)->call();
 
         $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-            'email' => $customer->getEmail(),
+            'email' => $email,
             'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_NEW,
             'properties' => array(
                 'source' => 'magento'

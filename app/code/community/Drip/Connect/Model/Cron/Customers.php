@@ -100,13 +100,18 @@ class Drip_Connect_Model_Cron_Customers
             $batchCustomer = array();
             $batchEvents = array();
             foreach ($collection as $subscriber) {
+                $email = $subscriber->getSubscriberEmail();
+                if (empty($email)) {
+                    Mage::log("Skipping newsletter subscriber event during sync due to blank email", Zend_Log::NOTICE);
+                    continue;
+                }
 
                 $dataCustomer = Drip_Connect_Helper_Data::prepareGuestSubscriberData($subscriber);
                 $dataCustomer['tags'] = array('Synced from Magento');
                 $batchCustomer[] = $dataCustomer;
 
                 $dataEvents = array(
-                    'email' => $subscriber->getSubscriberEmail(),
+                    'email' => $email,
                     'action' => ($subscriber->getDrip()
                         ? Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED
                         : Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_NEW),
