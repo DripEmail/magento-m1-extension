@@ -1,5 +1,5 @@
 <?php if (Mage::helper('drip_connect')->isModuleActive()) : ?>
-    <?php $accountId = Mage::getStoreConfig('dripconnect_general/api_settings/account_id'); ?>
+    <?php $accountId = Mage::getStoreConfig('dripconnect_general/api_settings/account_id', Mage::app()->getRequest()->getParam('store')); ?>
     <?php if (!empty($accountId)) : ?>
         <!-- Drip -->
         <script type="text/javascript">
