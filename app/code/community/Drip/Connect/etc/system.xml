@@ -103,6 +103,15 @@
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
                         </batch_delay>
+                        <memory_limit translate="label comment">
+                            <label>Memory Limit</label>
+                            <comment>Memory Limit in Mb</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </memory_limit>
                     </fields>
                 </api_settings>
                 <actions translate="label">
@@ -136,6 +145,17 @@
                                 <hideThisField>1</hideThisField>
                             </depends>
                         </sync_customers_data_state>
+                        <sync_customers_data_state_reset translate="label comment button_label">
+                            <label></label>
+                            <button_label>Reset Status</button_label>
+                            <comment>This will reset the sync status to "Ready". Sync process takes a time so please use the reset only if it gets stuck.</comment>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>drip_connect/adminhtml_system_config_sync_customers_reset</frontend_model>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sync_customers_data_state_reset>
                         <sync_orders_data translate="label comment button_label">
                             <label>Sync Orders</label>
                             <button_label>Sync All Orders To Drip</button_label>
@@ -159,6 +179,17 @@
                                 <hideThisField>1</hideThisField>
                             </depends>
                         </sync_orders_data_state>
+                        <sync_orders_data_state_reset translate="label comment button_label">
+                            <label></label>
+                            <button_label>Reset Status</button_label>
+                            <comment>This will reset the sync status to "Ready". Sync process takes a time so please use the reset only if it gets stuck.</comment>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>drip_connect/adminhtml_system_config_sync_orders_reset</frontend_model>
+                            <sort_order>22</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sync_orders_data_state_reset>
                     </fields>
                 </actions>
                 <log_settings translate="label">

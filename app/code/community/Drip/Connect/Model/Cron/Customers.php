@@ -12,7 +12,8 @@ class Drip_Connect_Model_Cron_Customers
      */
     public function syncCustomers()
     {
-
+        ini_set('memory_limit', Mage::getStoreConfig('dripconnect_general/api_settings/memory_limit'));
+        
         $storeIds = [];
         $stores = Mage::app()->getStores(false, false);
 
@@ -80,6 +81,8 @@ class Drip_Connect_Model_Cron_Customers
 
         $delay = (int) Mage::getStoreConfig('dripconnect_general/api_settings/batch_delay');
 
+        $delay = (int) Mage::getStoreConfig('dripconnect_general/api_settings/batch_delay');
+
         $result = true;
         $page = 1;
         do {
@@ -142,6 +145,7 @@ class Drip_Connect_Model_Cron_Customers
 
                 sleep($delay);
             }
+            
         } while ($page <= $collection->getLastPageNumber());
 
         return $result;
