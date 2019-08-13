@@ -27,16 +27,16 @@ class Drip_Connect_Model_Http_Client extends Zend_Http_Client
      */
     public function request($method = null)
     {
+        $requestId = uniqid();
+        $this->setHeaders('X-Drip-Connect-Request-Id', $requestId);
         $requestBody = $this->_prepareBody();
         $requestUrl = $this->getUri(true);
         $response = parent::request($method);
         $responseData = $response->getBody();
 
-        if (!is_null($this->getLogger())) {
-            $this->getLogger()->info('Request Url: '.$requestUrl);
-            $this->getLogger()->info('Request Body: '.$requestBody);
-            $this->getLogger()->info('Response: '.$responseData);
-        }
+        $this->getLogger()->info('['.$requestId.'] Request Url: '.$requestUrl);
+        $this->getLogger()->info('['.$requestId.'] Request Body: '.$requestBody);
+        $this->getLogger()->info('['.$requestId.'] Response: '.$responseData);
 
         return $response;
     }
