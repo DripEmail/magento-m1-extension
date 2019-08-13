@@ -60,7 +60,7 @@ class Drip_Connect_Model_Cron_Customers
         if ($trackDefaultStatus) {
             if (count($statuses) === 0 || (
                 count(array_unique($statuses)) === 1 &&
-                $stauses[0] === Drip_Connect_Model_Source_SyncState::READY
+                $statuses[0] === Drip_Connect_Model_Source_SyncState::READY
             )) {
                 $status = Drip_Connect_Model_Source_SyncState::READY;
             } else {
