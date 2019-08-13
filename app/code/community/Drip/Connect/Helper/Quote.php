@@ -114,7 +114,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
                 'categories' => $categories,
                 'quantity' => $item->getQty(),
                 'price' => Mage::helper('drip_connect')->priceAsCents($item->getPrice())/100,
-                'discount' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount())/100,
+                'discounts' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount())/100,
                 'total' => Mage::helper('drip_connect')->priceAsCents((float)$item->getQty() * (float)$item->getPrice()) / 100,
                 'product_url' => $product->getProductUrl(),
                 'image_url' => Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()),
