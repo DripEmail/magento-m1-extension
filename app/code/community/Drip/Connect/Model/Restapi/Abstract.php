@@ -133,7 +133,7 @@ abstract class Drip_Connect_Model_Restapi_Abstract
     /**
      * @param int $storeId
      */
-    protected function setStoreId(int $storeId)
+    protected function setStoreId($storeId)
     {
         $this->storeId = $storeId;
     }
