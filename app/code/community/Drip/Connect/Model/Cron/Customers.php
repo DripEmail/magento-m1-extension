@@ -82,8 +82,6 @@ class Drip_Connect_Model_Cron_Customers
 
         $delay = (int) Mage::getStoreConfig('dripconnect_general/api_settings/batch_delay');
 
-        $delay = (int) Mage::getStoreConfig('dripconnect_general/api_settings/batch_delay');
-
         $result = true;
         $page = 1;
         do {
