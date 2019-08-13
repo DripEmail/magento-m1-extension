@@ -2,6 +2,10 @@
 
 class Drip_Connect_Model_Cron_Customers
 {
+    protected function getLogger() {
+        return Mage::helper('drip_connect/logger')->logger();
+    }
+
     /**
      * run customers sync for stores
      *
@@ -42,7 +46,7 @@ class Drip_Connect_Model_Cron_Customers
                     $result = $this->syncGuestSubscribersForStore($storeId);
                 }
             } catch (\Exception $e) {
-                Mage::logException($e);
+                $this->getLogger()->log($e->__toString(), Zend_Log::ERR);
                 $result = false;
             }
 

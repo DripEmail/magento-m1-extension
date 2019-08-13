@@ -197,41 +197,19 @@
                     <frontend_type>text</frontend_type>
                     <sort_order>100</sort_order>
                     <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>1</show_in_store>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
                     <fields>
                         <is_enabled translate="label">
                             <label>Is Debug Mode Enabled</label>
-                            <comment>Logs all requests and responses to var/log/drip/apiclient/drip.log</comment>
+                            <comment>Logs all requests and responses to var/log/drip.log</comment>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>1</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </is_enabled>
-                        <log_rotation_period translate="label">
-                            <label>Log Rotation Period (days)</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>2</sort_order>
-                            <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <depends>
-                                <is_enabled>1</is_enabled>
-                            </depends>
-                        </log_rotation_period>
-                        <last_log_archive translate="label">
-                            <label>Last Log Archive Timestamp</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>100</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <hideThisField>1</hideThisField>
-                            </depends>
-                        </last_log_archive>
+                        </is_enabled>
                     </fields>
                 </log_settings>
             </groups>
