@@ -1,7 +1,5 @@
 <?php
 
-// Mage::helper('drip_connect/logger')->logger()
-
 class Drip_Connect_Helper_Logger extends Mage_Core_Helper_Abstract
 {
     /** @var Zend_Log */
