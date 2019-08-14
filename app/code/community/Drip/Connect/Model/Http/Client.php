@@ -34,9 +34,9 @@ class Drip_Connect_Model_Http_Client extends Zend_Http_Client
         $response = parent::request($method);
         $responseData = $response->getBody();
 
-        $this->getLogger()->info('['.$requestId.'] Request Url: '.$requestUrl);
-        $this->getLogger()->info('['.$requestId.'] Request Body: '.$requestBody);
-        $this->getLogger()->info('['.$requestId.'] Response: '.$responseData);
+        $this->getLogger()->info("[{$requestId}] Request Url: {$requestUrl}");
+        $this->getLogger()->info("[{$requestId}] Request Body: {$requestBody}");
+        $this->getLogger()->info("[{$requestId}] Response: {$responseData}");
 
         return $response;
     }
