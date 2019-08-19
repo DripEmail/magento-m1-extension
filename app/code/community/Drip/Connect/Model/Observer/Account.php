@@ -264,8 +264,8 @@ class Drip_Connect_Model_Observer_Account
     protected function proceedGuestSubscriberNew($subscriber)
     {
         $email = $subscriber->getSubscriberEmail();
-        if (empty($email)) {
-            Mage::log("Skipping guest subscriber create due to blank email", Zend_Log::NOTICE);
+        if (!Mage::helper('drip_connect')->isEmailValid($email)) {
+            Mage::log("Skipping guest subscriber create due to unusable email", Zend_Log::NOTICE);
             return;
         }
 
@@ -289,8 +289,8 @@ class Drip_Connect_Model_Observer_Account
     protected function proceedAccountNew($customer)
     {
         $email = $customer->getEmail();
-        if (empty($email)) {
-            Mage::log("Skipping guest subscriber create due to blank email", Zend_Log::NOTICE);
+        if (!Mage::helper('drip_connect')->isEmailValid($email)) {
+            Mage::log("Skipping guest subscriber create due to unusable email", Zend_Log::NOTICE);
             return;
         }
 

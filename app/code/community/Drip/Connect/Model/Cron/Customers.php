@@ -101,8 +101,8 @@ class Drip_Connect_Model_Cron_Customers
             $batchEvents = array();
             foreach ($collection as $subscriber) {
                 $email = $subscriber->getSubscriberEmail();
-                if (empty($email)) {
-                    Mage::log("Skipping newsletter subscriber event during sync due to blank email", Zend_Log::NOTICE);
+                if (!Mage::helper('drip_connect')->isEmailValid($email)) {
+                    Mage::log("Skipping newsletter subscriber event during sync due to unusable email", Zend_Log::NOTICE);
                     continue;
                 }
 
