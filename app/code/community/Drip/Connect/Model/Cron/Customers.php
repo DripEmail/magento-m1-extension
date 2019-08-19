@@ -102,7 +102,7 @@ class Drip_Connect_Model_Cron_Customers
             foreach ($collection as $subscriber) {
                 $email = $subscriber->getSubscriberEmail();
                 if (!Mage::helper('drip_connect')->isEmailValid($email)) {
-                    Mage::log("Skipping newsletter subscriber event during sync due to unusable email", Zend_Log::NOTICE);
+                    $this->getLogger()->log("Skipping newsletter subscriber event during sync due to unusable email", Zend_Log::NOTICE);
                     continue;
                 }
 

@@ -265,7 +265,7 @@ class Drip_Connect_Model_Observer_Account
     {
         $email = $subscriber->getSubscriberEmail();
         if (!Mage::helper('drip_connect')->isEmailValid($email)) {
-            Mage::log("Skipping guest subscriber create due to unusable email", Zend_Log::NOTICE);
+            $this->getLogger()->log("Skipping guest subscriber create due to unusable email", Zend_Log::NOTICE);
             return;
         }
 
@@ -290,7 +290,7 @@ class Drip_Connect_Model_Observer_Account
     {
         $email = $customer->getEmail();
         if (!Mage::helper('drip_connect')->isEmailValid($email)) {
-            Mage::log("Skipping guest subscriber create due to unusable email", Zend_Log::NOTICE);
+            $this->getLogger()->log("Skipping guest subscriber create due to unusable email", Zend_Log::NOTICE);
             return;
         }
 
@@ -434,5 +434,9 @@ class Drip_Connect_Model_Observer_Account
             'country' => $address->getCountry(),
             'phone_number' => $address->getTelephone(),
         );
+    }
+
+    protected function getLogger() {
+        return Mage::helper('drip_connect/logger')->logger();
     }
 }
