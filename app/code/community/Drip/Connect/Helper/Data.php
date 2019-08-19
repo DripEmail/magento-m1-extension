@@ -337,4 +337,14 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
 
         return $storeId;
     }
+
+    /**
+     * @param string $email
+     *
+     * @return bool
+     */
+    public function isEmailValid($email)
+    {
+        return !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
 }

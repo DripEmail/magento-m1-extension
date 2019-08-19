@@ -249,10 +249,6 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
      */
     public function isCanBeSent($order)
     {
-        if (empty($order->getCustomerEmail())) {
-            return false;
-        }
-
-        return true;
+        return Mage::helper('drip_connect')->isEmailValid($order->getCustomerEmail());
     }
 }
