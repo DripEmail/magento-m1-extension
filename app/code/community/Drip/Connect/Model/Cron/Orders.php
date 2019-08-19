@@ -39,7 +39,7 @@ class Drip_Connect_Model_Cron_Orders
             try {
                 $result = $this->syncOrdersForStore($storeId);
             } catch (\Exception $e) {
-                Mage::logException($e);
+                $this->getLogger()->log($e->__toString(), Zend_Log::ERR);
                 $result = false;
             }
 
@@ -99,8 +99,8 @@ class Drip_Connect_Model_Cron_Orders
                     $data['occurred_at'] = Mage::helper('drip_connect')->formatDate($order->getCreatedAt());
                     $batch[] = $data;
                 } else {
-                    Mage::log(sprintf(
-                        "Order with id %s can't be sent to Drip",
+                    $this->getLogger()->log(sprintf(
+                        "Order with id %s can't be sent to Drip (email likely blank)",
                         $order->getId()
                     ));
                 }
@@ -121,5 +121,9 @@ class Drip_Connect_Model_Cron_Orders
         } while ($page <= $collection->getLastPageNumber());
 
         return $result;
+    }
+
+    protected function getLogger() {
+        return Mage::helper('drip_connect/logger')->logger();
     }
 }

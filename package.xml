@@ -53,6 +53,7 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                     </dir>
                     <dir name="Helper">
                         <file name="Data.php" hash="c2ab87064ff0884c5f0b2b8bc2b960b5"/>
+                        <file name="Logger.php" hash="0ec6df8b3b60ddcef74b37e14f31660f"/>
                         <file name="Order.php" hash="6766119ff758ce2cd950946c514caf65"/>
                         <file name="Product.php" hash="e365a5bc6f31f5d17b576fc43ea6acce"/>
                         <file name="Quote.php" hash="3eda9baa99bebde0322a1a9d55e351e6"/>
@@ -85,11 +86,11 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                             </dir>
                         </dir>
                         <dir name="Cron">
-                            <file name="Customers.php" hash="65638f52163f87e39e40126d59c0eb6f"/>
-                            <file name="Orders.php" hash="d0bbce2b1ceb1a9b109b51fb09b24a7d"/>
+                            <file name="Customers.php" hash="c8751ed02766b0545cfb83fb870121ab"/>
+                            <file name="Orders.php" hash="07711c8a8d6fedc119749f4f194083b0"/>
                         </dir>
                         <dir name="Http">
-                            <file name="Client.php" hash="2a5bb7ca065531f08f66cb1f060d5296"/>
+                            <file name="Client.php" hash="fdcd57673da74718dbf5b7c0405aa254"/>
                         </dir>
                         <dir name="Observer">
                             <file name="Account.php" hash="3c8add2cf8a7184420d671a5f1996d17"/>
@@ -100,7 +101,7 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                             <file name="Wishlist.php" hash="0895bc9c86cad3c0f6b9426899b92375"/>
                         </dir>
                         <dir name="Restapi">
-                            <file name="Abstract.php" hash="c67f062f0a3c42392ffc79147cef81c1"/>
+                            <file name="Abstract.php" hash="f00e608a7ed8c1138c20682e923390da"/>
                             <dir name="Request">
                                 <file name="Interface.php" hash="5e403bb6699b8921f91b3ccaf6e86c3a"/>
                             </dir>
@@ -135,7 +136,7 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                     <dir name="etc">
                         <file name="adminhtml.xml" hash="d4f35cee5cd38366de6ba2e6df312bf6"/>
                         <file name="config.xml" hash="87fb99792eb419a5d4a06ddab9e214bb"/>
-                        <file name="system.xml" hash="82bc422837c18ed345da8257429488da"/>
+                        <file name="system.xml" hash="3ccea41a962d81b6bf6742ee3a24d455"/>
                     </dir>
                     <dir name="sql">
                         <dir name="drip_connect_setup">
