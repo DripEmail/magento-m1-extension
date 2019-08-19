@@ -65,7 +65,7 @@
                 <observers>
                     <drip_connect_controller_action_predispatch_newsletter_manage_save>
                         <class>drip_connect/observer_account</class>
-                        <method>saveSubscribtionState</method>
+                        <method>saveSubscriptionState</method>
                     </drip_connect_controller_action_predispatch_newsletter_manage_save>
                 </observers>
             </controller_action_predispatch_newsletter_manage_save>

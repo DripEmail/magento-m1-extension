@@ -8,7 +8,7 @@ class Drip_Connect_Model_Observer_Account
     const REGISTRY_KEY_IS_NEW = 'newcustomer';
     const REGISTRY_KEY_OLD_DATA = 'oldcustomerdata';
     const REGISTRY_KEY_OLD_ADDR = 'oldcustomeraddress';
-    const REGISTRY_KEY_SUBSCRIBER_PREV_STATE = 'oldsubscribtionstatus';
+    const REGISTRY_KEY_SUBSCRIBER_PREV_STATE = 'oldsubscriptionstatus';
     const REGISTRY_KEY_NEW_GUEST_SUBSCRIBER = 'newguestsubscriber';
 
     static $isAddressSaved = false;
@@ -92,11 +92,11 @@ class Drip_Connect_Model_Observer_Account
     }
 
     /**
-     * siave old customer subscribtion state
+     * save old customer subscription state
      *
      * @param Varien_Event_Observer $observer
      */
-    public function saveSubscribtionState($observer)
+    public function saveSubscriptionState($observer)
     {
         if (!Mage::helper('drip_connect')->isModuleActive()) {
             return;
@@ -379,7 +379,7 @@ class Drip_Connect_Model_Observer_Account
     }
 
     /**
-     * check if we need to send additional api call to cancel all subscribtions
+     * check if we need to send additional api call to cancel all subscriptions
      * (true if status change from yes to no)
      *
      * @param Mage_Customer_Model_Customer $customer
