@@ -1,0 +1,37 @@
+version: '3.7'
+services:
+  web:
+    build: .
+    ports:
+    - 3005:80
+    links:
+    - db
+    environment:
+      - MYSQL_DATABASE=magento
+      - MYSQL_USER=magento
+      - MYSQL_PASSWORD=magento
+    volumes:
+      - type: bind
+        source: './../app/code/community/Drip/Connect'
+        target: /var/www/html/magento/app/code/community/Drip/Connect
+      - type: bind
+        source: './../app/etc/modules/Drip_Connect.xml'
+        target: /var/www/html/magento/app/etc/modules/Drip_Connect.xml
+      - type: bind
+        source: './../app/design/adminhtml/default/default/template/drip'
+        target: /var/www/html/magento/app/design/adminhtml/default/default/template/drip
+      - type: bind
+        source: './../app/design/frontend/base/default/layout/drip'
+        target: /var/www/html/magento/app/design/frontend/base/default/layout/drip
+      - type: bind
+        source: './../app/design/frontend/base/default/template/drip'
+        target: /var/www/html/magento/app/design/frontend/base/default/template/drip
+  db:
+    image: mysql:5.7.27
+    environment:
+      - MYSQL_DATABASE=magento
+      - MYSQL_USER=magento
+      - MYSQL_PASSWORD=magento
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+    volumes:
+      - ./db_data:/var/lib/mysql
