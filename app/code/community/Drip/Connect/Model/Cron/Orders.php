@@ -100,7 +100,7 @@ class Drip_Connect_Model_Cron_Orders
                     $batch[] = $data;
                 } else {
                     $this->getLogger()->log(sprintf(
-                        "Order with id %s can't be sent to Drip (email likely blank)",
+                        "Order with id %s can't be sent to Drip (email likely invalid)",
                         $order->getId()
                     ), Zend_Log::NOTICE);
                 }
