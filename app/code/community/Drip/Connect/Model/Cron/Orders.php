@@ -102,7 +102,7 @@ class Drip_Connect_Model_Cron_Orders
                     $this->getLogger()->log(sprintf(
                         "Order with id %s can't be sent to Drip (email likely blank)",
                         $order->getId()
-                    ));
+                    ), Zend_Log::NOTICE);
                 }
             }
 
