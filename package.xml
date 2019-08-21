@@ -86,8 +86,8 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                             </dir>
                         </dir>
                         <dir name="Cron">
-                            <file name="Customers.php" hash="ef94cf843faf97f5f4d9b6763c68df80"/>
-                            <file name="Orders.php" hash="5f98af6c45df2d1ad1b0325117b8e757"/>
+                            <file name="Customers.php" hash="04a0d4eed553f5a7d31b7232d0667c42"/>
+                            <file name="Orders.php" hash="8ddbb4b263ba82b8eed80a6c9b17a56d"/>
                         </dir>
                         <dir name="Http">
                             <file name="Client.php" hash="cf5d97790773681d4427662ac736b954"/>

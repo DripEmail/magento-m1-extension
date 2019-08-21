@@ -185,6 +185,12 @@ class Drip_Connect_Model_Cron_Customers
 
             $batchCustomer = array();
             foreach ($collection as $customer) {
+                $email = $customer->getEmail();
+                if (!Mage::helper('drip_connect')->isEmailValid($email)) {
+                    $this->getLogger()->log("Skipping subscriber during sync due to unusable email ({$email})", Zend_Log::NOTICE);
+                    continue;
+                }
+
                 $dataCustomer = Drip_Connect_Helper_Data::prepareCustomerData($customer);
                 $dataCustomer['tags'] = array('Synced from Magento');
                 $batchCustomer[] = $dataCustomer;
