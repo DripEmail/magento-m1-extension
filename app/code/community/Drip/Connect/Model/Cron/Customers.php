@@ -41,16 +41,20 @@ class Drip_Connect_Model_Cron_Customers
             }
 
             try {
-                $result = $this->syncCustomersForStore($storeId);
-                if ($result) {
-                    $result = $this->syncGuestSubscribersForStore($storeId);
-                }
+                $customerResult = $this->syncCustomersForStore($storeId);
             } catch (\Exception $e) {
                 $this->getLogger()->log($e->__toString(), Zend_Log::ERR);
-                $result = false;
+                $customerResult = false;
             }
 
-            if ($result) {
+            try {
+                $subscriberResult = $this->syncGuestSubscribersForStore($storeId);
+            } catch (\Exception $e) {
+                $this->getLogger()->log($e->__toString(), Zend_Log::ERR);
+                $subscriberResult = false;
+            }
+
+            if ($subscriberResult && $customerResult) {
                 $status = Drip_Connect_Model_Source_SyncState::READY;
             } else {
                 $status = Drip_Connect_Model_Source_SyncState::READYERRORS;
