@@ -163,15 +163,9 @@ class Drip_Connect_Model_Observer_Account
 
         if (Mage::registry(self::REGISTRY_KEY_IS_NEW)) {
             $this->proceedAccountNew($customer);
-            if (! $customer->getIsSubscribed()) {
-                $this->unsubscribe($customer->getEmail());
-            }
         } else {
             if ($this->isCustomerChanged($customer)) {
                 $this->proceedAccount($customer);
-            }
-            if ($this->isUnsubscribeCallRequired($customer)) {
-                $this->unsubscribe($customer->getEmail());
             }
         }
         Mage::unregister(self::REGISTRY_KEY_IS_NEW);
@@ -324,18 +318,6 @@ class Drip_Connect_Model_Observer_Account
     }
 
     /**
-     * drip unsubscribe action
-     *
-     * @param string $email
-     */
-    protected function unsubscribe($email)
-    {
-        Mage::getModel('drip_connect/ApiCalls_Helper_UnsubscribeSubscriber', array(
-            'email' => $email,
-        ))->call();
-    }
-
-    /**
      * drip actions for subscriber save
      *
      * @param Mage_Newsletter_Model_Subscriber $ubscriber
@@ -344,10 +326,6 @@ class Drip_Connect_Model_Observer_Account
     {
         $data = Drip_Connect_Helper_Data::prepareGuestSubscriberData($subscriber);
         Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $data)->call();
-
-        if ($subscriber->getSubscriberStatus() != Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
-            $this->unsubscribe($subscriber->getEmail());
-        }
     }
 
     /**
@@ -359,9 +337,8 @@ class Drip_Connect_Model_Observer_Account
     {
         $data = Drip_Connect_Helper_Data::prepareGuestSubscriberData($subscriber);
         $data['custom_fields']['accepts_marketing'] = 'no';
+        $data['status'] = 'unsubscribed';
         Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $data)->call();
-
-        $this->unsubscribe($subscriber->getEmail());
     }
 
     /**
@@ -388,23 +365,6 @@ class Drip_Connect_Model_Observer_Account
         $newData = Drip_Connect_Helper_Data::prepareCustomerData($customer);
 
         return (Mage::helper('core')->jsonEncode($oldData) != Mage::helper('core')->jsonEncode($newData));
-    }
-
-    /**
-     * check if we need to send additional api call to cancel all subscriptions
-     * (true if status change from yes to no)
-     *
-     * @param Mage_Customer_Model_Customer $customer
-     *
-     * @return bool
-     */
-    protected function isUnsubscribeCallRequired($customer)
-    {
-        $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
-        $newData = Drip_Connect_Helper_Data::prepareCustomerData($customer);
-
-        return ($newData['custom_fields']['accepts_marketing'] == 'no'
-            && $oldData['custom_fields']['accepts_marketing'] != 'no');
     }
 
     /**

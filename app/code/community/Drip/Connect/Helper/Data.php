@@ -31,17 +31,14 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     static public function prepareGuestSubscriberData($subscriber, $updatableOnly = true)
     {
-        if ($subscriber->getSubscriberStatus() == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
-            $acceptsMarketing = 'yes';
-        } else {
-            $acceptsMarketing = 'no';
-        }
+        $acceptsMarketing = $subscriber->getSubscriberStatus() == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED;
 
         $data = array (
             'email' => (string) $subscriber->getSubscriberEmail(),
             'ip_address' => (string) Mage::helper('core/http')->getRemoteAddr(),
+            'status' => $acceptsMarketing ? 'active' : 'unsubscribed',
             'custom_fields' => array(
-                'accepts_marketing' => $acceptsMarketing,
+                'accepts_marketing' => $acceptsMarketing ? 'yes' : 'no',
             ),
         );
 
@@ -69,6 +66,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
             'email' => (string) $customer->getEmail(),
             'new_email' => ($newEmail ? $newEmail : ''),
             'ip_address' => (string) Mage::helper('core/http')->getRemoteAddr(),
+            'status' => $customer->getIsSubscribed() ? 'active' : 'unsubscribed',
             'custom_fields' => array(
                 'first_name' => $customer->getFirstname(),
                 'last_name' => $customer->getLastname(),
@@ -133,6 +131,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
         return array (
             'email' => (string) $order->getCustomerEmail(),
             'ip_address' => (string) Mage::helper('core/http')->getRemoteAddr(),
+            'status' => 'unsubscribed',
             'custom_fields' => array(
                 'first_name' => $order->getCustomerFirstname(),
                 'last_name' => $order->getCustomerLastname(),

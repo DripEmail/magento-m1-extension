@@ -76,7 +76,6 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                                 <file name="GetProjectList.php" hash="60cd99bc8bc0eacfd02bda01a3286585"/>
                                 <file name="GetSubscriberList.php" hash="8f345fd3ba905a422d7c4325915a9adb"/>
                                 <file name="RecordAnEvent.php" hash="3a7146f60792ce14c4cbc762876dab8d"/>
-                                <file name="UnsubscribeSubscriber.php" hash="41e76ac87d895da2c9efb878d8e71274"/>
                             </dir>
                             <dir name="Request">
                                 <file name="Base.php" hash="6430d8c4c92c0453318df9a27823e35d"/>
