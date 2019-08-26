@@ -52,7 +52,7 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                         </dir>
                     </dir>
                     <dir name="Helper">
-                        <file name="Data.php" hash="a0370e747144b53cbe4162983ba70278"/>
+                        <file name="Data.php" hash="703a10324a0e3216e4db8e7dd3bb838a"/>
                         <file name="Logger.php" hash="0ec6df8b3b60ddcef74b37e14f31660f"/>
                         <file name="Order.php" hash="92ba61e7ac88468c228b1b910c21236b"/>
                         <file name="Product.php" hash="e365a5bc6f31f5d17b576fc43ea6acce"/>
@@ -61,7 +61,7 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                     <dir name="Model">
                         <dir name="ApiCalls">
                             <file name="Base.php" hash="25af11212862af2fec5e6ccc0c969302"/>
-                            <file name="Helper.php" hash="a0fbeed59c5233f01afabaf356787cdd"/>
+                            <file name="Helper.php" hash="f2d21d3f8c9224140674b16906eb2d96"/>
                             <dir name="Helper">
                                 <dir name="Batches">
                                     <file name="Events.php" hash="ab4fda95fa2a618462967349e87590f3"/>
@@ -85,14 +85,14 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                             </dir>
                         </dir>
                         <dir name="Cron">
-                            <file name="Customers.php" hash="04a0d4eed553f5a7d31b7232d0667c42"/>
+                            <file name="Customers.php" hash="5e3820936a573ab7d69fef1aedc2c154"/>
                             <file name="Orders.php" hash="8ddbb4b263ba82b8eed80a6c9b17a56d"/>
                         </dir>
                         <dir name="Http">
                             <file name="Client.php" hash="cf5d97790773681d4427662ac736b954"/>
                         </dir>
                         <dir name="Observer">
-                            <file name="Account.php" hash="43c09664b53bc4b9574685fabe1b5863"/>
+                            <file name="Account.php" hash="668aa3606f47ff09e6fee4076bfe6a56"/>
                             <file name="Customer.php" hash="d04d968d5184ea5859c4046c4a9bc659"/>
                             <file name="Order.php" hash="5bcedf0fcecfc5aee855a3c957272921"/>
                             <file name="Product.php" hash="948c8c5f4c603a8f2d699136a9b2b891"/>
