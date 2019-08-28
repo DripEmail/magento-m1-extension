@@ -73,7 +73,7 @@
                 <observers>
                     <drip_connect_customer_save_before>
                         <class>drip_connect/observer_account</class>
-                        <method>checkIfCustomerNew</method>
+                        <method>beforeCustomerSave</method>
                     </drip_connect_customer_save_before>
                 </observers>
             </customer_save_before>

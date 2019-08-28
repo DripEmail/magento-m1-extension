@@ -128,7 +128,7 @@ class Drip_Connect_Model_Observer_Account
      *
      * @param Varien_Event_Observer $observer
      */
-    public function checkIfCustomerNew($observer)
+    public function beforeCustomerSave($observer)
     {
         if (!Mage::helper('drip_connect')->isModuleActive()) {
             return;

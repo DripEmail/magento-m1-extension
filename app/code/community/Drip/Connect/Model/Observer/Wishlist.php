@@ -72,7 +72,7 @@ class Drip_Connect_Model_Observer_Wishlist
         if(!$wishlist->getId()) {
             return;
         }
-        
+
         //loop through each product and check quantity
         if (filter_input_array(INPUT_POST) && (null !== filter_input(INPUT_POST, 'description')) && is_array(filter_input(INPUT_POST, 'description'))) {
             foreach (filter_input(INPUT_POST, 'description') as $itemId => $description) {
