@@ -36,7 +36,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
         $data = array (
             'email' => (string) $subscriber->getSubscriberEmail(),
             'ip_address' => (string) Mage::helper('core/http')->getRemoteAddr(),
-            'new_subscriber_status' => $acceptsMarketing ? 'active' : 'unsubscribed',
+            'initial_status' => $acceptsMarketing ? 'active' : 'unsubscribed',
             'custom_fields' => array(
                 'accepts_marketing' => $acceptsMarketing ? 'yes' : 'no',
             ),
@@ -66,7 +66,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
             'email' => (string) $customer->getEmail(),
             'new_email' => ($newEmail ? $newEmail : ''),
             'ip_address' => (string) Mage::helper('core/http')->getRemoteAddr(),
-            'new_subscriber_status' => $customer->getIsSubscribed() ? 'active' : 'unsubscribed',
+            'initial_status' => $customer->getIsSubscribed() ? 'active' : 'unsubscribed',
             'custom_fields' => array(
                 'first_name' => $customer->getFirstname(),
                 'last_name' => $customer->getLastname(),
@@ -131,7 +131,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
         return array (
             'email' => (string) $order->getCustomerEmail(),
             'ip_address' => (string) Mage::helper('core/http')->getRemoteAddr(),
-            'new_subscriber_status' => 'unsubscribed',
+            'initial_status' => 'unsubscribed',
             'custom_fields' => array(
                 'first_name' => $order->getCustomerFirstname(),
                 'last_name' => $order->getCustomerLastname(),
