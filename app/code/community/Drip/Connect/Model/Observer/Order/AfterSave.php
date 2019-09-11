@@ -12,7 +12,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
             return;
         }
         $this->proceedOrder($order);
-        Mage::unregister(self::REGISTRY_KEY_OLD_DATA);
+        Mage::unregister(self::REGISTRY_KEY_ORDER_OLD_DATA);
     }
 
     /**
@@ -132,7 +132,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
             return true;
         }
 
-        $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
+        $oldData = Mage::registry(self::REGISTRY_KEY_ORDER_OLD_DATA);
         if (empty($oldData['state'])) {
             return true;
         }
@@ -149,7 +149,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
      */
     protected function refundDiff($order)
     {
-        $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
+        $oldData = Mage::registry(self::REGISTRY_KEY_ORDER_OLD_DATA);
         $oldValue = Mage::helper('drip_connect')->priceAsCents($oldData['total_refunded']);
         $newValue = Mage::helper('drip_connect')->priceAsCents($order->getTotalRefunded());
 
@@ -162,7 +162,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
      */
     protected function isSameState($order)
     {
-        $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
+        $oldData = Mage::registry(self::REGISTRY_KEY_ORDER_OLD_DATA);
         $oldValue = $oldData['state'];
         $newValue = $order->getState();
 

@@ -17,7 +17,7 @@ class Drip_Connect_Model_Observer_Order_BeforeSave extends Drip_Connect_Model_Ob
             'total_refunded' => $order->getOrigData('total_refunded'),
             'state' => $order->getOrigData('state'),
         );
-        Mage::unregister(self::REGISTRY_KEY_OLD_DATA);
-        Mage::register(self::REGISTRY_KEY_OLD_DATA, $data);
+        Mage::unregister(self::REGISTRY_KEY_ORDER_OLD_DATA);
+        Mage::register(self::REGISTRY_KEY_ORDER_OLD_DATA, $data);
     }
 }

@@ -48,48 +48,48 @@
             <controller_action_predispatch_newsletter_subscriber_new>
                 <observers>
                     <drip_connect_controller_action_predispatch_newsletter_subscriber_new>
-                        <class>drip_connect/observer_account</class>
-                        <method>newGuestSubscriberAttempt</method>
+                        <class>drip_connect/observer_customer_guestsubscriberattempt</class>
+                        <method>execute</method>
                     </drip_connect_controller_action_predispatch_newsletter_subscriber_new>
                 </observers>
             </controller_action_predispatch_newsletter_subscriber_new>
             <controller_action_postdispatch_newsletter_subscriber_new>
                 <observers>
                     <drip_connect_controller_action_postdispatch_newsletter_subscriber_new>
-                        <class>drip_connect/observer_account</class>
-                        <method>newGuestSubscriberCreated</method>
+                        <class>drip_connect/observer_customer_guestsubscribercreated</class>
+                        <method>execute</method>
                     </drip_connect_controller_action_postdispatch_newsletter_subscriber_new>
                 </observers>
             </controller_action_postdispatch_newsletter_subscriber_new>
             <controller_action_predispatch_newsletter_manage_save>
                 <observers>
                     <drip_connect_controller_action_predispatch_newsletter_manage_save>
-                        <class>drip_connect/observer_account</class>
-                        <method>saveSubscriptionState</method>
+                        <class>drip_connect/observer_customer_newslettersave</class>
+                        <method>execute</method>
                     </drip_connect_controller_action_predispatch_newsletter_manage_save>
                 </observers>
             </controller_action_predispatch_newsletter_manage_save>
             <customer_save_before>
                 <observers>
                     <drip_connect_customer_save_before>
-                        <class>drip_connect/observer_account</class>
-                        <method>beforeCustomerSave</method>
+                        <class>drip_connect/observer_customer_beforesave</class>
+                        <method>execute</method>
                     </drip_connect_customer_save_before>
                 </observers>
             </customer_save_before>
             <customer_save_commit_after>
                 <observers>
                     <drip_connect_customer_save_commit_after>
-                        <class>drip_connect/observer_account</class>
-                        <method>afterCustomerSave</method>
+                        <class>drip_connect/observer_customer_aftersave</class>
+                        <method>execute</method>
                     </drip_connect_customer_save_commit_after>
                 </observers>
             </customer_save_commit_after>
             <customer_delete_commit_after>
                 <observers>
                     <drip_connect_customer_delete_commit_after>
-                        <class>drip_connect/observer_account</class>
-                        <method>afterCustomerDelete</method>
+                        <class>drip_connect/observer_customer_afterdelete</class>
+                        <method>execute</method>
                     </drip_connect_customer_delete_commit_after>
                 </observers>
             </customer_delete_commit_after>
@@ -125,8 +125,8 @@
                 <observers>
                     <drip_connect_customer_address_save_before>
                         <type>singleton</type>
-                        <class>drip_connect/observer_account</class>
-                        <method>beforeCustomerAddressSaveFront</method>
+                        <class>drip_connect/observer_customer_beforeaddresssave</class>
+                        <method>execute</method>
                     </drip_connect_customer_address_save_before>
                 </observers>
             </customer_address_save_before>
@@ -134,8 +134,8 @@
                 <observers>
                     <drip_connect_customer_address_save_commit_after>
                         <type>singleton</type>
-                        <class>drip_connect/observer_account</class>
-                        <method>afterCustomerAddressSaveFront</method>
+                        <class>drip_connect/observer_customer_afteraddresssave</class>
+                        <method>execute</method>
                     </drip_connect_customer_address_save_commit_after>
                 </observers>
             </customer_address_save_commit_after>-->
