@@ -243,9 +243,10 @@ class Drip_Connect_Model_Observer_Account
     /**
      * drip actions for customer account create
      *
-     * @param Mage_Newsletter_Model_Subscriber $ubscriber
+     * @param Mage_Newsletter_Model_Subscriber $subscriber
+     * @param bool $forceStatus
      */
-    protected function proceedGuestSubscriberNew($subscriber)
+    protected function proceedGuestSubscriberNew($subscriber, $forceStatus = false)
     {
         $email = $subscriber->getSubscriberEmail();
         if (!Mage::helper('drip_connect')->isEmailValid($email)) {
@@ -253,7 +254,7 @@ class Drip_Connect_Model_Observer_Account
             return;
         }
 
-        $data = Drip_Connect_Helper_Data::prepareGuestSubscriberData($subscriber, false);
+        $data = Drip_Connect_Helper_Data::prepareGuestSubscriberData($subscriber, false, $forceStatus);
         Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $data)->call();
 
         $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
