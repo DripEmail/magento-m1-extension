@@ -31,7 +31,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     static public function prepareGuestSubscriberData($subscriber, $updatableOnly = true)
     {
-        $acceptsMarketing = $subscriber->getSubscriberStatus() == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED;
+        $acceptsMarketing = $subscriber->isSubscribed();
 
         $data = array (
             'email' => (string) $subscriber->getSubscriberEmail(),

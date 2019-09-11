@@ -111,7 +111,7 @@ class Drip_Connect_Model_Observer_Account
         if (! $subscriber->getId()) {
             $acceptsMarketing = 'no';
         } else {
-            if ($subscriber->getSubscriberStatus() == Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED) {
+            if ($subscriber->isSubscribed()) {
                 $acceptsMarketing = 'yes';
             } else {
                 $acceptsMarketing = 'no';
