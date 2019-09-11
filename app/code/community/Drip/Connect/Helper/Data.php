@@ -26,10 +26,11 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Newsletter_Model_Subscriber $subscriber
      * @param bool $updatableOnly leave only those fields which are used in update action
+     * @param bool $statusChanged whether the status has changed and should be updated in Drip
      *
      * @return array
      */
-    static public function prepareGuestSubscriberData($subscriber, $updatableOnly = true)
+    static public function prepareGuestSubscriberData($subscriber, $updatableOnly = true, $statusChanged = false)
     {
         $acceptsMarketing = $subscriber->isSubscribed();
 
@@ -41,6 +42,10 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
                 'accepts_marketing' => $acceptsMarketing ? 'yes' : 'no',
             ),
         );
+
+        if ($statusChanged) {
+            $data['status'] = $acceptsMarketing ? 'active' : 'unsubscribed';
+        }
 
         if ($updatableOnly) {
             unset($data['ip_address']);
