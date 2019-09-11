@@ -15,9 +15,12 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
      */
     protected function getCommonOrderData($order)
     {
+        $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($order->getCustomerEmail());
+
         $data = array(
             'provider' => (string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
             'email' => (string) $order->getCustomerEmail(),
+            'initial_status' => ($subscriber->isSubscribed() ? 'active' : 'unsubscribed'),
             'order_id' => (string) $order->getIncrementId(),
             'order_public_id' => (string) $order->getIncrementId(),
             'grand_total' => Mage::helper('drip_connect')->priceAsCents($order->getGrandTotal()) / 100,

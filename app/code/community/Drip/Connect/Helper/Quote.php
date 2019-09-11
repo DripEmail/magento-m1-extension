@@ -75,9 +75,12 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
      */
     public function prepareQuoteData($quote)
     {
+        $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($this->email);
+
         $data = array (
             "provider" => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote::PROVIDER_NAME,
             "email" => $this->email,
+            "initial_status" => ($subscriber->isSubscribed() ? 'active' : 'unsubscribed'),
             "cart_id" => $quote->getId(),
             "grand_total" => Mage::helper('drip_connect')->priceAsCents($quote->getGrandTotal())/100,
             "total_discounts" => Mage::helper('drip_connect')->priceAsCents((float)$quote->getSubtotal() - (float)$quote->getSubtotalWithDiscount()) / 100,
