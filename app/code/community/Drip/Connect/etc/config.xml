@@ -96,16 +96,16 @@
             <sales_order_save_before>
                 <observers>
                     <drip_connect_sales_order_save_before>
-                        <class>drip_connect/observer_order</class>
-                        <method>beforeOrderSave</method>
+                        <class>drip_connect/observer_order_beforesave</class>
+                        <method>execute</method>
                     </drip_connect_sales_order_save_before>
                 </observers>
             </sales_order_save_before>
             <sales_order_save_commit_after>
                 <observers>
                     <drip_connect_sales_order_save_commit_after>
-                        <class>drip_connect/observer_order</class>
-                        <method>afterOrderSave</method>
+                        <class>drip_connect/observer_order_aftersave</class>
+                        <method>execute</method>
                     </drip_connect_sales_order_save_commit_after>
                 </observers>
             </sales_order_save_commit_after>
