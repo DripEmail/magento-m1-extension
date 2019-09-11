@@ -5,3 +5,4 @@
 /bitbucket-pipelines.yml export-ignore
 /.bitbucket-pipelines export-ignore
 composer.json export-ignore
+/devtools_m1 export-ignore

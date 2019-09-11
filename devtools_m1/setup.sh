@@ -3,13 +3,13 @@ set -e
 
 # Spin up a new instance of Magento
 # Add --build when you need to rebuild the Dockerfile.
-docker-compose -p m1devtools up -d
+docker-compose up -d
 
-port=$(docker-compose -p m1devtools port web 80 | cut -d':' -f2)
-web_container=$(docker-compose -p m1devtools ps -q web)
+port=$(docker-compose port web 80 | cut -d':' -f2)
+web_container=$(docker-compose ps -q web)
 
 # Wait for the DB to be up.
-docker-compose -p m1devtools exec -T db /bin/bash -c 'while ! mysql --protocol TCP -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "show databases;" > /dev/null 2>&1; do sleep 1; done'
+docker-compose exec -T db /bin/bash -c 'while ! mysql --protocol TCP -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "show databases;" > /dev/null 2>&1; do sleep 1; done'
 
 magento_setup_script=$(cat <<SCRIPT
 cd /var/www/html/magento/ && \
@@ -36,13 +36,13 @@ cd /var/www/html/magento/ && \
 SCRIPT
 )
 
-docker-compose -p m1devtools exec -T -u www-data web /bin/bash -c "$magento_setup_script"
+docker-compose exec -T -u www-data web /bin/bash -c "$magento_setup_script"
 
 subdomain_setup=$(cat <<SCRIPT
 FN="/var/www/html/magento/index.php"; NL=\$(wc -l "\$FN"); sed -i \${NL%% *}'i\switch(\$_SERVER["HTTP_HOST"]) { case "site1.magento.localhost:$port": \$mageRunCode = "site1_website"; \$mageRunType = "website"; break; }' "\$FN"
 SCRIPT
 )
-docker-compose -p m1devtools exec -T -u www-data web /bin/bash -c "$subdomain_setup"
+docker-compose exec -T -u www-data web /bin/bash -c "$subdomain_setup"
 
 # Backup for reset.
-docker-compose -p m1devtools exec -e MYSQL_PWD=magento db mysqldump -u magento magento > db_data/dump.sql
+docker-compose exec -e MYSQL_PWD=magento db mysqldump -u magento magento > db_data/dump.sql
