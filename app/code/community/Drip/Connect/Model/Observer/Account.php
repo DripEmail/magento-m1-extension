@@ -152,7 +152,7 @@ class Drip_Connect_Model_Observer_Account
         $customer = $observer->getCustomer();
 
         if (Mage::registry(self::REGISTRY_KEY_IS_NEW)) {
-            $this->proceedAccountNew($customer);
+            $this->proceedAccount($customer, null, Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_NEW);
         } else {
             if ($this->isCustomerChanged($customer)) {
                 $this->proceedAccount($customer);
@@ -266,44 +266,28 @@ class Drip_Connect_Model_Observer_Account
     }
 
     /**
-     * drip actions for customer account create
-     *
-     * @param Mage_Customer_Model_Customer $customer
-     */
-    protected function proceedAccountNew($customer)
-    {
-        $email = $customer->getEmail();
-        if (!Mage::helper('drip_connect')->isEmailValid($email)) {
-            $this->getLogger()->log("Skipping guest subscriber create due to unusable email", Zend_Log::NOTICE);
-            return;
-        }
-
-        $customerData = Drip_Connect_Helper_Data::prepareCustomerData($customer, false);
-        Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $customerData)->call();
-
-        $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-            'email' => $email,
-            'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_NEW,
-            'properties' => array(
-                'source' => 'magento'
-            ),
-        ))->call();
-    }
-
-    /**
      * drip actions for customer account change
      *
      * @param Mage_Customer_Model_Customer $customer
+     * @param bool $acceptsMarketing whether the customer accepts marketing. Overrides the customer is_subscribed record.
+     * @param string $event The updated/created/deleted event.
+     * @param bool $forceStatus Whether the customer has changed marketing preferences which should be synced to Drip.
      */
-    protected function proceedAccount($customer)
+    protected function proceedAccount($customer, $acceptsMarketing = null, $event = Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED, $forceStatus = false)
     {
-        $customerData = Drip_Connect_Helper_Data::prepareCustomerData($customer);
+        $email = $customer->getEmail();
+        if (!Mage::helper('drip_connect')->isEmailValid($email)) {
+            $this->getLogger()->log("Skipping guest subscriber update due to unusable email", Zend_Log::NOTICE);
+            return;
+        }
+
+        $customerData = Drip_Connect_Helper_Data::prepareCustomerData($customer, true, $forceStatus, $acceptsMarketing);
 
         Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $customerData)->call();
 
         $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
             'email' => $customer->getEmail(),
-            'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED,
+            'action' => $event,
         ))->call();
     }
 
