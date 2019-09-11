@@ -116,8 +116,8 @@
             <sales_quote_merge_before>
                 <observers>
                     <drip_connect_sales_quote_merge_before>
-                        <class>drip_connect/observer_quote</class>
-                        <method>clearCartOnLogin</method>
+                        <class>drip_connect/observer_quote_clearcartonlogin</class>
+                        <method>execute</method>
                     </drip_connect_sales_quote_merge_before>
                 </observers>
             </sales_quote_merge_before>
@@ -142,8 +142,8 @@
             <customer_login>
                 <observers>
                     <drip_connect_customer_login>
-                        <class>drip_connect/observer_customer</class>
-                        <method>customerLogin</method>
+                        <class>drip_connect/observer_customer_login</class>
+                        <method>execute</method>
                     </drip_connect_customer_login>
                 </observers>
             </customer_login>
@@ -174,16 +174,16 @@
             <sales_quote_save_before>
                 <observers>
                     <drip_connect_sales_quote_save_before>
-                        <class>drip_connect/observer_quote</class>
-                        <method>beforeQuoteSaved</method>
+                        <class>drip_connect/observer_quote_beforequotesaved</class>
+                        <method>execute</method>
                     </drip_connect_sales_quote_save_before>
                 </observers>
             </sales_quote_save_before>
             <sales_quote_save_commit_after>
                 <observers>
                     <drip_connect_sales_quote_save_commit_after>
-                        <class>drip_connect/observer_quote</class>
-                        <method>afterQuoteSaved</method>
+                        <class>drip_connect/observer_quote_afterquotesaved</class>
+                        <method>execute</method>
                     </drip_connect_sales_quote_save_commit_after>
                 </observers>
             </sales_quote_save_commit_after>
