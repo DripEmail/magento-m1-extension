@@ -108,18 +108,8 @@ class Drip_Connect_Model_Observer_Account
 
         $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($customerEmail);
 
-        if (! $subscriber->getId()) {
-            $acceptsMarketing = 'no';
-        } else {
-            if ($subscriber->isSubscribed()) {
-                $acceptsMarketing = 'yes';
-            } else {
-                $acceptsMarketing = 'no';
-            }
-        }
-
         Mage::unregister(self::REGISTRY_KEY_SUBSCRIBER_PREV_STATE);
-        Mage::register(self::REGISTRY_KEY_SUBSCRIBER_PREV_STATE, $acceptsMarketing);
+        Mage::register(self::REGISTRY_KEY_SUBSCRIBER_PREV_STATE, $subscriber->isSubscribed());
     }
 
     /**
@@ -140,8 +130,8 @@ class Drip_Connect_Model_Observer_Account
         if (!$customer->isObjectNew()) {
             $orig = Mage::getModel('customer/customer')->load($customer->getId());
             $data = Drip_Connect_Helper_Data::prepareCustomerData($orig);
-            if (Mage::registry(self::REGISTRY_KEY_SUBSCRIBER_PREV_STATE)) {
-                $data['custom_fields']['accepts_marketing'] = Mage::registry(self::REGISTRY_KEY_SUBSCRIBER_PREV_STATE);
+            if (Mage::registry(self::REGISTRY_KEY_SUBSCRIBER_PREV_STATE) !== null) {
+                $data['custom_fields']['accepts_marketing'] = Mage::registry(self::REGISTRY_KEY_SUBSCRIBER_PREV_STATE) ? 'yes' : 'no';
             }
             Mage::unregister(self::REGISTRY_KEY_OLD_DATA);
             Mage::register(self::REGISTRY_KEY_OLD_DATA, $data);
