@@ -59,19 +59,29 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Customer_Model_Customer $customer
      * @param bool $updatableOnly leave only those fields which are used in update action
+     * @param bool $statusChanged whether the status has changed and should be synced
+     * @param bool $overriddenStatus whether the status should be something other than what is on the customer's is_subscribed field.
      */
-    static public function prepareCustomerData($customer, $updatableOnly = true)
+    static public function prepareCustomerData($customer, $updatableOnly = true, $statusChanged = false, $overriddenStatus = null)
     {
         if ($customer->getOrigData() && $customer->getData('email') != $customer->getOrigData('email')) {
             $newEmail = $customer->getData('email');
         } else {
             $newEmail = '';
         }
+
+        if ($overriddenStatus !== null) {
+            $status = $overriddenStatus;
+        } else {
+            $subscriber = Mage::getModel('newsletter/subscriber')->loadByCustomer($customer);
+            $status = $subscriber->isSubscribed();
+        }
+
         $data = array (
             'email' => (string) $customer->getEmail(),
             'new_email' => ($newEmail ? $newEmail : ''),
             'ip_address' => (string) Mage::helper('core/http')->getRemoteAddr(),
-            'initial_status' => $customer->getIsSubscribed() ? 'active' : 'unsubscribed',
+            'initial_status' => $status ? 'active' : 'unsubscribed',
             'custom_fields' => array(
                 'first_name' => $customer->getFirstname(),
                 'last_name' => $customer->getLastname(),
@@ -80,9 +90,13 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
                 'magento_account_created' => $customer->getCreatedAt(),
                 'magento_customer_group' => Mage::getModel('customer/group')->load($customer->getGroupId())->getCustomerGroupCode(),
                 'magento_store' => $customer->getStoreId(),
-                'accepts_marketing' => ($customer->getIsSubscribed() ? 'yes' : 'no'),
+                'accepts_marketing' => ($status ? 'yes' : 'no'),
             ),
         );
+
+        if ($statusChanged) {
+            $data['status'] = $status ? 'active' : 'unsubscribed';
+        }
 
         if ($updatableOnly) {
             unset($data['custom_fields']['magento_account_created']);
