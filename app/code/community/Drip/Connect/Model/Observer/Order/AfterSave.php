@@ -5,7 +5,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
     /**
      * @param Varien_Event_Observer $observer
      */
-    public function executeWhenEnabled($observer)
+    protected function executeWhenEnabled($observer)
     {
         $order = $observer->getEvent()->getOrder();
         if (!$order->getId()) {

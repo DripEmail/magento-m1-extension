@@ -32,8 +32,8 @@
             <newsletter_subscriber_save_commit_after>
                 <observers>
                     <drip_connect_newsletter_subscriber_save_commit_after>
-                        <class>drip_connect/observer_account</class>
-                        <method>afterSubscriberSave</method>
+                        <class>drip_connect/observer_customer_subscriberaftersave</class>
+                        <method>execute</method>
                     </drip_connect_newsletter_subscriber_save_commit_after>
                 </observers>
             </newsletter_subscriber_save_commit_after>
