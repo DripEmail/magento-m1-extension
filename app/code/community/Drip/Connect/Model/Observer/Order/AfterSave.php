@@ -1,48 +1,18 @@
 <?php
-/**
- * Actions with orders - place, change, finish..
- */
 
-class Drip_Connect_Model_Observer_Order
+class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Observer_Base
 {
-    const REGISTRY_KEY_OLD_DATA = 'orderoldvalues';
-
-    /**
-     * store some current params we may need to compare with themselves later
-     *
-     * @param Varien_Event_Observer $observer
-     */
-    public function beforeOrderSave($observer)
-    {
-        if (!Mage::helper('drip_connect')->isModuleActive()) {
-            return;
-        }
-        $order = $observer->getEvent()->getOrder();
-        if (!$order->getId()) {
-            return;
-        }
-        $data = array(
-            'total_refunded' => $order->getOrigData('total_refunded'),
-            'state' => $order->getOrigData('state'),
-        );
-        Mage::unregister(self::REGISTRY_KEY_OLD_DATA);
-        Mage::register(self::REGISTRY_KEY_OLD_DATA, $data);
-    }
-
     /**
      * @param Varien_Event_Observer $observer
      */
-    public function afterOrderSave($observer)
+    protected function executeWhenEnabled($observer)
     {
-        if (!Mage::helper('drip_connect')->isModuleActive()) {
-            return;
-        }
         $order = $observer->getEvent()->getOrder();
         if (!$order->getId()) {
             return;
         }
         $this->proceedOrder($order);
-        Mage::unregister(self::REGISTRY_KEY_OLD_DATA);
+        Mage::unregister(self::REGISTRY_KEY_ORDER_OLD_DATA);
     }
 
     /**
@@ -162,7 +132,7 @@ class Drip_Connect_Model_Observer_Order
             return true;
         }
 
-        $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
+        $oldData = Mage::registry(self::REGISTRY_KEY_ORDER_OLD_DATA);
         if (empty($oldData['state'])) {
             return true;
         }
@@ -179,7 +149,7 @@ class Drip_Connect_Model_Observer_Order
      */
     protected function refundDiff($order)
     {
-        $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
+        $oldData = Mage::registry(self::REGISTRY_KEY_ORDER_OLD_DATA);
         $oldValue = Mage::helper('drip_connect')->priceAsCents($oldData['total_refunded']);
         $newValue = Mage::helper('drip_connect')->priceAsCents($order->getTotalRefunded());
 
@@ -192,7 +162,7 @@ class Drip_Connect_Model_Observer_Order
      */
     protected function isSameState($order)
     {
-        $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
+        $oldData = Mage::registry(self::REGISTRY_KEY_ORDER_OLD_DATA);
         $oldValue = $oldData['state'];
         $newValue = $order->getState();
 

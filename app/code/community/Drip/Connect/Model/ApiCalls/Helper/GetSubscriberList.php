@@ -6,7 +6,7 @@ class Drip_Connect_Model_ApiCalls_Helper_GetSubscriberList
     public function __construct($data)
     {
         $data = array_merge(array(
-            'status' => '',
+            'initial_status' => '',
             'tags' => '',
             'subscribed_before' => '',
             'subscribed_after' => '',
@@ -21,7 +21,7 @@ class Drip_Connect_Model_ApiCalls_Helper_GetSubscriberList
         $this->request = Mage::getModel('drip_connect/ApiCalls_Request_Base')
             ->setMethod(Zend_Http_Client::GET)
             ->setParametersGet(array(
-                'status' => $data['status'],
+                'initial_status' => $data['initial_status'],
                 'tags' => $data['tags'],
                 'subscribed_before' => $data['subscribed_before'],
                 'subscribed_after' => $data['subscribed_after'],

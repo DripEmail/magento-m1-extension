@@ -52,16 +52,18 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                         </dir>
                     </dir>
                     <dir name="Helper">
-                        <file name="Data.php" hash="a0370e747144b53cbe4162983ba70278"/>
+                        <file name="Customer.php" hash="fc2c4cf7011535e92a4ee9d9f5eb1a8f"/>
+                        <file name="Data.php" hash="5184d844180c80178fcf840aa3089f50"/>
                         <file name="Logger.php" hash="0ec6df8b3b60ddcef74b37e14f31660f"/>
-                        <file name="Order.php" hash="92ba61e7ac88468c228b1b910c21236b"/>
+                        <file name="Order.php" hash="c49b285adf653074f622ae6c3da40a9a"/>
                         <file name="Product.php" hash="e365a5bc6f31f5d17b576fc43ea6acce"/>
-                        <file name="Quote.php" hash="3eda9baa99bebde0322a1a9d55e351e6"/>
+                        <file name="Quote.php" hash="e3a795ead2f5ee21f3b58fe11f401129"/>
+                        <file name="Wishlist.php" hash="a7398feb59e74dd2807d0e7a2d0335f3"/>
                     </dir>
                     <dir name="Model">
                         <dir name="ApiCalls">
                             <file name="Base.php" hash="25af11212862af2fec5e6ccc0c969302"/>
-                            <file name="Helper.php" hash="a0fbeed59c5233f01afabaf356787cdd"/>
+                            <file name="Helper.php" hash="f2d21d3f8c9224140674b16906eb2d96"/>
                             <dir name="Helper">
                                 <dir name="Batches">
                                     <file name="Events.php" hash="ab4fda95fa2a618462967349e87590f3"/>
@@ -74,9 +76,8 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                                 <file name="CreateUpdateRefund.php" hash="f65123a8769b09154c1151a3892abeef"/>
                                 <file name="CreateUpdateSubscriber.php" hash="f73f8e2eca14f1ef0d111a26295f9702"/>
                                 <file name="GetProjectList.php" hash="60cd99bc8bc0eacfd02bda01a3286585"/>
-                                <file name="GetSubscriberList.php" hash="8f345fd3ba905a422d7c4325915a9adb"/>
+                                <file name="GetSubscriberList.php" hash="531b590ed95585c34e3720684ef174b2"/>
                                 <file name="RecordAnEvent.php" hash="3a7146f60792ce14c4cbc762876dab8d"/>
-                                <file name="UnsubscribeSubscriber.php" hash="41e76ac87d895da2c9efb878d8e71274"/>
                             </dir>
                             <dir name="Request">
                                 <file name="Base.php" hash="6430d8c4c92c0453318df9a27823e35d"/>
@@ -86,19 +87,46 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                             </dir>
                         </dir>
                         <dir name="Cron">
-                            <file name="Customers.php" hash="04a0d4eed553f5a7d31b7232d0667c42"/>
+                            <file name="Customers.php" hash="5e3820936a573ab7d69fef1aedc2c154"/>
                             <file name="Orders.php" hash="8ddbb4b263ba82b8eed80a6c9b17a56d"/>
                         </dir>
                         <dir name="Http">
                             <file name="Client.php" hash="cf5d97790773681d4427662ac736b954"/>
                         </dir>
                         <dir name="Observer">
-                            <file name="Account.php" hash="43c09664b53bc4b9574685fabe1b5863"/>
-                            <file name="Customer.php" hash="d04d968d5184ea5859c4046c4a9bc659"/>
-                            <file name="Order.php" hash="5bcedf0fcecfc5aee855a3c957272921"/>
-                            <file name="Product.php" hash="948c8c5f4c603a8f2d699136a9b2b891"/>
-                            <file name="Quote.php" hash="5c687e1fedbc3b68c55f47a79b43f646"/>
-                            <file name="Wishlist.php" hash="0895bc9c86cad3c0f6b9426899b92375"/>
+                            <file name="Base.php" hash="1e9c74c858b77020e1e88ababe8a380b"/>
+                            <dir name="Customer">
+                                <file name="AfterAddressSave.php" hash="a1a5faeb5b6df09c03effe1f55696db6"/>
+                                <file name="AfterDelete.php" hash="35de3a7ed49cbd783902694d1886c0df"/>
+                                <file name="AfterSave.php" hash="77535590bb5773883a0cc1b214e2e55e"/>
+                                <file name="BeforeAddressSave.php" hash="6fa3122674c8cd79a0cf6c635e5121e5"/>
+                                <file name="BeforeSave.php" hash="f4e7102a68a1ec31c9b44b0b6dce7ab4"/>
+                                <file name="GuestSubscriberAttempt.php" hash="7989dbdf9c797c15d89d52450d99da1d"/>
+                                <file name="GuestSubscriberCreated.php" hash="dd858eb4bbc0fafa00d609e96c13cbd7"/>
+                                <file name="Login.php" hash="dbd809a6e15a4ea5b2457d843a88e11f"/>
+                                <file name="NewsletterSave.php" hash="f65b565da920cbc5ddb577e097b3a37c"/>
+                                <file name="SubscriberAfterDelete.php" hash="0692287413e66c79a5ab4a4c2892ce15"/>
+                                <file name="SubscriberAfterSave.php" hash="69dc2c0d9b96826108e31dd471dd94ae"/>
+                            </dir>
+                            <dir name="Order">
+                                <file name="AfterSave.php" hash="2af3e9b5b0824f8189b025ffa38c87e2"/>
+                                <file name="BeforeSave.php" hash="1ae09060bc1d00bc5c3070c8f7ee3f97"/>
+                            </dir>
+                            <dir name="Product">
+                                <file name="DeleteAfter.php" hash="5788d56dd780f66253184c6e2c7caec9"/>
+                                <file name="SaveAfter.php" hash="c14c9f456b40a475aec2ae09a89339f2"/>
+                                <file name="SaveBefore.php" hash="159f1e85fabbe5e7c30895c14a2dbe99"/>
+                            </dir>
+                            <dir name="Quote">
+                                <file name="AfterQuoteSaved.php" hash="8170760678ede711534c563567937fb9"/>
+                                <file name="BeforeQuoteSaved.php" hash="9a966e23064854b9db67a549147e6b7c"/>
+                                <file name="ClearCartOnLogin.php" hash="d5d0583d2c1aa02efc01966f32e23b8e"/>
+                            </dir>
+                            <dir name="Wishlist">
+                                <file name="AddProduct.php" hash="404d5a9ba0d1820c1f1fac5585d7157b"/>
+                                <file name="PredispatchWishlistIndexRemove.php" hash="bdbef89a9e7c802d18f319b9abde19a8"/>
+                                <file name="RemoveProductsWithoutQuantity.php" hash="9d739b86e1fad191978d3f179074529a"/>
+                            </dir>
                         </dir>
                         <dir name="Restapi">
                             <file name="Abstract.php" hash="f00e608a7ed8c1138c20682e923390da"/>
@@ -135,7 +163,7 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                     </dir>
                     <dir name="etc">
                         <file name="adminhtml.xml" hash="d4f35cee5cd38366de6ba2e6df312bf6"/>
-                        <file name="config.xml" hash="003f6c880a7a39aa1702df93e7abf320"/>
+                        <file name="config.xml" hash="fed2310a190cc3d9306a9d431751707e"/>
                         <file name="system.xml" hash="3ccea41a962d81b6bf6742ee3a24d455"/>
                     </dir>
                     <dir name="sql">

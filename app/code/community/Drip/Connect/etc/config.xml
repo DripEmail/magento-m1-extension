@@ -32,80 +32,80 @@
             <newsletter_subscriber_save_commit_after>
                 <observers>
                     <drip_connect_newsletter_subscriber_save_commit_after>
-                        <class>drip_connect/observer_account</class>
-                        <method>afterSubscriberSave</method>
+                        <class>drip_connect/observer_customer_subscriberaftersave</class>
+                        <method>execute</method>
                     </drip_connect_newsletter_subscriber_save_commit_after>
                 </observers>
             </newsletter_subscriber_save_commit_after>
             <newsletter_subscriber_delete_commit_after>
                 <observers>
                     <drip_connect_newsletter_subscriber_delete_commit_after>
-                        <class>drip_connect/observer_account</class>
-                        <method>afterSubscriberDelete</method>
+                        <class>drip_connect/observer_customer_subscriberafterdelete</class>
+                        <method>execute</method>
                     </drip_connect_newsletter_subscriber_delete_commit_after>
                 </observers>
             </newsletter_subscriber_delete_commit_after>
             <controller_action_predispatch_newsletter_subscriber_new>
                 <observers>
                     <drip_connect_controller_action_predispatch_newsletter_subscriber_new>
-                        <class>drip_connect/observer_account</class>
-                        <method>newGuestSubscriberAttempt</method>
+                        <class>drip_connect/observer_customer_guestsubscriberattempt</class>
+                        <method>execute</method>
                     </drip_connect_controller_action_predispatch_newsletter_subscriber_new>
                 </observers>
             </controller_action_predispatch_newsletter_subscriber_new>
             <controller_action_postdispatch_newsletter_subscriber_new>
                 <observers>
                     <drip_connect_controller_action_postdispatch_newsletter_subscriber_new>
-                        <class>drip_connect/observer_account</class>
-                        <method>newGuestSubscriberCreated</method>
+                        <class>drip_connect/observer_customer_guestsubscribercreated</class>
+                        <method>execute</method>
                     </drip_connect_controller_action_postdispatch_newsletter_subscriber_new>
                 </observers>
             </controller_action_postdispatch_newsletter_subscriber_new>
             <controller_action_predispatch_newsletter_manage_save>
                 <observers>
                     <drip_connect_controller_action_predispatch_newsletter_manage_save>
-                        <class>drip_connect/observer_account</class>
-                        <method>saveSubscriptionState</method>
+                        <class>drip_connect/observer_customer_newslettersave</class>
+                        <method>execute</method>
                     </drip_connect_controller_action_predispatch_newsletter_manage_save>
                 </observers>
             </controller_action_predispatch_newsletter_manage_save>
             <customer_save_before>
                 <observers>
                     <drip_connect_customer_save_before>
-                        <class>drip_connect/observer_account</class>
-                        <method>checkIfCustomerNew</method>
+                        <class>drip_connect/observer_customer_beforesave</class>
+                        <method>execute</method>
                     </drip_connect_customer_save_before>
                 </observers>
             </customer_save_before>
             <customer_save_commit_after>
                 <observers>
                     <drip_connect_customer_save_commit_after>
-                        <class>drip_connect/observer_account</class>
-                        <method>afterCustomerSave</method>
+                        <class>drip_connect/observer_customer_aftersave</class>
+                        <method>execute</method>
                     </drip_connect_customer_save_commit_after>
                 </observers>
             </customer_save_commit_after>
             <customer_delete_commit_after>
                 <observers>
                     <drip_connect_customer_delete_commit_after>
-                        <class>drip_connect/observer_account</class>
-                        <method>afterCustomerDelete</method>
+                        <class>drip_connect/observer_customer_afterdelete</class>
+                        <method>execute</method>
                     </drip_connect_customer_delete_commit_after>
                 </observers>
             </customer_delete_commit_after>
             <sales_order_save_before>
                 <observers>
                     <drip_connect_sales_order_save_before>
-                        <class>drip_connect/observer_order</class>
-                        <method>beforeOrderSave</method>
+                        <class>drip_connect/observer_order_beforesave</class>
+                        <method>execute</method>
                     </drip_connect_sales_order_save_before>
                 </observers>
             </sales_order_save_before>
             <sales_order_save_commit_after>
                 <observers>
                     <drip_connect_sales_order_save_commit_after>
-                        <class>drip_connect/observer_order</class>
-                        <method>afterOrderSave</method>
+                        <class>drip_connect/observer_order_aftersave</class>
+                        <method>execute</method>
                     </drip_connect_sales_order_save_commit_after>
                 </observers>
             </sales_order_save_commit_after>
@@ -116,8 +116,8 @@
             <sales_quote_merge_before>
                 <observers>
                     <drip_connect_sales_quote_merge_before>
-                        <class>drip_connect/observer_quote</class>
-                        <method>clearCartOnLogin</method>
+                        <class>drip_connect/observer_quote_clearcartonlogin</class>
+                        <method>execute</method>
                     </drip_connect_sales_quote_merge_before>
                 </observers>
             </sales_quote_merge_before>
@@ -125,8 +125,8 @@
                 <observers>
                     <drip_connect_customer_address_save_before>
                         <type>singleton</type>
-                        <class>drip_connect/observer_account</class>
-                        <method>beforeCustomerAddressSaveFront</method>
+                        <class>drip_connect/observer_customer_beforeaddresssave</class>
+                        <method>execute</method>
                     </drip_connect_customer_address_save_before>
                 </observers>
             </customer_address_save_before>
@@ -134,56 +134,56 @@
                 <observers>
                     <drip_connect_customer_address_save_commit_after>
                         <type>singleton</type>
-                        <class>drip_connect/observer_account</class>
-                        <method>afterCustomerAddressSaveFront</method>
+                        <class>drip_connect/observer_customer_afteraddresssave</class>
+                        <method>execute</method>
                     </drip_connect_customer_address_save_commit_after>
                 </observers>
             </customer_address_save_commit_after>-->
             <customer_login>
                 <observers>
                     <drip_connect_customer_login>
-                        <class>drip_connect/observer_customer</class>
-                        <method>customerLogin</method>
+                        <class>drip_connect/observer_customer_login</class>
+                        <method>execute</method>
                     </drip_connect_customer_login>
                 </observers>
             </customer_login>
             <wishlist_add_product>
                 <observers>
                     <wishlist_change_event>
-                        <class>drip_connect/observer_wishlist</class>
-                        <method>addProduct</method>
+                        <class>drip_connect/observer_wishlist_addproduct</class>
+                        <method>execute</method>
                     </wishlist_change_event>
                 </observers>
             </wishlist_add_product>
             <controller_action_predispatch_wishlist_index_remove>
                 <observers>
                     <drip_connect_wishlist_remove_product>
-                        <class>drip_connect/observer_wishlist</class>
-                        <method>removeProduct</method>
+                        <class>drip_connect/observer_wishlist_predispatchwishlistindexremove</class>
+                        <method>execute</method>
                     </drip_connect_wishlist_remove_product>
                 </observers>
             </controller_action_predispatch_wishlist_index_remove>
             <controller_action_predispatch_wishlist_index_update>
                 <observers>
                     <drip_connect_wishlist_update>
-                        <class>drip_connect/observer_wishlist</class>
-                        <method>removeProductsWithoutQuantity</method>
+                        <class>drip_connect/observer_wishlist_removeproductswithoutquantity</class>
+                        <method>execute</method>
                     </drip_connect_wishlist_update>
                 </observers>
             </controller_action_predispatch_wishlist_index_update>
             <sales_quote_save_before>
                 <observers>
                     <drip_connect_sales_quote_save_before>
-                        <class>drip_connect/observer_quote</class>
-                        <method>beforeQuoteSaved</method>
+                        <class>drip_connect/observer_quote_beforequotesaved</class>
+                        <method>execute</method>
                     </drip_connect_sales_quote_save_before>
                 </observers>
             </sales_quote_save_before>
             <sales_quote_save_commit_after>
                 <observers>
                     <drip_connect_sales_quote_save_commit_after>
-                        <class>drip_connect/observer_quote</class>
-                        <method>afterQuoteSaved</method>
+                        <class>drip_connect/observer_quote_afterquotesaved</class>
+                        <method>execute</method>
                     </drip_connect_sales_quote_save_commit_after>
                 </observers>
             </sales_quote_save_commit_after>
@@ -221,24 +221,24 @@
             <catalog_product_save_before>
                 <observers>
                     <drip_connect_catalog_product_save_before>
-                        <class>drip_connect/observer_product</class>
-                        <method>beforeSave</method>
+                        <class>drip_connect/observer_product_savebefore</class>
+                        <method>execute</method>
                     </drip_connect_catalog_product_save_before>
                 </observers>
             </catalog_product_save_before>
             <catalog_product_save_after>
                 <observers>
                     <drip_connect_catalog_product_save_after>
-                        <class>drip_connect/observer_product</class>
-                        <method>afterSave</method>
+                        <class>drip_connect/observer_product_saveafter</class>
+                        <method>execute</method>
                     </drip_connect_catalog_product_save_after>
                 </observers>
             </catalog_product_save_after>
             <catalog_product_delete_after>
                 <observers>
                     <drip_connect_catalog_product_delete_commit_after>
-                        <class>drip_connect/observer_product</class>
-                        <method>afterDelete</method>
+                        <class>drip_connect/observer_product_afterdelete</class>
+                        <method>execute</method>
                     </drip_connect_catalog_product_delete_commit_after>
                 </observers>
             </catalog_product_delete_after>

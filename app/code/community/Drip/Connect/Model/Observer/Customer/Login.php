@@ -1,18 +1,12 @@
 <?php
-/**
- * Customer actions without data change - login, logout, visit some pages, etc
- */
 
-class Drip_Connect_Model_Observer_Customer
+class Drip_Connect_Model_Observer_Customer_Login extends Drip_Connect_Model_Observer_Base
 {
     /**
      * @param Varien_Event_Observer $observer
      */
-    public function customerLogin($observer)
+    protected function executeWhenEnabled($observer)
     {
-        if (!Mage::helper('drip_connect')->isModuleActive()) {
-            return;
-        }
         $customer = $observer->getCustomer();
         $this->proceedCustomerLogin($customer);
 

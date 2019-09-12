@@ -1,5 +1,15 @@
 # Magento 1 Drip Connect Changelog
 
+## NEXT
+
+* Previously, if syncing customers failed, we wouldn't finish the job and attempt to sync guest subscribers. This was dumb. We now try both of them.
+* We now send subscription status with every call, and successfully switch from unsubscribed to active when a user subscribes, or from subscribed to unsubscribed when a user changes their subscription status.
+* Skip sending order items on after_save with invalid emails.
+* Prevent observer exceptions from causing customer site errors.
+* Improve observer logging.
+* We also send initial status with orders, so that if an unsubscribed customer places an order and are created in Drip, then they are still unsubscribed in Drip.
+* Backend: Refactored observers to match the architecture of the M2 extension for easier maintenance.
+
 ## 1.7.3
 
 * Improved logger so that all output from the extension is in one place. This enables us to identify and solve customer issues more quickly.
