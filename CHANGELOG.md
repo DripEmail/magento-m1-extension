@@ -1,6 +1,6 @@
 # Magento 1 Drip Connect Changelog
 
-## NEXT
+## 1.7.4
 
 * Previously, if syncing customers failed, we wouldn't finish the job and attempt to sync guest subscribers. This was dumb. We now try both of them.
 * We now send subscription status with every call, and successfully switch from unsubscribed to active when a user subscribes, or from subscribed to unsubscribed when a user changes their subscription status.
