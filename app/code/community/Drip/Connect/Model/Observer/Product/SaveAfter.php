@@ -32,6 +32,6 @@ class Drip_Connect_Model_Observer_Product_SaveAfter extends Drip_Connect_Model_O
         $newData = Mage::helper('drip_connect/product')->prepareData($product);
         unset($newData['occurred_at']);
 
-        return (Mage::helper('core')->jsonEncode($oldData) != Mage::helper('core')->jsonEncode($newData));
+        return (Mage::helper('core')->jsonEncode($oldData) !== Mage::helper('core')->jsonEncode($newData));
     }
 }
