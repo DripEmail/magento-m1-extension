@@ -27,7 +27,7 @@ class Drip_Connect_Model_Observer_Customer_BeforeAddressSave extends Drip_Connec
 
         // if editing address is already a default shipping one
         // get its old values
-        if ($customer->getDefaultShippingAddress() && $address->getEntityId() == $customer->getDefaultShippingAddress()->getEntityId()) {
+        if ($customer->getDefaultShippingAddress() && $address->getEntityId() === $customer->getDefaultShippingAddress()->getEntityId()) {
             Mage::unregister(self::REGISTRY_KEY_CUSTOMER_OLD_ADDR);
             Mage::register(self::REGISTRY_KEY_CUSTOMER_OLD_ADDR, Mage::helper('drip_connect')->getAddressFields($customer->getDefaultShippingAddress()));
         }
