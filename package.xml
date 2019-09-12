@@ -163,7 +163,7 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                     </dir>
                     <dir name="etc">
                         <file name="adminhtml.xml" hash="d4f35cee5cd38366de6ba2e6df312bf6"/>
-                        <file name="config.xml" hash="fed2310a190cc3d9306a9d431751707e"/>
+                        <file name="config.xml" hash="f41eac95efb250d043b0f89397ee40ff"/>
                         <file name="system.xml" hash="3ccea41a962d81b6bf6742ee3a24d455"/>
                     </dir>
                     <dir name="sql">
