@@ -99,14 +99,14 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                                 <file name="AfterAddressSave.php" hash="a1a5faeb5b6df09c03effe1f55696db6"/>
                                 <file name="AfterDelete.php" hash="35de3a7ed49cbd783902694d1886c0df"/>
                                 <file name="AfterSave.php" hash="77535590bb5773883a0cc1b214e2e55e"/>
-                                <file name="BeforeAddressSave.php" hash="6fa3122674c8cd79a0cf6c635e5121e5"/>
+                                <file name="BeforeAddressSave.php" hash="8b007cc50c597907aef9d8f6b5aeafff"/>
                                 <file name="BeforeSave.php" hash="f4e7102a68a1ec31c9b44b0b6dce7ab4"/>
                                 <file name="GuestSubscriberAttempt.php" hash="7989dbdf9c797c15d89d52450d99da1d"/>
                                 <file name="GuestSubscriberCreated.php" hash="dd858eb4bbc0fafa00d609e96c13cbd7"/>
                                 <file name="Login.php" hash="dbd809a6e15a4ea5b2457d843a88e11f"/>
                                 <file name="NewsletterSave.php" hash="f65b565da920cbc5ddb577e097b3a37c"/>
                                 <file name="SubscriberAfterDelete.php" hash="0692287413e66c79a5ab4a4c2892ce15"/>
-                                <file name="SubscriberAfterSave.php" hash="69dc2c0d9b96826108e31dd471dd94ae"/>
+                                <file name="SubscriberAfterSave.php" hash="3fdf5626ae6c7a15092c7a71faf635a9"/>
                             </dir>
                             <dir name="Order">
                                 <file name="AfterSave.php" hash="2af3e9b5b0824f8189b025ffa38c87e2"/>
@@ -114,18 +114,18 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                             </dir>
                             <dir name="Product">
                                 <file name="DeleteAfter.php" hash="5788d56dd780f66253184c6e2c7caec9"/>
-                                <file name="SaveAfter.php" hash="c14c9f456b40a475aec2ae09a89339f2"/>
+                                <file name="SaveAfter.php" hash="425ef4346217ba77c4b42efb73731e3a"/>
                                 <file name="SaveBefore.php" hash="159f1e85fabbe5e7c30895c14a2dbe99"/>
                             </dir>
                             <dir name="Quote">
                                 <file name="AfterQuoteSaved.php" hash="8170760678ede711534c563567937fb9"/>
                                 <file name="BeforeQuoteSaved.php" hash="9a966e23064854b9db67a549147e6b7c"/>
-                                <file name="ClearCartOnLogin.php" hash="d5d0583d2c1aa02efc01966f32e23b8e"/>
+                                <file name="ClearCartOnLogin.php" hash="7981a0bef544c230b0a4baa2975f9b0f"/>
                             </dir>
                             <dir name="Wishlist">
                                 <file name="AddProduct.php" hash="404d5a9ba0d1820c1f1fac5585d7157b"/>
                                 <file name="PredispatchWishlistIndexRemove.php" hash="bdbef89a9e7c802d18f319b9abde19a8"/>
-                                <file name="RemoveProductsWithoutQuantity.php" hash="9d739b86e1fad191978d3f179074529a"/>
+                                <file name="RemoveProductsWithoutQuantity.php" hash="cc4baf9534093cfbf7d864dd5fac3614"/>
                             </dir>
                         </dir>
                         <dir name="Restapi">
