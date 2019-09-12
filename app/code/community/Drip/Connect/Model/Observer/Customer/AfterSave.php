@@ -44,7 +44,8 @@ class Drip_Connect_Model_Observer_Customer_AfterSave extends Drip_Connect_Model_
     {
         $newStatus = Mage::registry(self::REGISTRY_KEY_SUBSCRIBER_SUBSCRIBE_INTENT);
         if ($newStatus === null) {
-            return false;
+            $subscriber = Mage::getModel('newsletter/subscriber')->loadByCustomer($customer);
+            $newStatus = $subscriber->isSubscribed();
         }
 
         $oldData = Mage::registry(self::REGISTRY_KEY_CUSTOMER_OLD_DATA);
