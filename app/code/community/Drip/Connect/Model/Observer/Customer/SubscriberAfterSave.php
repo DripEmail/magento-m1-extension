@@ -15,7 +15,7 @@ class Drip_Connect_Model_Observer_Customer_SubscriberAfterSave extends Drip_Conn
 
         // treate only massactions executed from newsletter grig
         // subscribe/unsubscribe massactions executed from customers grid get treated by customer's observers
-        if ($controller == 'newsletter_subscriber' && $action == 'massUnsubscribe') {
+        if ($controller === 'newsletter_subscriber' && $action === 'massUnsubscribe') {
             $subscriber = $observer->getSubscriber();
             $this->proceedSubscriberSave($subscriber);
         }
