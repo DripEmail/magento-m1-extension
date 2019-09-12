@@ -16,7 +16,7 @@ class Drip_Connect_Model_Observer_Customer_GuestSubscriberCreated extends Drip_C
         $email = Mage::app()->getRequest()->getParam('email');
         $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($email);
 
-        $this->proceedGuestSubscriberNew($subscriber);
+        $this->proceedGuestSubscriberNew($subscriber, $subscriber->isSubscribed());
     }
 
     /**
@@ -27,6 +27,7 @@ class Drip_Connect_Model_Observer_Customer_GuestSubscriberCreated extends Drip_C
      */
     protected function proceedGuestSubscriberNew($subscriber, $forceStatus = false)
     {
+        // M2 DIFFERENCE: This is in the customer helper.
         $email = $subscriber->getSubscriberEmail();
         if (!Mage::helper('drip_connect')->isEmailValid($email)) {
             $this->getLogger()->log("Skipping guest subscriber create due to unusable email", Zend_Log::NOTICE);
