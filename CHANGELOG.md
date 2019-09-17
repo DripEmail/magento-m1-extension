@@ -1,6 +1,6 @@
 # Magento 1 Drip Connect Changelog
 
-## NEXT
+## 1.7.4.1
 
 * Bugfix for observer configuration.
 

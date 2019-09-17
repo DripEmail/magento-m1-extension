@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Drip_Connect>
-            <version>1.7.4</version>
+            <version>1.7.4.1</version>
         </Drip_Connect>
     </modules>
     <global>

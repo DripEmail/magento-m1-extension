@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
     <name>Drip</name>
-    <version>1.7.4</version>
+    <version>1.7.4.1</version>
     <stability>stable</stability>
     <license>GNU Lesser General Public License 3.0</license>
     <channel>community</channel>
@@ -163,7 +163,7 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                     </dir>
                     <dir name="etc">
                         <file name="adminhtml.xml" hash="d4f35cee5cd38366de6ba2e6df312bf6"/>
-                        <file name="config.xml" hash="9b4bcb009311f49a5dbcedd43cef2f74"/>
+                        <file name="config.xml" hash="8a4af4db1a7e6b07bcaa68ca0b4eaed1"/>
                         <file name="system.xml" hash="3ccea41a962d81b6bf6742ee3a24d455"/>
                     </dir>
                     <dir name="sql">
