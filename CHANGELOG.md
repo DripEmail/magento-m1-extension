@@ -1,5 +1,9 @@
 # Magento 1 Drip Connect Changelog
 
+## NEXT
+
+* Bugfix for observer configuration.
+
 ## 1.7.4
 
 * Previously, if syncing customers failed, we wouldn't finish the job and attempt to sync guest subscribers. This was dumb. We now try both of them.
