@@ -1,0 +1,4 @@
+{
+  "ignoreTestFiles": "*.js",
+  "baseUrl": "http://main.magento.localhost:3005"
+}
