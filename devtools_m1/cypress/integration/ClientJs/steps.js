@@ -5,9 +5,6 @@ Given('I am logged into the admin interface', function() {
   cy.get('input[name="login[username]"]').type('admin')
   cy.get('input[name="login[password]"]').type('abc1234567890')
   cy.contains('Login').click()
-
-  // Stupid popup
-  cy.contains('close').click()
 })
 
 Given('I have set up a multi-store configuration', function() {

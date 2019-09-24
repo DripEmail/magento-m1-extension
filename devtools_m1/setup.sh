@@ -32,7 +32,8 @@ cd /var/www/html/magento/ && \
 --admin_lastname 'LAST_NAME' \
 --admin_email 'admin@example.com' \
 --admin_username 'admin' \
---admin_password 'abc1234567890'
+--admin_password 'abc1234567890' && \
+echo '<?xml version="1.0"?><config><modules><Mage_AdminNotification><active>false</active></Mage_AdminNotification></modules></config>' > /var/www/html/magento/app/etc/modules/Zzz.xml
 SCRIPT
 )
 
