@@ -17,3 +17,7 @@ install:
   - cd $TRAVIS_BUILD_DIR/devtools_m1/ && npm ci
 script:
   - cd $TRAVIS_BUILD_DIR/devtools_m1/ && ./tests.sh
+addons:
+  hosts:
+    - main.magento.localhost
+    - site1.magento.localhost
