@@ -46,4 +46,5 @@ SCRIPT
 ./docker_compose.sh exec -T -u www-data web /bin/bash -c "$subdomain_setup"
 
 # Backup for reset.
+mkdir db_data/
 ./docker_compose.sh exec -e MYSQL_PWD=magento db mysqldump -u magento magento > db_data/dump.sql
