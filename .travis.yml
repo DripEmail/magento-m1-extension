@@ -16,4 +16,4 @@ cache:
 install:
   - cd devtools_m1/ && npm ci
 script:
-  - devtools_m1/tests.sh
+  - cd devtools_m1/ && ./tests.sh
