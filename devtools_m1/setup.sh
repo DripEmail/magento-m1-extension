@@ -39,12 +39,24 @@ SCRIPT
 
 ./docker_compose.sh exec -T -u www-data web /bin/bash -c "$magento_setup_script"
 
-subdomain_setup=$(cat <<SCRIPT
-FN="/var/www/html/magento/index.php"; NL=\$(wc -l "\$FN"); sed -i \${NL%% *}'i\switch(\$_SERVER["HTTP_HOST"]) { case "site1.magento.localhost:$port": \$mageRunCode = "site1_website"; \$mageRunType = "website"; break; }' "\$FN"
-SCRIPT
-)
-./docker_compose.sh exec -T -u www-data web /bin/bash -c "$subdomain_setup"
+# For multi-store.
+./docker_compose.sh exec -T -u www-data web patch -p1 /var/www/html/magento/index.php <<'SCRIPT'
+--- index.php	2019-09-25 15:38:16.385943000 +0000
++++ index.php	2019-09-25 15:38:43.574194000 +0000
+@@ -80,4 +80,11 @@
+ /* Run store or run website */
+ $mageRunType = isset($_SERVER['MAGE_RUN_TYPE']) ? $_SERVER['MAGE_RUN_TYPE'] : 'store';
 
-# Backup for reset.
++switch($_SERVER["HTTP_HOST"]) {
++    case "site1.magento.localhost:3005":
++        $mageRunCode = "site1_website";
++        $mageRunType = "website";
++        break;
++}
++
+ Mage::run($mageRunCode, $mageRunType);
+SCRIPT
+
+echo "Backing up database for later reset"
 mkdir -p db_data/
 ./docker_compose.sh exec -e MYSQL_PWD=magento db mysqldump -u magento magento > db_data/dump.sql
