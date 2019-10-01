@@ -16,11 +16,8 @@ When('I create an account', function() {
 })
 
 When('I add something to my cart', function() {
-  // cy.server()
-  // cy.route('POST', 'checkout/cart/add/**').as('addToCartRequest')
   cy.visit(`/widget-1.html`)
   cy.contains('Add to Cart').click()
-  // cy.wait('@addToCartRequest')
 })
 
 Then('A cart event should be sent to Drip', function() {
