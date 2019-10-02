@@ -16,7 +16,12 @@ When('I create an account', function() {
 })
 
 When('I add something to my cart', function() {
+  // For some reason, Magento throws an error here in JS. We don't really care, so ignore it.
+  cy.on('uncaught:exception', (err, runnable) => {
+    return false
+  })
   cy.visit(`/widget-1.html`)
+  cy.get('#product-options-wrapper select').select('XL')
   cy.contains('Add to Cart').click()
 })
 
@@ -45,6 +50,10 @@ Then('A cart event should be sent to Drip', function() {
   })).then(function(recordedRequests) {
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.email).to.eq('testuser@example.com')
-    // expect(body.product_variant_id).to.eq('1234')
+    const item = body.items[0]
+    expect(item.product_id).to.eq('1')
+    expect(item.product_variant_id).to.eq('2')
+    expect(item.sku).to.eq('widg-1-XL')
+    expect(body.items).to.have.lengthOf(1)
   })
 })

@@ -13,6 +13,9 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
+// import 'cypress-drag-drop';
+import '@4tw/cypress-drag-drop';
+
 // Import commands.js using ES2015 syntax:
 import './commands'
 import './docker_helpers'
