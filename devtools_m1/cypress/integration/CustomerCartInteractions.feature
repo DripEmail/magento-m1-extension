@@ -21,3 +21,9 @@ Feature: Customer Cart Interactions
       And I create an account
       And I add something to my cart
     Then A cart event should be sent to Drip
+
+# Grouped Product
+# Configurable Product
+# Virtual Product
+# Bundle Product
+# Downloadable Product

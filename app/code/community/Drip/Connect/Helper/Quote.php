@@ -101,8 +101,14 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
      */
     protected function prepareQuoteItemsData($quote)
     {
-        $data = array ();
+        $childItems = array();
         foreach ($quote->getAllItems() as $item) {
+            if (!$item->getParentItemId()) { continue; }
+            $childItems[$item->getParentItemId()] = $item;
+        }
+
+        $data = array();
+        foreach ($quote->getAllVisibleItems() as $item) {
             $product = Mage::getModel('catalog/product')->load($item->getProduct()->getId());
 
             $categories = explode(',', Mage::helper('drip_connect')->getProductCategoryNames($product));
@@ -110,8 +116,14 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
                 $categories = [];
             }
 
+            $productVariantItem = $childItems[$item->getId()];
+            if (!$productVariantItem) {
+                $productVariantItem = $item;
+            }
+
             $group = array(
                 'product_id' => $item->getProductId(),
+                'product_variant_id' => $productVariantItem->getProductId(),
                 'sku' => $item->getSku(),
                 'name' => $item->getName(),
                 'categories' => $categories,
