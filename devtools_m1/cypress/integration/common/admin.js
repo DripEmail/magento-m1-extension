@@ -79,7 +79,7 @@ Given('I have configured Drip to be enabled for main', function() {
 })
 
 // Simple Product
-Given('I have configured a widget', function() {
+Given('I have configured a simple widget', function() {
   cy.contains('Manage Products').click({ force: true })
   cy.contains('Add Product').click()
   cy.contains('Continue').click()
@@ -95,8 +95,6 @@ Given('I have configured a widget', function() {
   cy.get('a[name="inventory"]').click()
   cy.get('input[name="product[stock_data][qty]"]').type('120')
   cy.get('select[name="product[stock_data][is_in_stock]"]').select('In Stock')
-  cy.get('a[name="websites"]').click()
-  cy.get('#product_website_1').check()
   cy.contains('Save').click()
 })
 
