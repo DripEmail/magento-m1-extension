@@ -42,29 +42,17 @@ Given('I have set up a multi-store configuration', function() {
   cy.contains('Save Config').click()
 })
 
-Given('I have configured Drip to be enabled for site1', function() {
+Given('I have configured Drip to be enabled for {string}', function(site) {
   cy.contains('System').trigger('mouseover')
   cy.contains('Configuration').click()
   cy.contains('Drip Connect Configuration').click()
-  cy.get('select#store_switcher').select('site1_website')
-  cy.contains('Module Settings').click()
-  cy.contains('API Settings').click()
-  cy.get('input[name="groups[module_settings][fields][is_enabled][inherit]"]').uncheck()
-  cy.get('select[name="groups[module_settings][fields][is_enabled][value]"]').select('Yes')
-  cy.get('input[name="groups[api_settings][fields][account_id][inherit]"]').uncheck()
-  cy.get('input[name="groups[api_settings][fields][account_id][value]"]').type('123456')
-  cy.get('input[name="groups[api_settings][fields][api_key][inherit]"]').uncheck()
-  cy.get('input[name="groups[api_settings][fields][api_key][value]"]').type('abc123')
-  cy.get('input[name="groups[api_settings][fields][url][inherit]"]').uncheck()
-  cy.get('input[name="groups[api_settings][fields][url][value]"]').clear().type('http://mock:1080/v2/')
-  cy.contains('Save Config').click()
-})
-
-Given('I have configured Drip to be enabled for main', function() {
-  cy.contains('System').trigger('mouseover')
-  cy.contains('Configuration').click()
-  cy.contains('Drip Connect Configuration').click()
-  cy.get('select#store_switcher').select('Main Website')
+  let websiteKey
+  if (site == 'main') {
+    websiteKey = 'Main Website'
+  } else {
+    websiteKey = `${site}_website`
+  }
+  cy.get('select#store_switcher').select(websiteKey)
   cy.contains('Module Settings').click()
   cy.contains('API Settings').click()
   cy.get('input[name="groups[module_settings][fields][is_enabled][inherit]"]').uncheck()
