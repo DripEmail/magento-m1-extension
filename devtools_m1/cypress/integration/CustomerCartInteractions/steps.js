@@ -15,22 +15,19 @@ When('I create an account', function() {
   })
 })
 
-When('I add a simple widget to my cart', function() {
-  cy.visit(`/widget-1.html`)
-  cy.contains('Add to Cart').click()
-})
-
-When('I add a configured widget to my cart', function() {
+When('I add a {string} widget to my cart', function(type) {
   // For some reason, Magento throws an error here in JS. We don't really care, so ignore it.
   cy.on('uncaught:exception', (err, runnable) => {
     return false
   })
   cy.visit(`/widget-1.html`)
-  cy.get('#product-options-wrapper select').select('XL')
+  if (type == 'configured') {
+    cy.get('#product-options-wrapper select').select('XL')
+  }
   cy.contains('Add to Cart').click()
 })
 
-Then('A configured cart event should be sent to Drip', function() {
+Then('A {string} cart event should be sent to Drip', function(type) {
   cy.log('Validating subscriber mocks were called')
   cy.then(function() {
     return Mockclient.verify({
@@ -57,74 +54,13 @@ Then('A configured cart event should be sent to Drip', function() {
     expect(body.email).to.eq('testuser@example.com')
     const item = body.items[0]
     expect(item.product_id).to.eq('1')
-    expect(item.product_variant_id).to.eq('2')
-    expect(item.sku).to.eq('widg-1-XL')
-    expect(body.items).to.have.lengthOf(1)
-  })
-})
-
-Then('A simple cart event should be sent to Drip', function() {
-  cy.log('Validating subscriber mocks were called')
-  cy.then(function() {
-    return Mockclient.verify({
-      'path': '/v2/123456/subscribers'
-    }, 1, 1);
-  })
-  cy.log('Validating event mocks were called')
-  cy.then(function() {
-    return Mockclient.verify({
-      'path': '/v2/123456/events'
-    }, 2, 2);
-  })
-  cy.log('Validating cart mock was called')
-  cy.then(function() {
-    return Mockclient.verify({
-      'path': '/v3/123456/shopper_activity/cart'
-    }, 1, 1);
-  })
-  cy.log('Validating that the cart call has everything we need')
-  cy.wrap(Mockclient.retrieveRecordedRequests({
-    'path': '/v3/123456/shopper_activity/cart'
-  })).then(function(recordedRequests) {
-    const body = JSON.parse(recordedRequests[0].body.string)
-    expect(body.email).to.eq('testuser@example.com')
-    const item = body.items[0]
-    expect(item.product_id).to.eq('1')
-    expect(item.product_variant_id).to.eq('1')
-    expect(item.sku).to.eq('widg-1')
-    expect(body.items).to.have.lengthOf(1)
-  })
-})
-
-Then('A configured widget cart event should be sent to Drip', function() {
-  cy.log('Validating subscriber mocks were called')
-  cy.then(function() {
-    return Mockclient.verify({
-      'path': '/v2/123456/subscribers'
-    }, 1, 1);
-  })
-  cy.log('Validating event mocks were called')
-  cy.then(function() {
-    return Mockclient.verify({
-      'path': '/v2/123456/events'
-    }, 2, 2);
-  })
-  cy.log('Validating cart mock was called')
-  cy.then(function() {
-    return Mockclient.verify({
-      'path': '/v3/123456/shopper_activity/cart'
-    }, 1, 1);
-  })
-  cy.log('Validating that the cart call has everything we need')
-  cy.wrap(Mockclient.retrieveRecordedRequests({
-    'path': '/v3/123456/shopper_activity/cart'
-  })).then(function(recordedRequests) {
-    const body = JSON.parse(recordedRequests[0].body.string)
-    expect(body.email).to.eq('testuser@example.com')
-    const item = body.items[0]
-    expect(item.product_id).to.eq('1')
-    expect(item.product_variant_id).to.eq('2')
-    expect(item.sku).to.eq('widg-1-XL')
+    if (type == 'configured') {
+      expect(item.product_variant_id).to.eq('2')
+      expect(item.sku).to.eq('widg-1-XL')
+    } else {
+      expect(item.product_variant_id).to.eq('1')
+      expect(item.sku).to.eq('widg-1')
+    }
     expect(body.items).to.have.lengthOf(1)
   })
 })
