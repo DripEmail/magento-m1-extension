@@ -68,81 +68,37 @@ Given('I have configured Drip to be enabled for {string}', function(site) {
 
 // Simple Product
 Given('I have configured a simple widget', function() {
-  cy.contains('Manage Products').click({ force: true })
-  cy.contains('Add Product').click()
-  cy.contains('Continue').click()
-  cy.get('input[name="product[name]"]').type('Widget 1')
-  cy.get('textarea[name="product[description]"]').type('This is really a widget. There are many like it, but this one is mine.')
-  cy.get('textarea[name="product[short_description]"]').type('This is really a widget.')
-  cy.get('input[name="product[sku]"]').type('widg-1')
-  cy.get('input[name="product[weight]"]').type('120')
-  cy.get('select[name="product[status]"]').select('Enabled')
-  cy.get('a[name="group_8"]').click()
-  cy.get('input[name="product[price]"]').type('120')
-  cy.get('select[name="product[tax_class_id]"]').select('None')
-  cy.get('a[name="inventory"]').click()
-  cy.get('input[name="product[stock_data][qty]"]').type('120')
-  cy.get('select[name="product[stock_data][is_in_stock]"]').select('In Stock')
-  cy.contains('Save').click()
+  cy.createProduct({
+    "sku": "widg-1",
+    "name": "Widget 1",
+    "description": "This is really a widget. There are many like it, but this one is mine.",
+    "shortDescription": "This is really a widget.",
+  })
 })
 
 // Configurable Product
 Given('I have configured a configurable widget', function() {
-  cy.contains('Manage Attributes').click({ force: true })
-  cy.contains('Add New Attribute').click()
-  cy.get('input[name="attribute_code"]').type('widget_size')
-  cy.get('select[name="frontend_input"]').select('Dropdown')
-  cy.get('select[name="is_global"]').select('Global')
-  cy.get('select[name="is_configurable"]').select('Yes')
-  cy.get('a#product_attribute_tabs_labels').click()
-  cy.get('input[name="frontend_label[0]"]').type('Widget Size')
-  cy.contains('Add Option').click()
-  cy.get('input[name="option[value][option_0][0]"]').type('XL') // Admin
-  cy.contains('Save Attribute').click()
-  // Make sure the page reload has finished.
-  cy.contains('Add New Attribute')
-
-  cy.contains('Manage Attribute Sets').click({ force: true })
-  cy.contains('Add New Set').click()
-  cy.get('input[name="attribute_set_name"]').type('widget_size_set')
-  cy.contains('Save Attribute Set').click()
-  cy.get('#tree-div2').contains('widget_size').drag('#tree-div1 .folder')
-  cy.contains('Save Attribute Set').click()
-  // Make sure the page reload has finished.
-  cy.contains('Add New Set')
-
-  cy.contains('Manage Products').click({ force: true })
-  cy.contains('Add Product').click()
-  cy.get('select[name="type"]').select('Configurable Product')
-  cy.get('select[name="set"]').select('widget_size_set')
-  cy.contains('Continue').click()
-  cy.contains('Widget Size').click() // TODO: Make this a checkbox check instead of a click.
-  cy.contains('Continue').click()
-  cy.get('input[name="product[name]"]').type('Widget 1')
-  cy.get('textarea[name="product[description]"]').type('This is really a widget. There are many like it, but this one is mine.')
-  cy.get('textarea[name="product[short_description]"]').type('This is really a widget.')
-  cy.get('input[name="product[sku]"]').type('widg-1')
-  cy.get('select[name="product[status]"]').select('Enabled')
-  cy.get('#product_info_tabs').contains('Prices').click()
-  cy.get('input[name="product[price]"]').type('120')
-  cy.get('select[name="product[tax_class_id]"]').select('None')
-  cy.get('a[name="inventory"]').click()
-  cy.get('select[name="product[stock_data][is_in_stock]"]').select('In Stock')
-
-  cy.get('#product_info_tabs').contains('Associated Products').click()
-  cy.contains('Save and Continue Edit').click()
-
-  cy.get('#simple_product').within(() => {
-    cy.get('input[name="simple_product[weight]"]').type('120')
-    cy.get('select[name="simple_product[status]"]').select('Enabled')
-    cy.get('select[name="simple_product[visibility]"]').select('Catalog, Search')
-    cy.get('select[name="simple_product[widget_size]"]').select('XL')
-    cy.get('input[name="simple_product[stock_data][qty]"]').type('120')
-    cy.get('select[name="simple_product[stock_data][is_in_stock]"]').select('In Stock')
-    cy.contains('Quick Create').click()
-    // cy.get('a[name="websites"]').click()
-    // cy.get('#product_website_1').check()
+  cy.createProduct({
+    "sku": "widg-1",
+    "name": "Widget 1",
+    "description": "This is really a widget. There are many like it, but this one is mine.",
+    "shortDescription": "This is really a widget.",
+    "typeId": "configurable",
+    "attributes": {
+      "widget_size": {
+        "XL": {
+          "sku": "widg-1-xl",
+          "name": "Widget 1 XL",
+          "description": "This is really an XL widget. There are many like it, but this one is mine.",
+          "shortDescription": "This is really an XL widget.",
+        },
+        "L": {
+          "sku": "widg-1-l",
+          "name": "Widget 1 L",
+          "description": "This is really an L widget. There are many like it, but this one is mine.",
+          "shortDescription": "This is really an L widget.",
+        }
+      }
+    }
   })
-
-  cy.contains('Save').click()
 })

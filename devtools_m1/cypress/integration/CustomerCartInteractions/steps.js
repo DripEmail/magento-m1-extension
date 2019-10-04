@@ -53,10 +53,10 @@ Then('A {string} cart event should be sent to Drip', function(type) {
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.email).to.eq('testuser@example.com')
     const item = body.items[0]
-    expect(item.product_id).to.eq('1')
+    expect(item.product_id).to.eq('3')
     if (type == 'configured') {
-      expect(item.product_variant_id).to.eq('2')
-      expect(item.sku).to.eq('widg-1-XL')
+      expect(item.product_variant_id).to.eq('1')
+      expect(item.sku).to.eq('widg-1-xl')
     } else {
       expect(item.product_variant_id).to.eq('1')
       expect(item.sku).to.eq('widg-1')

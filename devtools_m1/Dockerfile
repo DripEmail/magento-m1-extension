@@ -30,3 +30,6 @@ RUN chmod +x /var/www/html/magento/mage /var/www/html/magento/cron.sh
 
 USER root
 CMD [ "/usr/sbin/apache2", "-DFOREGROUND" ]
+
+# Make life a little nicer when we log into the container.
+WORKDIR /var/www/html/magento

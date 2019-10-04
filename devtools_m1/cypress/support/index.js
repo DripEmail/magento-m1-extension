@@ -20,6 +20,7 @@ import '@4tw/cypress-drag-drop';
 import './commands'
 import './docker_helpers'
 import './mocking_helpers'
+import './product_management'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
