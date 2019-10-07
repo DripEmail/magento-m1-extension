@@ -102,3 +102,28 @@ Given('I have configured a configurable widget', function() {
     }
   })
 })
+
+// Grouped Product
+Given('I have configured a grouped widget', function() {
+  cy.createProduct({
+    "sku": "widg-1",
+    "name": "Widget 1",
+    "description": "This is really a widget. There are many like it, but this one is mine.",
+    "shortDescription": "This is really a widget.",
+    "typeId": "grouped",
+    "associated": [
+      {
+        "sku": "widg-1-sub1",
+        "name": "Widget 1 Sub 1",
+        "description": "This is really a sub1 widget. There are many like it, but this one is mine.",
+        "shortDescription": "This is really a sub1 widget.",
+      },
+      {
+        "sku": "widg-1-sub2",
+        "name": "Widget 1 Sub 2",
+        "description": "This is really a sub2 widget. There are many like it, but this one is mine.",
+        "shortDescription": "This is really a sub2 widget.",
+      }
+    ]
+  })
+})

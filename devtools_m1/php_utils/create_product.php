@@ -24,6 +24,9 @@ class Mage_Shell_Drip_CreateProduct extends Mage_Shell_Abstract
             case 'configurable':
                 $this->buildConfigurableProduct($json);
                 break;
+            case 'grouped':
+                $this->buildGroupedProduct($json);
+                break;
             default:
                 throw new \Exception("Unsupported type: ${type}");
         }
@@ -140,6 +143,28 @@ class Mage_Shell_Drip_CreateProduct extends Mage_Shell_Abstract
         $configProduct->setConfigurableProductsData($configurableProductsData);
 
         $configProduct->save();
+    }
+
+    protected function buildGroupedProduct($data)
+    {
+        $associated = $data['associated'];
+        unset($data['associated']);
+
+        $groupedProduct = $this->buildSimpleProduct($data);
+        $groupedProduct->setStockData(array(
+            'use_config_manage_stock' => 0, //'Use config settings' checkbox
+            'manage_stock' => 1, //manage stock
+            'is_in_stock' => 1, //Stock Availability
+        ));
+        $groupedProduct->save();
+
+        $products_links = Mage::getModel('catalog/product_link_api');
+
+        foreach ($associated as $simpleProductData) {
+            $simpleProduct = $this->buildSimpleProduct($simpleProductData);
+            $simpleProduct->save();
+            $products_links->assign("grouped", $groupedProduct->getId(), $simpleProduct->getId());
+        }
     }
 }
 
