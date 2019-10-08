@@ -295,7 +295,6 @@ function basicOrderBodyAssertions(body) {
   expect(body.order_public_id).to.eq('100000001')
   expect(body.provider).to.eq('magento')
   expect(body.total_discounts).to.eq(0)
-  expect(body.total_shipping).to.eq(5)
   expect(body.total_taxes).to.eq(0)
   expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
 
@@ -333,6 +332,7 @@ Then('A simple order event should be sent to Drip', function() {
     expect(body.grand_total).to.eq(16.22)
     expect(body.initial_status).to.eq('unsubscribed')
     expect(body.items_count).to.eq(1)
+    expect(body.total_shipping).to.eq(5)
     expect(body.items).to.have.lengthOf(1)
 
     basicOrderBodyAssertions(body)
@@ -364,6 +364,7 @@ Then('A configurable order event should be sent to Drip', function() {
     expect(body.grand_total).to.eq(16.22)
     expect(body.initial_status).to.eq('unsubscribed')
     expect(body.items_count).to.eq(1)
+    expect(body.total_shipping).to.eq(5)
     expect(body.items).to.have.lengthOf(1)
 
     basicOrderBodyAssertions(body)
@@ -395,6 +396,7 @@ Then('A grouped order event should be sent to Drip', function() {
     expect(body.grand_total).to.eq(32.44)
     expect(body.initial_status).to.eq('unsubscribed')
     expect(body.items_count).to.eq(2)
+    expect(body.total_shipping).to.eq(10)
     expect(body.items).to.have.lengthOf(2)
 
     basicOrderBodyAssertions(body)
@@ -440,6 +442,7 @@ Then('A bundle order event should be sent to Drip', function() {
     expect(body.grand_total).to.eq(27.44)
     expect(body.initial_status).to.eq('unsubscribed')
     expect(body.items_count).to.eq(1)
+    expect(body.total_shipping).to.eq(5)
     expect(body.items).to.have.lengthOf(1)
 
     basicOrderBodyAssertions(body)
