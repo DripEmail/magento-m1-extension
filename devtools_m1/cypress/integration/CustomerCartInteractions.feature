@@ -29,7 +29,8 @@ Feature: Customer Cart Interactions
       And I add a 'grouped' widget to my cart
     Then A grouped cart event should be sent to Drip
 
-  # Note that we skip a test for virtual products since they are essentially the same as simple products, as far as we are concerned.
+  # Note that we skip a test for virtual and downloadable products since they
+  # are essentially the same as simple products, as far as we are concerned.
 
   Scenario: A customer adds a bundle product to their cart
     Given I am logged into the admin interface
@@ -39,5 +40,3 @@ Feature: Customer Cart Interactions
       And I create an account
       And I add a 'bundle' widget to my cart
     Then A bundle cart event should be sent to Drip
-
-  Scenario: A customer adds a downloadable product to their cart
