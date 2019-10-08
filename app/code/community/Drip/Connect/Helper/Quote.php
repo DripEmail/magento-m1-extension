@@ -117,7 +117,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
             }
 
             $productVariantItem = $item;
-            if ($item->getProductType() === 'configured' && $childItems[$item->getId()]) {
+            if ($item->getProductType() === 'configurable' && $childItems[$item->getId()]) {
                 $productVariantItem = $childItems[$item->getId()];
             }
 

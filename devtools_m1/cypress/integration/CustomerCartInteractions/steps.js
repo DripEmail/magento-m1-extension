@@ -22,7 +22,7 @@ When('I add a {string} widget to my cart', function(type) {
   })
   cy.visit(`/widget-1.html`)
   switch (type) {
-    case 'configured':
+    case 'configurable':
       cy.get('#product-options-wrapper select').select('XL')
       break;
     case 'grouped':
@@ -77,7 +77,7 @@ Then('A simple cart event should be sent to Drip', function() {
   })
 })
 
-Then('A configured cart event should be sent to Drip', function() {
+Then('A configurable cart event should be sent to Drip', function() {
   checkBasicCartEvents()
   cy.log('Validating that the cart call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
