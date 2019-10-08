@@ -130,11 +130,31 @@ Then('A configurable cart event should be sent to Drip', function() {
   })).then(function(recordedRequests) {
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.email).to.eq('testuser@example.com')
+    expect(body.action).to.eq('created')
+    expect(body.cart_id).to.eq('1')
+    expect(body.cart_url).to.startWith('http://main.magento.localhost:3005/drip/cart/index/q/1')
+    expect(body.currency).to.eq('USD')
+    expect(body.grand_total).to.eq(11.22)
+    expect(body.initial_status).to.eq('unsubscribed')
+    expect(body.items_count).to.eq(1)
+    expect(body.magento_source).to.eq('Storefront')
+    expect(body.provider).to.eq('magento')
+    expect(body.total_discounts).to.eq(0)
+    expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+    expect(body.items).to.have.lengthOf(1)
+
     const item = body.items[0]
     expect(item.product_id).to.eq('3')
     expect(item.product_variant_id).to.eq('1')
     expect(item.sku).to.eq('widg-1-xl')
-    expect(body.items).to.have.lengthOf(1)
+    expect(item.categories).to.be.empty
+    expect(item.discounts).to.eq(0)
+    expect(item.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
+    expect(item.name).to.eq('Widget 1') // TODO: Figure out whether this is correct.
+    expect(item.price).to.eq(11.22)
+    expect(item.product_url).to.eq('http://main.magento.localhost:3005/widget-1.html')
+    expect(item.quantity).to.eq(1)
+    expect(item.total).to.eq(11.22)
   })
 })
 
@@ -166,15 +186,44 @@ Then('A grouped cart event should be sent to Drip', function() {
   })).then(function(recordedRequests) {
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.email).to.eq('testuser@example.com')
+    expect(body.action).to.eq('created')
+    expect(body.cart_id).to.eq('1')
+    expect(body.cart_url).to.startWith('http://main.magento.localhost:3005/drip/cart/index/q/1')
+    expect(body.currency).to.eq('USD')
+    expect(body.grand_total).to.eq(22.44)
+    expect(body.initial_status).to.eq('unsubscribed')
+    expect(body.items_count).to.eq(2)
+    expect(body.magento_source).to.eq('Storefront')
+    expect(body.provider).to.eq('magento')
+    expect(body.total_discounts).to.eq(0)
+    expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+    expect(body.items).to.have.lengthOf(2)
+
     const item1 = body.items[0]
     expect(item1.product_id).to.eq('2')
     expect(item1.product_variant_id).to.eq('2')
     expect(item1.sku).to.eq('widg-1-sub1')
+    expect(item1.categories).to.be.empty
+    expect(item1.discounts).to.eq(0)
+    expect(item1.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
+    expect(item1.name).to.eq('Widget 1 Sub 1')
+    expect(item1.price).to.eq(11.22)
+    expect(item1.product_url).to.eq('http://main.magento.localhost:3005/widget-1-sub-1.html')
+    expect(item1.quantity).to.eq(1)
+    expect(item1.total).to.eq(11.22)
+
     const item2 = body.items[1]
     expect(item2.product_id).to.eq('3')
     expect(item2.product_variant_id).to.eq('3')
     expect(item2.sku).to.eq('widg-1-sub2')
-    expect(body.items).to.have.lengthOf(2)
+    expect(item2.categories).to.be.empty
+    expect(item2.discounts).to.eq(0)
+    expect(item2.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
+    expect(item2.name).to.eq('Widget 1 Sub 2')
+    expect(item2.price).to.eq(11.22)
+    expect(item2.product_url).to.eq('http://main.magento.localhost:3005/widget-1-sub-2.html')
+    expect(item2.quantity).to.eq(1)
+    expect(item2.total).to.eq(11.22)
   })
 })
 
@@ -186,12 +235,31 @@ Then('A bundle cart event should be sent to Drip', function() {
   })).then(function(recordedRequests) {
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.email).to.eq('testuser@example.com')
+    expect(body.action).to.eq('created')
+    expect(body.cart_id).to.eq('1')
+    expect(body.cart_url).to.startWith('http://main.magento.localhost:3005/drip/cart/index/q/1')
+    expect(body.currency).to.eq('USD')
+    expect(body.grand_total).to.eq(22.44)
+    expect(body.initial_status).to.eq('unsubscribed')
+    expect(body.items_count).to.eq(1)
+    expect(body.magento_source).to.eq('Storefront')
+    expect(body.provider).to.eq('magento')
+    expect(body.total_discounts).to.eq(0)
+    expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+    expect(body.items).to.have.lengthOf(1)
 
     // We don't send anything unique for the child products right now.
     const item = body.items[0]
     expect(item.product_id).to.eq('3')
     expect(item.product_variant_id).to.eq('3')
     expect(item.sku).to.eq('widg-1')
-    expect(body.items).to.have.lengthOf(1)
+    expect(item.categories).to.be.empty
+    expect(item.discounts).to.eq(0)
+    expect(item.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
+    expect(item.name).to.eq('Widget 1')
+    expect(item.price).to.eq(22.44)
+    expect(item.product_url).to.eq('http://main.magento.localhost:3005/widget-1.html')
+    expect(item.quantity).to.eq(1)
+    expect(item.total).to.eq(22.44)
   })
 })
