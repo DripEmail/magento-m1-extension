@@ -21,6 +21,8 @@ Feature: Customer Cart Interactions
       And I create an account
       And I add a 'configurable' widget to my cart
     Then A configurable cart event should be sent to Drip
+    When I check out
+    Then A configurable order event should be sent to Drip
 
   Scenario: A customer adds several configurable products to their cart and sees data about the sub-items
     Given I am logged into the admin interface
@@ -40,6 +42,8 @@ Feature: Customer Cart Interactions
       And I create an account
       And I add a 'grouped' widget to my cart
     Then A grouped cart event should be sent to Drip
+    When I check out
+    Then A grouped order event should be sent to Drip
 
   # Note that we skip a test for virtual and downloadable products since they
   # are essentially the same as simple products, as far as we are concerned.
@@ -52,3 +56,5 @@ Feature: Customer Cart Interactions
       And I create an account
       And I add a 'bundle' widget to my cart
     Then A bundle cart event should be sent to Drip
+    When I check out
+    Then A bundle order event should be sent to Drip

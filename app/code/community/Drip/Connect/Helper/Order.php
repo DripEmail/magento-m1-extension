@@ -211,11 +211,22 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
      */
     protected function getOrderItemsData($order, $isRefund = false)
     {
-        $data = array();
+        $childItems = array();
         foreach ($order->getAllItems() as $item) {
+            if (!$item->getParentItemId()) { continue; }
+            $childItems[$item->getParentItemId()] = $item;
+        }
+
+        $data = array();
+        foreach ($order->getAllVisibleItems() as $item) {
+            $productVariantItem = $item;
+            if ($item->getProductType() === 'configurable' && $childItems[$item->getId()]) {
+                $productVariantItem = $childItems[$item->getId()];
+            }
+
             $group = array(
                 'product_id' => (string) $item->getProductId(),
-                'product_variant_id' => (string) $item->getProductId(),
+                'product_variant_id' => (string) $productVariantItem->getProductId(),
                 'sku' => (string) $item->getSku(),
                 'name' => (string) $item->getName(),
                 'quantity' => (float) $item->getQtyOrdered(),
