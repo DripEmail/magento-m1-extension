@@ -20,7 +20,6 @@ Feature: Customer Cart Interactions
       And I add a 'configurable' widget to my cart
     Then A configurable cart event should be sent to Drip
 
-  @focus
   Scenario: A customer adds several configurable products to their cart and sees data about the sub-items
     Given I am logged into the admin interface
       And I have configured Drip to be enabled for 'main'

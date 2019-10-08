@@ -111,8 +111,9 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
         foreach ($quote->getAllVisibleItems() as $item) {
             $product = Mage::getModel('catalog/product')->load($item->getProduct()->getId());
 
-            $categories = explode(',', Mage::helper('drip_connect')->getProductCategoryNames($product));
-            if (empty($categories)) {
+            $productCategoryNames = Mage::helper('drip_connect')->getProductCategoryNames($product);
+            $categories = explode(',', $productCategoryNames);
+            if ($productCategoryNames === '' || empty($categories)) {
                 $categories = [];
             }
 
