@@ -1,6 +1,6 @@
 Feature: Customer Cart Interactions
 
-  I want to send cart events to Drip when a customer interacts with their cart.
+  I want to send cart and order events to Drip when a customer interacts with their cart.
 
   Scenario: A customer adds a simple product to their cart
     Given I am logged into the admin interface
@@ -10,6 +10,8 @@ Feature: Customer Cart Interactions
       And I create an account
       And I add a 'simple' widget to my cart
     Then A simple cart event should be sent to Drip
+    When I check out
+    Then A simple order event should be sent to Drip
 
   Scenario: A customer adds a configurable product to their cart and sees data about the sub-item
     Given I am logged into the admin interface

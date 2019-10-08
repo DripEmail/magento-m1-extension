@@ -263,3 +263,86 @@ Then('A bundle cart event should be sent to Drip', function() {
     expect(item.total).to.eq(22.44)
   })
 })
+
+When('I check out', function() {
+  cy.log('Resetting mocks')
+  cy.wrap(Mockclient.reset())
+
+  cy.contains('Proceed to Checkout').click()
+
+  cy.get('input[name="billing[street][]"]:first').type('123 Main St.')
+  cy.get('input[name="billing[city]"]').type('Centerville')
+  cy.get('select[name="billing[region_id]"]').select('Minnesota')
+  cy.get('input[name="billing[postcode]"]').type('12345')
+  cy.get('input[name="billing[telephone]"]').type('999-999-9999')
+  cy.contains('Continue').click()
+
+  cy.contains('Flat Rate')
+  cy.get('#shipping-method-buttons-container').contains('Continue').click()
+
+  cy.contains('Check / Money order')
+  cy.get('#checkout-step-payment').contains('Continue').click()
+
+  cy.contains('Place Order').click()
+  cy.contains('Your order has been received')
+})
+
+Then('A simple order event should be sent to Drip', function() {
+  cy.log('Validating that the order call has everything we need')
+  cy.wrap(Mockclient.retrieveRecordedRequests({
+    'path': '/v3/123456/shopper_activity/order'
+  })).then(function(recordedRequests) {
+    const body = JSON.parse(recordedRequests[0].body.string)
+    expect(body.action).to.eq('placed')
+    expect(body.currency).to.eq('USD')
+    expect(body.email).to.eq('testuser@example.com')
+    expect(body.grand_total).to.eq(16.22)
+    expect(body.initial_status).to.eq('unsubscribed')
+    expect(body.items_count).to.eq(1)
+    expect(body.magento_source).to.eq('Storefront')
+    expect(body.occurred_at).to.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)
+    expect(body.order_id).to.eq('100000001')
+    expect(body.order_public_id).to.eq('100000001')
+    expect(body.provider).to.eq('magento')
+    expect(body.total_discounts).to.eq(0)
+    expect(body.total_shipping).to.eq(5)
+    expect(body.total_taxes).to.eq(0)
+    expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+
+    expect(body.billing_address.address_1).to.eq('123 Main St.')
+    expect(body.billing_address.address_2).to.eq('')
+    expect(body.billing_address.city).to.eq('Centerville')
+    expect(body.billing_address.company).to.eq('')
+    expect(body.billing_address.country).to.eq('US')
+    expect(body.billing_address.first_name).to.eq('Test')
+    expect(body.billing_address.last_name).to.eq('User')
+    expect(body.billing_address.phone).to.eq('999-999-9999')
+    expect(body.billing_address.postal_code).to.eq('12345')
+    expect(body.billing_address.state).to.eq('Minnesota')
+
+    expect(body.shipping_address.address_1).to.eq('123 Main St.')
+    expect(body.shipping_address.address_2).to.eq('')
+    expect(body.shipping_address.city).to.eq('Centerville')
+    expect(body.shipping_address.company).to.eq('')
+    expect(body.shipping_address.country).to.eq('US')
+    expect(body.shipping_address.first_name).to.eq('Test')
+    expect(body.shipping_address.last_name).to.eq('User')
+    expect(body.shipping_address.phone).to.eq('999-999-9999')
+    expect(body.shipping_address.postal_code).to.eq('12345')
+    expect(body.shipping_address.state).to.eq('Minnesota')
+
+    const item = body.items[0]
+    expect(item.categories).to.be.empty
+    expect(item.discounts).to.eq(0)
+    expect(item.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
+    expect(item.name).to.eq('Widget 1')
+    expect(item.price).to.eq(11.22)
+    expect(item.product_id).to.eq('1')
+    expect(item.product_variant_id).to.eq('1')
+    expect(item.product_url).to.eq('http://main.magento.localhost:3005/widget-1.html')
+    expect(item.quantity).to.eq(1)
+    expect(item.sku).to.eq('widg-1')
+    expect(item.taxes).to.eq(0)
+    expect(item.total).to.eq(11.22)
+  })
+})

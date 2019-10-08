@@ -215,6 +215,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
         foreach ($order->getAllItems() as $item) {
             $group = array(
                 'product_id' => (string) $item->getProductId(),
+                'product_variant_id' => (string) $item->getProductId(),
                 'sku' => (string) $item->getSku(),
                 'name' => (string) $item->getName(),
                 'quantity' => (float) $item->getQtyOrdered(),
@@ -225,8 +226,9 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
             );
             if (!empty($item->getProduct()->getId())) {
                 $product = Mage::getModel('catalog/product')->load($item->getProduct()->getId());
-                $categories = explode(',', Mage::helper('drip_connect')->getProductCategoryNames($product));
-                if (empty($categories)) {
+                $productCategoryNames = Mage::helper('drip_connect')->getProductCategoryNames($product);
+                $categories = explode(',', $productCategoryNames);
+                if ($productCategoryNames === '' || empty($categories)) {
                     $categories = [];
                 }
                 $group['categories'] = $categories;
