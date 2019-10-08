@@ -43,4 +43,8 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
             'phone_number' => $address->getTelephone(),
         );
     }
+
+    protected function getLogger() {
+        return Mage::helper('drip_connect/logger')->logger();
+    }
 }

@@ -29,6 +29,12 @@ When('I add a {string} widget to my cart', function(type) {
       cy.get('#product_addtocart_form input[name="super_group[2]"]').clear().type('1')
       cy.get('#product_addtocart_form input[name="super_group[3]"]').clear().type('1')
       break;
+    case 'simple':
+    case 'bundle': // For now, we only have one option for each bundle option, so we don't have to do anything.
+      // Do nothing
+      break;
+    default:
+      throw 'Methinks thou hast forgotten something…'
   }
   cy.contains('Add to Cart').click()
 })
@@ -55,7 +61,7 @@ function checkBasicCartEvents() {
   })
 }
 
-Then('A simple cart event should be sent to Drip', function(type) {
+Then('A simple cart event should be sent to Drip', function() {
   checkBasicCartEvents()
   cy.log('Validating that the cart call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
@@ -71,7 +77,7 @@ Then('A simple cart event should be sent to Drip', function(type) {
   })
 })
 
-Then('A configured cart event should be sent to Drip', function(type) {
+Then('A configured cart event should be sent to Drip', function() {
   checkBasicCartEvents()
   cy.log('Validating that the cart call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
@@ -87,7 +93,7 @@ Then('A configured cart event should be sent to Drip', function(type) {
   })
 })
 
-Then('A grouped cart event should be sent to Drip', function(type) {
+Then('A grouped cart event should be sent to Drip', function() {
   checkBasicCartEvents()
   cy.log('Validating that the cart call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
@@ -104,5 +110,23 @@ Then('A grouped cart event should be sent to Drip', function(type) {
     expect(item2.product_variant_id).to.eq('3')
     expect(item2.sku).to.eq('widg-1-sub2')
     expect(body.items).to.have.lengthOf(2)
+  })
+})
+
+Then('A bundle cart event should be sent to Drip', function() {
+  checkBasicCartEvents()
+  cy.log('Validating that the cart call has everything we need')
+  cy.wrap(Mockclient.retrieveRecordedRequests({
+    'path': '/v3/123456/shopper_activity/cart'
+  })).then(function(recordedRequests) {
+    const body = JSON.parse(recordedRequests[0].body.string)
+    expect(body.email).to.eq('testuser@example.com')
+
+    // We don't send anything unique for the child products right now.
+    const item = body.items[0]
+    expect(item.product_id).to.eq('3')
+    expect(item.product_variant_id).to.eq('3')
+    expect(item.sku).to.eq('widg-1')
+    expect(body.items).to.have.lengthOf(1)
   })
 })

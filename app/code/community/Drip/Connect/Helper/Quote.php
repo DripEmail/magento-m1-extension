@@ -116,9 +116,9 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
                 $categories = [];
             }
 
-            $productVariantItem = $childItems[$item->getId()];
-            if (!$productVariantItem) {
-                $productVariantItem = $item;
+            $productVariantItem = $item;
+            if ($item->getProductType() === 'configured' && $childItems[$item->getId()]) {
+                $productVariantItem = $childItems[$item->getId()];
             }
 
             $group = array(
@@ -132,7 +132,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
                 'discounts' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount())/100,
                 'total' => Mage::helper('drip_connect')->priceAsCents((float)$item->getQty() * (float)$item->getPrice()) / 100,
                 'product_url' => $product->getProductUrl(),
-                'image_url' => Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()),
+                'image_url' => Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getThumbnail()),
             );
 
             $data[] = $group;
@@ -187,5 +187,9 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
         $quote->merge($oldQuote);
         $quote->collectTotals()->save();
         $checkoutSession->setQuoteId($quote->getId());
+    }
+
+    protected function getLogger() {
+        return Mage::helper('drip_connect/logger')->logger();
     }
 }

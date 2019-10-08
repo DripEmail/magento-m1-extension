@@ -27,6 +27,9 @@ class Mage_Shell_Drip_CreateProduct extends Mage_Shell_Abstract
             case 'grouped':
                 $this->buildGroupedProduct($json);
                 break;
+            case 'bundle':
+                $this->buildBundleProduct($json);
+                break;
             default:
                 throw new \Exception("Unsupported type: ${type}");
         }
@@ -165,6 +168,69 @@ class Mage_Shell_Drip_CreateProduct extends Mage_Shell_Abstract
             $simpleProduct->save();
             $products_links->assign("grouped", $groupedProduct->getId(), $simpleProduct->getId());
         }
+    }
+
+    protected function buildBundleProduct($data)
+    {
+        $configuredBundleOptions = $data['bundle_options'];
+        unset($data['bundle_options']);
+
+        $bundleProduct = $this->buildSimpleProduct($data);
+        $bundleProduct->setStockData(array(
+            'use_config_manage_stock' => 0, //'Use config settings' checkbox
+            'manage_stock' => 1, //manage stock
+            'is_in_stock' => 1, //Stock Availability
+        ));
+
+        // Requires title
+        $defaultOptions = array(
+            'option_id' => '',
+            'delete' => '',
+            'type' => 'select',
+            'required' => '1',
+            'position' => '1'
+        );
+
+        $bundleOptions = array();
+        $bundleSelections = array();
+        foreach ($configuredBundleOptions as $option) {
+            $productOptions = $option['product_options'];
+            unset($option['product_options']);
+
+            $selections = array();
+            foreach ($productOptions as $productData) {
+                $simpleProduct = $this->buildSimpleProduct($productData);
+                $simpleProduct->save();
+                $selections[] = array(
+                    'product_id' => $simpleProduct->getId(),
+                    'delete' => '',
+                    'selection_price_value' => $simpleProduct->getPrice(),
+                    'selection_price_type' => 0,
+                    'selection_qty' => 1,
+                    'selection_can_change_qty' => 0,
+                    'position' => 0,
+                    'is_default' => 1
+                );
+            }
+
+            // $bundleOptions and $bundleSelections need to have parallel indicies.
+            $bundleOptions[] = array_replace_recursive($defaultOptions, $option);
+            $bundleSelections[] = $selections;
+        }
+
+        //flags for saving custom options/selections
+        $bundleProduct->setCanSaveCustomOptions(true);
+        $bundleProduct->setCanSaveBundleSelections(true);
+        $bundleProduct->setAffectBundleProductSelections(true);
+
+        //registering a product because of Mage_Bundle_Model_Selection::_beforeSave
+        Mage::register('product', $bundleProduct);
+
+        //setting the bundle options and selection data
+        $bundleProduct->setBundleOptionsData($bundleOptions);
+        $bundleProduct->setBundleSelectionsData($bundleSelections);
+
+        $bundleProduct->save();
     }
 }
 

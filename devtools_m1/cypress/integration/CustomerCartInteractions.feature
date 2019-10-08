@@ -20,7 +20,6 @@ Feature: Customer Cart Interactions
       And I add a 'configured' widget to my cart
     Then A configured cart event should be sent to Drip
 
-  @focus
   Scenario: A customer adds a grouped product to their cart and sees all the individual items
     Given I am logged into the admin interface
       And I have configured Drip to be enabled for 'main'
@@ -30,6 +29,15 @@ Feature: Customer Cart Interactions
       And I add a 'grouped' widget to my cart
     Then A grouped cart event should be sent to Drip
 
-  Scenario: A customer adds a virtual product to their cart
+  # Note that we skip a test for virtual products since they are essentially the same as simple products, as far as we are concerned.
+
   Scenario: A customer adds a bundle product to their cart
+    Given I am logged into the admin interface
+      And I have configured Drip to be enabled for 'main'
+      And I have configured a bundle widget
+    When I open the 'main' homepage
+      And I create an account
+      And I add a 'bundle' widget to my cart
+    Then A bundle cart event should be sent to Drip
+
   Scenario: A customer adds a downloadable product to their cart
