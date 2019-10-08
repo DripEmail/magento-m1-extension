@@ -39,6 +39,31 @@ When('I add a {string} widget to my cart', function(type) {
   cy.contains('Add to Cart').click()
 })
 
+// TODO: This is kind of ugly and duplicates the prior.
+When('I add a different {string} widget to my cart', function(type) {
+  // For some reason, Magento throws an error here in JS. We don't really care, so ignore it.
+  cy.on('uncaught:exception', (err, runnable) => {
+    return false
+  })
+  cy.visit(`/widget-1.html`)
+  switch (type) {
+    case 'configurable':
+      cy.get('#product-options-wrapper select').select('L')
+      break;
+    case 'grouped':
+      cy.get('#product_addtocart_form input[name="super_group[2]"]').clear().type('1')
+      cy.get('#product_addtocart_form input[name="super_group[3]"]').clear().type('1')
+      break;
+    case 'simple':
+    case 'bundle': // For now, we only have one option for each bundle option, so we don't have to do anything.
+      // Do nothing
+      break;
+    default:
+      throw 'Methinks thou hast forgotten something…'
+  }
+  cy.contains('Add to Cart').click()
+})
+
 // This is extracting some common assertions that will likely differ soon.
 function checkBasicCartEvents() {
   cy.log('Validating subscriber mocks were called')
@@ -57,7 +82,7 @@ function checkBasicCartEvents() {
   cy.then(function() {
     return Mockclient.verify({
       'path': '/v3/123456/shopper_activity/cart'
-    }, 1, 1);
+    }, 1, 2);
   })
 }
 
@@ -90,6 +115,26 @@ Then('A configurable cart event should be sent to Drip', function() {
     expect(item.product_variant_id).to.eq('1')
     expect(item.sku).to.eq('widg-1-xl')
     expect(body.items).to.have.lengthOf(1)
+  })
+})
+
+Then('Configurable cart events should be sent to Drip', function() {
+  checkBasicCartEvents()
+  cy.log('Validating that the cart call has everything we need')
+  cy.wrap(Mockclient.retrieveRecordedRequests({
+    'path': '/v3/123456/shopper_activity/cart'
+  })).then(function(recordedRequests) {
+    const body = JSON.parse(recordedRequests[recordedRequests.length - 1].body.string)
+    expect(body.email).to.eq('testuser@example.com')
+    expect(body.items).to.have.lengthOf(2)
+    const item1 = body.items[0]
+    expect(item1.product_id).to.eq('3')
+    expect(item1.product_variant_id).to.eq('1')
+    expect(item1.sku).to.eq('widg-1-xl')
+    const item2 = body.items[1]
+    expect(item2.product_id).to.eq('3')
+    expect(item2.product_variant_id).to.eq('2')
+    expect(item2.sku).to.eq('widg-1-l')
   })
 })
 
