@@ -64,34 +64,12 @@ When('I add a different {string} widget to my cart', function(type) {
   cy.contains('Add to Cart').click()
 })
 
-// This is extracting some common assertions that will likely differ soon.
-function checkBasicCartEvents() {
-  cy.log('Validating subscriber mocks were called')
-  cy.then(function() {
-    return Mockclient.verify({
-      'path': '/v2/123456/subscribers'
-    }, 1, 1);
-  })
-  cy.log('Validating event mocks were called')
-  cy.then(function() {
-    return Mockclient.verify({
-      'path': '/v2/123456/events'
-    }, 2, 2);
-  })
-  cy.log('Validating cart mock was called')
-  cy.then(function() {
-    return Mockclient.verify({
-      'path': '/v3/123456/shopper_activity/cart'
-    }, 1, 2);
-  })
-}
-
 Then('A simple cart event should be sent to Drip', function() {
-  checkBasicCartEvents()
   cy.log('Validating that the cart call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/cart'
   })).then(function(recordedRequests) {
+    expect(recordedRequests).to.have.lengthOf(1)
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.email).to.eq('testuser@example.com')
     expect(body.action).to.eq('created')
@@ -123,11 +101,11 @@ Then('A simple cart event should be sent to Drip', function() {
 })
 
 Then('A configurable cart event should be sent to Drip', function() {
-  checkBasicCartEvents()
   cy.log('Validating that the cart call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/cart'
   })).then(function(recordedRequests) {
+    expect(recordedRequests).to.have.lengthOf(1)
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.email).to.eq('testuser@example.com')
     expect(body.action).to.eq('created')
@@ -159,11 +137,11 @@ Then('A configurable cart event should be sent to Drip', function() {
 })
 
 Then('Configurable cart events should be sent to Drip', function() {
-  checkBasicCartEvents()
   cy.log('Validating that the cart call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/cart'
   })).then(function(recordedRequests) {
+    expect(recordedRequests).to.have.lengthOf(2)
     const body = JSON.parse(recordedRequests[recordedRequests.length - 1].body.string)
     expect(body.email).to.eq('testuser@example.com')
     expect(body.items).to.have.lengthOf(2)
@@ -179,11 +157,11 @@ Then('Configurable cart events should be sent to Drip', function() {
 })
 
 Then('A grouped cart event should be sent to Drip', function() {
-  checkBasicCartEvents()
   cy.log('Validating that the cart call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/cart'
   })).then(function(recordedRequests) {
+    expect(recordedRequests).to.have.lengthOf(1)
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.email).to.eq('testuser@example.com')
     expect(body.action).to.eq('created')
@@ -228,11 +206,11 @@ Then('A grouped cart event should be sent to Drip', function() {
 })
 
 Then('A bundle cart event should be sent to Drip', function() {
-  checkBasicCartEvents()
   cy.log('Validating that the cart call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/cart'
   })).then(function(recordedRequests) {
+    expect(recordedRequests).to.have.lengthOf(1)
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.email).to.eq('testuser@example.com')
     expect(body.action).to.eq('created')
@@ -326,6 +304,7 @@ Then('A simple order event should be sent to Drip', function() {
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/order'
   })).then(function(recordedRequests) {
+    expect(recordedRequests).to.have.lengthOf(1)
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.action).to.eq('placed')
     expect(body.email).to.eq('testuser@example.com')
@@ -358,6 +337,7 @@ Then('A configurable order event should be sent to Drip', function() {
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/order'
   })).then(function(recordedRequests) {
+    expect(recordedRequests).to.have.lengthOf(1)
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.action).to.eq('placed')
     expect(body.email).to.eq('testuser@example.com')
@@ -390,6 +370,7 @@ Then('A grouped order event should be sent to Drip', function() {
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/order'
   })).then(function(recordedRequests) {
+    expect(recordedRequests).to.have.lengthOf(1)
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.action).to.eq('placed')
     expect(body.email).to.eq('testuser@example.com')
@@ -436,6 +417,7 @@ Then('A bundle order event should be sent to Drip', function() {
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/order'
   })).then(function(recordedRequests) {
+    expect(recordedRequests).to.have.lengthOf(1)
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.action).to.eq('placed')
     expect(body.email).to.eq('testuser@example.com')
