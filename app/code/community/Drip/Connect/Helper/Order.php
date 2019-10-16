@@ -213,7 +213,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     {
         $childItems = array();
         foreach ($order->getAllItems() as $item) {
-            if (!$item->getParentItemId()) { continue; }
+            if (is_null($item->getParentItemId())) { continue; }
             $childItems[$item->getParentItemId()] = $item;
         }
 
