@@ -101,17 +101,30 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
      */
     protected function prepareQuoteItemsData($quote)
     {
-        $data = array ();
+        $childItems = array();
         foreach ($quote->getAllItems() as $item) {
+            if (!$item->getParentItemId()) { continue; }
+            $childItems[$item->getParentItemId()] = $item;
+        }
+
+        $data = array();
+        foreach ($quote->getAllVisibleItems() as $item) {
             $product = Mage::getModel('catalog/product')->load($item->getProduct()->getId());
 
-            $categories = explode(',', Mage::helper('drip_connect')->getProductCategoryNames($product));
-            if (empty($categories)) {
+            $productCategoryNames = Mage::helper('drip_connect')->getProductCategoryNames($product);
+            $categories = explode(',', $productCategoryNames);
+            if ($productCategoryNames === '' || empty($categories)) {
                 $categories = [];
+            }
+
+            $productVariantItem = $item;
+            if ($item->getProductType() === 'configurable' && $childItems[$item->getId()]) {
+                $productVariantItem = $childItems[$item->getId()];
             }
 
             $group = array(
                 'product_id' => $item->getProductId(),
+                'product_variant_id' => $productVariantItem->getProductId(),
                 'sku' => $item->getSku(),
                 'name' => $item->getName(),
                 'categories' => $categories,
@@ -120,7 +133,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
                 'discounts' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount())/100,
                 'total' => Mage::helper('drip_connect')->priceAsCents((float)$item->getQty() * (float)$item->getPrice()) / 100,
                 'product_url' => $product->getProductUrl(),
-                'image_url' => Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()),
+                'image_url' => Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getThumbnail()),
             );
 
             $data[] = $group;
@@ -175,5 +188,9 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
         $quote->merge($oldQuote);
         $quote->collectTotals()->save();
         $checkoutSession->setQuoteId($quote->getId());
+    }
+
+    protected function getLogger() {
+        return Mage::helper('drip_connect/logger')->logger();
     }
 }

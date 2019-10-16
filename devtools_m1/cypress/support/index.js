@@ -13,10 +13,17 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
+// import 'cypress-drag-drop';
+import '@4tw/cypress-drag-drop';
+import chaiString from 'chai-string';
+
 // Import commands.js using ES2015 syntax:
 import './commands'
 import './docker_helpers'
 import './mocking_helpers'
+import './product_management'
+
+chai.use(chaiString)
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

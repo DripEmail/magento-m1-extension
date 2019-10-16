@@ -42,11 +42,17 @@ Given('I have set up a multi-store configuration', function() {
   cy.contains('Save Config').click()
 })
 
-Given('I have configured Drip to be enabled for site1', function() {
+Given('I have configured Drip to be enabled for {string}', function(site) {
   cy.contains('System').trigger('mouseover')
   cy.contains('Configuration').click()
   cy.contains('Drip Connect Configuration').click()
-  cy.get('select#store_switcher').select('site1_website')
+  let websiteKey
+  if (site == 'main') {
+    websiteKey = 'Main Website'
+  } else {
+    websiteKey = `${site}_website`
+  }
+  cy.get('select#store_switcher').select(websiteKey)
   cy.contains('Module Settings').click()
   cy.contains('API Settings').click()
   cy.get('input[name="groups[module_settings][fields][is_enabled][inherit]"]').uncheck()
@@ -60,41 +66,101 @@ Given('I have configured Drip to be enabled for site1', function() {
   cy.contains('Save Config').click()
 })
 
-Given('I have configured Drip to be enabled for main', function() {
-  cy.contains('System').trigger('mouseover')
-  cy.contains('Configuration').click()
-  cy.contains('Drip Connect Configuration').click()
-  cy.get('select#store_switcher').select('Main Website')
-  cy.contains('Module Settings').click()
-  cy.contains('API Settings').click()
-  cy.get('input[name="groups[module_settings][fields][is_enabled][inherit]"]').uncheck()
-  cy.get('select[name="groups[module_settings][fields][is_enabled][value]"]').select('Yes')
-  cy.get('input[name="groups[api_settings][fields][account_id][inherit]"]').uncheck()
-  cy.get('input[name="groups[api_settings][fields][account_id][value]"]').type('123456')
-  cy.get('input[name="groups[api_settings][fields][api_key][inherit]"]').uncheck()
-  cy.get('input[name="groups[api_settings][fields][api_key][value]"]').type('abc123')
-  cy.get('input[name="groups[api_settings][fields][url][inherit]"]').uncheck()
-  cy.get('input[name="groups[api_settings][fields][url][value]"]').clear().type('http://mock:1080/v2/')
-  cy.contains('Save Config').click()
+// Simple Product
+Given('I have configured a simple widget', function() {
+  cy.createProduct({
+    "sku": "widg-1",
+    "name": "Widget 1",
+    "description": "This is really a widget. There are many like it, but this one is mine.",
+    "shortDescription": "This is really a widget.",
+  })
 })
 
-Given('I have configured a widget', function() {
-  cy.contains('Manage Products').click({ force: true })
-  cy.contains('Add Product').click()
-  cy.contains('Continue').click()
-  cy.get('input[name="product[name]"]').type('Widget 1')
-  cy.get('textarea[name="product[description]"]').type('This is really a widget. There are many like it, but this one is mine.')
-  cy.get('textarea[name="product[short_description]"]').type('This is really a widget.')
-  cy.get('input[name="product[sku]"]').type('widg-1')
-  cy.get('input[name="product[weight]"]').type('120')
-  cy.get('select[name="product[status]"]').select('Enabled')
-  cy.get('a[name="group_8"]').click()
-  cy.get('input[name="product[price]"]').type('120')
-  cy.get('select[name="product[tax_class_id]"]').select('None')
-  cy.get('a[name="inventory"]').click()
-  cy.get('input[name="product[stock_data][qty]"]').type('120')
-  cy.get('select[name="product[stock_data][is_in_stock]"]').select('In Stock')
-  cy.get('a[name="websites"]').click()
-  cy.get('#product_website_1').check()
-  cy.contains('Save').click()
+// Configurable Product
+Given('I have configured a configurable widget', function() {
+  cy.createProduct({
+    "sku": "widg-1",
+    "name": "Widget 1",
+    "description": "This is really a widget. There are many like it, but this one is mine.",
+    "shortDescription": "This is really a widget.",
+    "typeId": "configurable",
+    "attributes": {
+      "widget_size": {
+        "XL": {
+          "sku": "widg-1-xl",
+          "name": "Widget 1 XL",
+          "description": "This is really an XL widget. There are many like it, but this one is mine.",
+          "shortDescription": "This is really an XL widget.",
+        },
+        "L": {
+          "sku": "widg-1-l",
+          "name": "Widget 1 L",
+          "description": "This is really an L widget. There are many like it, but this one is mine.",
+          "shortDescription": "This is really an L widget.",
+        }
+      }
+    }
+  })
+})
+
+// Grouped Product
+Given('I have configured a grouped widget', function() {
+  cy.createProduct({
+    "sku": "widg-1",
+    "name": "Widget 1",
+    "description": "This is really a widget. There are many like it, but this one is mine.",
+    "shortDescription": "This is really a widget.",
+    "typeId": "grouped",
+    "associated": [
+      {
+        "sku": "widg-1-sub1",
+        "name": "Widget 1 Sub 1",
+        "description": "This is really a sub1 widget. There are many like it, but this one is mine.",
+        "shortDescription": "This is really a sub1 widget.",
+      },
+      {
+        "sku": "widg-1-sub2",
+        "name": "Widget 1 Sub 2",
+        "description": "This is really a sub2 widget. There are many like it, but this one is mine.",
+        "shortDescription": "This is really a sub2 widget.",
+      }
+    ]
+  })
+})
+
+// Bundle Product
+Given('I have configured a bundle widget', function() {
+  // skuType of 1 is a fixed sku rather than generating a composite SKU.
+  cy.createProduct({
+    "sku": "widg-1",
+    "skuType": 1,
+    "name": "Widget 1",
+    "description": "This is really a widget. There are many like it, but this one is mine.",
+    "shortDescription": "This is really a widget.",
+    "typeId": "bundle",
+    "bundle_options": [
+      {
+        "title": "item01",
+        "product_options": [
+          {
+            "sku": "widg-1-sub1",
+            "name": "Widget 1 Sub 1",
+            "description": "This is really a sub1 widget. There are many like it, but this one is mine.",
+            "shortDescription": "This is really a sub1 widget.",
+          }
+        ]
+      },
+      {
+        "title": "item02",
+        "product_options": [
+          {
+            "sku": "widg-1-sub2",
+            "name": "Widget 1 Sub 2",
+            "description": "This is really a sub2 widget. There are many like it, but this one is mine.",
+            "shortDescription": "This is really a sub2 widget.",
+          }
+        ]
+      }
+    ]
+  })
 })
