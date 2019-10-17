@@ -14,6 +14,8 @@ class Drip_Connect_Model_Cron_Orders
     {
         ini_set('memory_limit', Mage::getStoreConfig('dripconnect_general/api_settings/memory_limit'));
 
+        Mage::app()->setCurrentStore('default');
+
         $storeIds = [];
         $stores = Mage::app()->getStores(false, false);
 

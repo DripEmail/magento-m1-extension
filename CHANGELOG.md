@@ -6,6 +6,7 @@
 * Send `product_variant_id` correctly for all product types
 * Backend: Introduce the beginnings of a thorough Cypress.io based test suite.
 * When a product isn't in any categories, stop sending an array with a single empty string. Send an empty array instead.
+* Order batch sync now properly sends the frontend product URL.
 
 ## 1.7.5
 

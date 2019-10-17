@@ -23,3 +23,13 @@ Cypress.Commands.add("createCustomer", (desc) => {
     }
   })
 })
+
+Cypress.Commands.add("runCron", (desc) => {
+  cy.log('Running Magento Cron')
+  const str = JSON.stringify(desc)
+  cy.exec(`./cron.sh`, {
+    env: {
+      DRIP_COMPOSE_ENV: 'test'
+    }
+  })
+})

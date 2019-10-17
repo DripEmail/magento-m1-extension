@@ -2,11 +2,11 @@
 set -e
 
 # Reset cron
-docker-compose exec db mysql -u magento -pmagento magento -e "DELETE FROM cron_schedule WHERE job_code LIKE 'drip_%' AND status = 'running';"
+./docker_compose.sh exec -T db mysql -u magento -pmagento magento -e "DELETE FROM cron_schedule WHERE job_code LIKE 'drip_%' AND status = 'running';"
 
-# Force cron runs to now.
-docker-compose exec db mysql -u magento -pmagento magento -e "UPDATE cron_schedule SET scheduled_at = NOW() WHERE schedule_id = (SELECT schedule_id FROM (SELECT * FROM cron_schedule) AS inner_cron_schedule WHERE job_code = 'drip_connect_sync_customers' AND status = 'pending' ORDER BY scheduled_at ASC LIMIT 1);"
-docker-compose exec db mysql -u magento -pmagento magento -e "UPDATE cron_schedule SET scheduled_at = NOW() WHERE schedule_id = (SELECT schedule_id FROM (SELECT * FROM cron_schedule) AS inner_cron_schedule WHERE job_code = 'drip_connect_sync_orders' AND status = 'pending' ORDER BY scheduled_at ASC LIMIT 1);"
+# Nuke all existing cron runs for this plugin and create a new one.
+./docker_compose.sh exec -T db mysql -u magento -pmagento magento -e "DELETE FROM cron_schedule WHERE job_code IN ('drip_connect_sync_customers', 'drip_connect_sync_customers');"
+./docker_compose.sh exec -T db mysql -u magento -pmagento magento -e "INSERT INTO cron_schedule (job_code, status, created_at, scheduled_at) VALUES ('drip_connect_sync_customers', 'pending', NOW(), NOW()), ('drip_connect_sync_orders', 'pending', NOW(), NOW());"
 
-docker-compose exec -u www-data web /bin/bash -c "cd /var/www/html/magento/ && php cron.php -mdefault"
-docker-compose exec -u www-data web /bin/bash -c "cd /var/www/html/magento/ && php cron.php -malways"
+./docker_compose.sh exec -T -u www-data web /bin/bash -c "cd /var/www/html/magento/ && php cron.php -mdefault"
+./docker_compose.sh exec -T -u www-data web /bin/bash -c "cd /var/www/html/magento/ && php cron.php -malways"
