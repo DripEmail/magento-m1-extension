@@ -47,21 +47,29 @@ Given('I have configured Drip to be enabled for {string}', function(site) {
   cy.contains('Configuration').click()
   cy.contains('Drip Connect Configuration').click()
   let websiteKey
-  if (site == 'main') {
-    websiteKey = 'Main Website'
-  } else {
-    websiteKey = `${site}_website`
+  switch (site) {
+    case 'main':
+      websiteKey = 'Main Website'
+      break;
+    case 'default':
+      websiteKey = 'Default Config'
+      break;
+    default:
+      websiteKey = `${site}_website`
+      break;
   }
   cy.get('select#store_switcher').select(websiteKey)
   cy.contains('Module Settings').click()
   cy.contains('API Settings').click()
-  cy.get('input[name="groups[module_settings][fields][is_enabled][inherit]"]').uncheck()
+  if (site !== 'default') {
+    cy.get('input[name="groups[module_settings][fields][is_enabled][inherit]"]').uncheck()
+    cy.get('input[name="groups[api_settings][fields][account_id][inherit]"]').uncheck()
+    cy.get('input[name="groups[api_settings][fields][api_key][inherit]"]').uncheck()
+    cy.get('input[name="groups[api_settings][fields][url][inherit]"]').uncheck()
+  }
   cy.get('select[name="groups[module_settings][fields][is_enabled][value]"]').select('Yes')
-  cy.get('input[name="groups[api_settings][fields][account_id][inherit]"]').uncheck()
   cy.get('input[name="groups[api_settings][fields][account_id][value]"]').type('123456')
-  cy.get('input[name="groups[api_settings][fields][api_key][inherit]"]').uncheck()
   cy.get('input[name="groups[api_settings][fields][api_key][value]"]').type('abc123')
-  cy.get('input[name="groups[api_settings][fields][url][inherit]"]').uncheck()
   cy.get('input[name="groups[api_settings][fields][url][value]"]').clear().type('http://mock:1080/v2/')
   cy.contains('Save Config').click()
 })
