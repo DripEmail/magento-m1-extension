@@ -3,43 +3,6 @@ import { mockServerClient } from "mockserver-client"
 
 const Mockclient = mockServerClient("localhost", 1080);
 
-Given('a customer exists', function() {
-  cy.createCustomer({})
-})
-
-When('I create an order', function() {
-  cy.contains('Orders').click({force: true})
-  cy.contains('Create New Order').click()
-
-  // Select customer
-  cy.contains('John Doe').click()
-
-  // Add product to order
-  cy.contains('Add Products').click()
-  cy.contains('Widget 1').click()
-  cy.get('#product_composite_configure').within(function() {
-    cy.get('select[name="super_attribute[135]"]').select('XL')
-    cy.contains('OK').click()
-  })
-  cy.contains('Add Selected Product(s) to Order').click()
-
-  // Fill out shipping/billing addresses
-  cy.get('input[name="order[billing_address][firstname]"]').type('John')
-  cy.get('input[name="order[billing_address][lastname]"]').type('Doe')
-  cy.get('input[name="order[billing_address][street][0]"]').type('123 Main St.')
-  cy.get('input[name="order[billing_address][city]"]').type('Centerville')
-  cy.get('select[name="order[billing_address][region_id]"]').select('Minnesota')
-  cy.get('input[name="order[billing_address][postcode]"]').type('12345')
-  cy.get('input[name="order[billing_address][telephone]"]').type('999-999-9999')
-
-  cy.contains('Get shipping methods and rates').click()
-  cy.get('input[name="order[shipping_method]"]').check()
-
-  cy.contains('Submit Order').click()
-
-  cy.contains('The order has been created')
-})
-
 Then('an order event is sent to Drip', function() {
   cy.log('Validating that the order call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
