@@ -22,6 +22,7 @@ foreach ($attributes as $attributeCode => $attribute) {
     if ($customerInstaller->getAttributeId($attribute['entityType'], $attributeCode)) {
         $customerInstaller->removeAttribute($attribute['entityType'], $attributeCode);
     }
+
     $customerInstaller
         ->addAttribute($attribute['entityType'], $attributeCode, $attribute['data']);
 }

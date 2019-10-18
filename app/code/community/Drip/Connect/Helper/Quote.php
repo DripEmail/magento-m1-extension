@@ -7,7 +7,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
     const REGISTRY_KEY_CUSTOMER_REGISTERED_OR_LOGGED_IN_WITH_EMTPY_QUOTE = 'customercreatedemptycart';
 
     // if/when we know the user's email, it will be saved here
-    protected $email;
+    protected $_email;
 
     /**
      * If customer registers during checkout, they will login, but quote has not been updated with customer info yet
@@ -28,7 +28,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
 
     public function checkForEmptyQuote($quote)
     {
-        if(Mage::helper('drip_connect')->priceAsCents($quote->getGrandTotal()) == 0) {
+        if (Mage::helper('drip_connect')->priceAsCents($quote->getGrandTotal()) == 0) {
             $this->setEmptyQuoteFlag(true);
         }
     }
@@ -51,7 +51,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
     {
         $data = $this->prepareQuoteData($quote);
         $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote::QUOTE_NEW;
-        if (count($data['items'])) {
+        if (!empty($data['items'])) {
             Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateQuote', $data)->call();
         }
     }
@@ -75,15 +75,17 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
      */
     public function prepareQuoteData($quote)
     {
-        $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($this->email);
+        $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($th_is->email);
 
         $data = array (
             "provider" => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote::PROVIDER_NAME,
-            "email" => $this->email,
+            "email" => $this->_email,
             "initial_status" => ($subscriber->isSubscribed() ? 'active' : 'unsubscribed'),
             "cart_id" => $quote->getId(),
             "grand_total" => Mage::helper('drip_connect')->priceAsCents($quote->getGrandTotal())/100,
-            "total_discounts" => Mage::helper('drip_connect')->priceAsCents((float)$quote->getSubtotal() - (float)$quote->getSubtotalWithDiscount()) / 100,
+            "total_discounts" => Mage::helper('drip_connect')->priceAsCents(
+                (float)$quote->getSubtotal() - (float)$quote->getSubtotalWithDiscount()
+            ) / 100,
             "currency" => $quote->getQuoteCurrencyCode(),
             "cart_url" => Mage::helper('drip_connect')->getAbandonedCartUrl($quote),
             'items' => $this->prepareQuoteItemsData($quote),
@@ -103,7 +105,10 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
     {
         $childItems = array();
         foreach ($quote->getAllItems() as $item) {
-            if (!$item->getParentItemId()) { continue; }
+            if (!$item->getParentItemId()) {
+                continue;
+            }
+
             $childItems[$item->getParentItemId()] = $item;
         }
 
@@ -114,7 +119,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
             $productCategoryNames = Mage::helper('drip_connect')->getProductCategoryNames($product);
             $categories = explode(',', $productCategoryNames);
             if ($productCategoryNames === '' || empty($categories)) {
-                $categories = [];
+                $categories = array();
             }
 
             $productVariantItem = $item;
@@ -131,7 +136,9 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
                 'quantity' => $item->getQty(),
                 'price' => Mage::helper('drip_connect')->priceAsCents($item->getPrice())/100,
                 'discounts' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount())/100,
-                'total' => Mage::helper('drip_connect')->priceAsCents((float)$item->getQty() * (float)$item->getPrice()) / 100,
+                'total' => Mage::helper('drip_connect')->priceAsCents(
+                    (float)$item->getQty() * (float)$item->getPrice()
+                ) / 100,
                 'product_url' => $product->getProductUrl(),
                 'image_url' => Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getThumbnail()),
             );
@@ -168,13 +175,13 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
      */
     public function isUnknownUser($quote)
     {
-        $this->email = '';
+        $this->_email = '';
 
         if ($quote->getCustomerEmail()) {
-            $this->email = $quote->getCustomerEmail();
+            $this->_email = $quote->getCustomerEmail();
         }
 
-        return ! (bool) $this->email;
+        return ! (bool) $this->_email;
     }
 
     /**
@@ -190,7 +197,8 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
         $checkoutSession->setQuoteId($quote->getId());
     }
 
-    protected function getLogger() {
+    protected function getLogger()
+    {
         return Mage::helper('drip_connect/logger')->logger();
     }
 }

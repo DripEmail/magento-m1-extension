@@ -33,8 +33,11 @@ class Drip_Connect_Model_Observer_Quote_ClearCartOnLogin extends Drip_Connect_Mo
         $controller = $request->getControllerName();
         $action = $request->getActionName();
 
-        return in_array("{$route}_${$controller}_{$action}", [
-            'drip_cart_index'
-        ]);
+        return in_array(
+            "{$route}_${$controller}_{$action}",
+            array(
+                'drip_cart_index'
+            )
+        );
     }
 }

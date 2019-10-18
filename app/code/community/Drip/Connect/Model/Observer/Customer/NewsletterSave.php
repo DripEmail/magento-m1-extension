@@ -19,6 +19,9 @@ class Drip_Connect_Model_Observer_Customer_NewsletterSave extends Drip_Connect_M
         Mage::register(self::REGISTRY_KEY_SUBSCRIBER_PREV_STATE, $subscriber->isSubscribed());
 
         Mage::unregister(self::REGISTRY_KEY_SUBSCRIBER_SUBSCRIBE_INTENT);
-        Mage::register(self::REGISTRY_KEY_SUBSCRIBER_SUBSCRIBE_INTENT, Mage::app()->getRequest()->getparam('is_subscribed', false));
+        Mage::register(
+            self::REGISTRY_KEY_SUBSCRIBER_SUBSCRIBE_INTENT,
+            Mage::app()->getRequest()->getparam('is_subscribed', false)
+        );
     }
 }

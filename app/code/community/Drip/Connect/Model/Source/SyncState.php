@@ -40,22 +40,19 @@ class Drip_Connect_Model_Source_SyncState
     /**
      * @return string
      */
-    static function getLabel($key)
+    public static function getLabel($key)
     {
         switch ($key) {
             case self::READY :
                 return Mage::helper('adminhtml')->__('Ready');
-                break;
             case self::QUEUED :
                 return Mage::helper('adminhtml')->__('Queued');
-                break;
             case self::PROGRESS :
                 return Mage::helper('adminhtml')->__('In Progress');
-                break;
             case self::READYERRORS :
                 return Mage::helper('adminhtml')->__('Ready (finished with errors)');
-                break;
         }
+
         return '';
     }
 }

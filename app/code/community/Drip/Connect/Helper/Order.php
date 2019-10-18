@@ -213,7 +213,10 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     {
         $childItems = array();
         foreach ($order->getAllItems() as $item) {
-            if (is_null($item->getParentItemId())) { continue; }
+            if ($item->getParentItemId() === null) {
+                continue;
+            }
+
             $childItems[$item->getParentItemId()] = $item;
         }
 
@@ -232,7 +235,9 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
                 'quantity' => (float) $item->getQtyOrdered(),
                 'price' => Mage::helper('drip_connect')->priceAsCents($item->getPrice())/100,
                 'discounts' => Mage::helper('drip_connect')->priceAsCents($item->getDiscountAmount())/100,
-                'total' => Mage::helper('drip_connect')->priceAsCents((float)$item->getQtyOrdered() * (float)$item->getPrice()) / 100,
+                'total' => Mage::helper('drip_connect')->priceAsCents(
+                    (float)$item->getQtyOrdered() * (float)$item->getPrice()
+                ) / 100,
                 'taxes' => Mage::helper('drip_connect')->priceAsCents($item->getTaxAmount()) / 100,
             );
             if (!empty($item->getProduct()->getId())) {
@@ -240,16 +245,21 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
                 $productCategoryNames = Mage::helper('drip_connect')->getProductCategoryNames($product);
                 $categories = explode(',', $productCategoryNames);
                 if ($productCategoryNames === '' || empty($categories)) {
-                    $categories = [];
+                    $categories = array();
                 }
+
                 $group['categories'] = $categories;
                 $group['product_url'] = (string) $item->getProduct()->getProductUrl();
-                $group['image_url'] = (string) Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail());
+                $group['image_url'] = (string) Mage::getModel('catalog/product_media_config')->getMediaUrl(
+                    $product->getThumbnail()
+                );
             }
+
             if ($isRefund) {
                 $group['refund_amount'] = Mage::helper('drip_connect')->priceAsCents($item->getAmountRefunded());
                 $group['refund_quantity'] = $item->getQtyRefunded();
             }
+
             $data[] = $group;
         }
 

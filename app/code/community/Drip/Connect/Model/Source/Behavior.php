@@ -17,11 +17,11 @@ class Drip_Connect_Model_Source_Behavior
     public function toOptionArray()
     {
         return array(
-            array('value' => self::CALL_API,            'label' => Mage::helper('adminhtml')->__('Call API')),
-            array('value' => self::FORCE_VALID,         'label' => Mage::helper('adminhtml')->__('Force Valid Result')),
-            array('value' => self::FORCE_INVALID,       'label' => Mage::helper('adminhtml')->__('Force Invalid Result')),
-            array('value' => self::FORCE_TIMEOUT,       'label' => Mage::helper('adminhtml')->__('Force Timeout')),
-            array('value' => self::FORCE_ERROR,         'label' => Mage::helper('adminhtml')->__('Force Error')),
+            array('value' => self::CALL_API, 'label' => Mage::helper('adminhtml')->__('Call API')),
+            array('value' => self::FORCE_VALID, 'label' => Mage::helper('adminhtml')->__('Force Valid Result')),
+            array('value' => self::FORCE_INVALID, 'label' => Mage::helper('adminhtml')->__('Force Invalid Result')),
+            array('value' => self::FORCE_TIMEOUT, 'label' => Mage::helper('adminhtml')->__('Force Timeout')),
+            array('value' => self::FORCE_ERROR, 'label' => Mage::helper('adminhtml')->__('Force Error')),
             array('value' => self::FORCE_UNKNOWN_ERROR, 'label' => Mage::helper('adminhtml')->__('Force Unkown Error')),
         );
     }
@@ -34,12 +34,12 @@ class Drip_Connect_Model_Source_Behavior
     public function toArray()
     {
         return array(
-            self::CALL_API              => Mage::helper('adminhtml')->__('Call API'),
-            self::FORCE_VALID           => Mage::helper('adminhtml')->__('Force Valid Result'),
-            self::FORCE_INVALID         => Mage::helper('adminhtml')->__('Force Invalid Result'),
-            self::FORCE_TIMEOUT         => Mage::helper('adminhtml')->__('Force Timeout'),
-            self::FORCE_ERROR           => Mage::helper('adminhtml')->__('Force Error'),
-            self::FORCE_UNKNOWN_ERROR   => Mage::helper('adminhtml')->__('Force Unknown Error'),
+            self::CALL_API => Mage::helper('adminhtml')->__('Call API'),
+            self::FORCE_VALID => Mage::helper('adminhtml')->__('Force Valid Result'),
+            self::FORCE_INVALID => Mage::helper('adminhtml')->__('Force Invalid Result'),
+            self::FORCE_TIMEOUT => Mage::helper('adminhtml')->__('Force Timeout'),
+            self::FORCE_ERROR => Mage::helper('adminhtml')->__('Force Error'),
+            self::FORCE_UNKNOWN_ERROR => Mage::helper('adminhtml')->__('Force Unknown Error'),
         );
     }
 }

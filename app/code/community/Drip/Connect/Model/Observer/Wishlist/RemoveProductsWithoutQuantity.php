@@ -8,7 +8,8 @@ class Drip_Connect_Model_Observer_Wishlist_RemoveProductsWithoutQuantity extends
      *
      * @param $observer
      */
-    protected function executeWhenEnabled($observer) {
+    protected function executeWhenEnabled($observer)
+    {
         //get the wishlist
         $wishlistId = filter_var(Mage::app()->getRequest()->getParam('wishlist_id'), FILTER_SANITIZE_NUMBER_INT);
         $wishlist = Mage::getModel('wishlist/wishlist');
@@ -16,12 +17,14 @@ class Drip_Connect_Model_Observer_Wishlist_RemoveProductsWithoutQuantity extends
             $wishlist->load($wishlistId);
         }
 
-        if(!$wishlist->getId()) {
+        if (!$wishlist->getId()) {
             return;
         }
 
         //loop through each product and check quantity
-        if (filter_input_array(INPUT_POST) && (null !== filter_input(INPUT_POST, 'description')) && is_array(filter_input(INPUT_POST, 'description'))) {
+        if (filter_input_array(INPUT_POST) &&
+            (null !== filter_input(INPUT_POST, 'description')) &&
+            is_array(filter_input(INPUT_POST, 'description'))) {
             foreach (filter_input(INPUT_POST, 'description') as $itemId => $description) {
                 $item = Mage::getModel('wishlist/item')->load($itemId);
                 if ($item->getWishlistId() !== $wishlist->getId()) {

@@ -13,6 +13,7 @@ class Drip_Connect_Model_Observer_Order_BeforeSave extends Drip_Connect_Model_Ob
         if (!$order->getId()) {
             return;
         }
+
         $data = array(
             'total_refunded' => $order->getOrigData('total_refunded'),
             'state' => $order->getOrigData('state'),

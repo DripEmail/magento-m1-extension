@@ -16,6 +16,7 @@ class Drip_Connect_Model_Observer_Product_SaveAfter extends Drip_Connect_Model_O
                 Mage::helper('drip_connect/product')->proceedProduct($product);
             }
         }
+
         Mage::unregister(Drip_Connect_Helper_Product::REGISTRY_KEY_IS_NEW);
         Mage::unregister(Drip_Connect_Helper_Product::REGISTRY_KEY_OLD_DATA);
     }

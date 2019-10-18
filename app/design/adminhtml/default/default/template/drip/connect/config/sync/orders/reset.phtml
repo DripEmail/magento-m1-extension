@@ -7,16 +7,16 @@
 //<![CDATA[
     function resetSyncOrdersState() {
 
-        var elem = $('<?=$this->getHtmlId()?>');
+        var elem = $('<?php echo $this->getHtmlId()?>');
 
         elem.addClassName('disabled').setAttribute('disabled', 'disabled');
 
         params = {
-            account_id: '<?=$this->getAccountId()?>',
-            store_id: '<?=$this->getStoreId()?>',
+            account_id: '<?php echo $this->getAccountId()?>',
+            store_id: '<?php echo $this->getStoreId()?>',
         };
 
-        new Ajax.Request('<?=$this->getAjaxUrl()?>', {
+        new Ajax.Request('<?php echo $this->getAjaxUrl()?>', {
             parameters: params,
             onSuccess: function(response) {
                 document.location.reload(true);
@@ -28,6 +28,6 @@
     }
 //]]>
 </script>
-<button onclick="javascript:resetSyncOrdersState(); return false;" type="button" id="<?= $this->getHtmlId() ?>" class="scalable delete">
-    <?= $this->escapeHtml($this->getButtonLabel()) ?>
+<button onclick="javascript:resetSyncOrdersState(); return false;" type="button" id="<?php echo $this->getHtmlId() ?>" class="scalable delete">
+    <?php echo $this->escapeHtml($this->getButtonLabel()) ?>
 </button>
