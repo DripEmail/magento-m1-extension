@@ -27,9 +27,11 @@ class Drip_Connect_Helper_Product extends Mage_Core_Helper_Abstract
         if ($imageUrl = $this->getProductImageUrl($product)) {
             $data["image_url"] = $imageUrl;
         }
-        if (count($categories) && !empty($categories[0])) {
+
+        if (!empty($categories) && !empty($categories[0])) {
             $data["categories"] = $categories;
         }
+
         if ($brand = $this->getBrandName($product)) {
             $data["brand"] = $brand;
         }
@@ -137,6 +139,7 @@ class Drip_Connect_Helper_Product extends Mage_Core_Helper_Abstract
                 break;
             }
         }
+
         $url = $product->getProductUrl(false);
 
         if ($defaultStoreCode) {

@@ -17,7 +17,10 @@ class Drip_Connect_Adminhtml_Config_Sync_CustomersController
     {
         $storeId = $this->getRequest()->getParam('store_id');
 
-        Mage::helper('drip_connect')->setCustomersSyncStateToStore($storeId, Drip_Connect_Model_Source_SyncState::QUEUED);
+        Mage::helper('drip_connect')->setCustomersSyncStateToStore(
+            $storeId,
+            Drip_Connect_Model_Source_SyncState::QUEUED
+        );
 
         $this->getResponse()->setBody(Drip_Connect_Model_Source_SyncState::QUEUED);
     }
@@ -31,7 +34,10 @@ class Drip_Connect_Adminhtml_Config_Sync_CustomersController
     {
         $storeId = $this->getRequest()->getParam('store_id');
 
-        Mage::helper('drip_connect')->setCustomersSyncStateToStore($storeId, Drip_Connect_Model_Source_SyncState::READY);
+        Mage::helper('drip_connect')->setCustomersSyncStateToStore(
+            $storeId,
+            Drip_Connect_Model_Source_SyncState::READY
+        );
 
         $this->getResponse()->setBody(Drip_Connect_Model_Source_SyncState::READY);
     }

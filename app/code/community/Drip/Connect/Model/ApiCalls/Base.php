@@ -36,11 +36,13 @@ class Drip_Connect_Model_ApiCalls_Base
             } else {
                 $endpoint = '';
             }
+
             $url = Mage::getStoreConfig('dripconnect_general/api_settings/url', $storeId).$endpoint;
 
             if (!empty($options['v3'])) {
                 $url = str_replace('/v2/', '/v3/', $url);
             }
+
             $config = array(
                 'useragent' => self::USERAGENT,
                 'timeout' => Mage::getStoreConfig('dripconnect_general/api_settings/timeout', $storeId) / 1000,
@@ -49,16 +51,21 @@ class Drip_Connect_Model_ApiCalls_Base
                 $config = array_merge($config, $options['config']);
             }
 
-            $this->_httpClient = Mage::getModel('drip_connect/Http_Client', array(
-                'uri' => $url,
-                'config' => $config,
-                'logger' => $this->getLogger(),
-            ));
+            $this->_httpClient = Mage::getModel(
+                'drip_connect/Http_Client',
+                array(
+                    'uri' => $url,
+                    'config' => $config,
+                    'logger' => $this->getLogger(),
+                )
+            );
 
-            $this->_httpClient->setHeaders(array(
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json'
-            ));
+            $this->_httpClient->setHeaders(
+                array(
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json'
+                )
+            );
 
             $this->_httpClient->setAuth(
                 Mage::getStoreConfig('dripconnect_general/api_settings/api_key', $storeId),
@@ -79,9 +86,11 @@ class Drip_Connect_Model_ApiCalls_Base
         if (!empty($request->getParametersGet())) {
             $this->_httpClient->setParameterGet($request->getParametersGet());
         }
+
         if (!empty($request->getParametersPost())) {
             $this->_httpClient->setParameterPost($request->getParametersPost());
         }
+
         if (!empty($request->getRawData())) {
             $this->_httpClient->setRawData($request->getRawData());
         }
@@ -96,26 +105,44 @@ class Drip_Connect_Model_ApiCalls_Base
 
     protected function _forceValidResponse($request)
     {
-        return new Zend_Http_Response(200, array("Content-type" => "application/json; charset=utf-8"), json_encode(array(
-            "Status" => "OK",
-            "Message" => "Forced Valid Response"
-        )));
+        return new Zend_Http_Response(
+            200,
+            array("Content-type" => "application/json; charset=utf-8"),
+            json_encode(
+                array(
+                    "Status" => "OK",
+                    "Message" => "Forced Valid Response"
+                )
+            )
+        );
     }
 
     protected function _forceInvalidResponse($request)
     {
-        return new Zend_Http_Response(200, array("Content-type" => "application/json; charset=utf-8"), json_encode(array(
-            "Status" => "OK",
-            "Message" => "Forced Invalid Response"
-        )));
+        return new Zend_Http_Response(
+            200,
+            array("Content-type" => "application/json; charset=utf-8"),
+            json_encode(
+                array(
+                    "Status" => "OK",
+                    "Message" => "Forced Invalid Response"
+                )
+            )
+        );
     }
 
     protected function _forceError($request)
     {
-        return new Zend_Http_Response(500, array("Content-type" => "application/json; charset=utf-8"), json_encode(array(
-            "Status" => "Error",
-            "Message" => "Forced Error Message"
-        )));
+        return new Zend_Http_Response(
+            500,
+            array("Content-type" => "application/json; charset=utf-8"),
+            json_encode(
+                array(
+                    "Status" => "Error",
+                    "Message" => "Forced Error Message"
+                )
+            )
+        );
     }
 
     /**

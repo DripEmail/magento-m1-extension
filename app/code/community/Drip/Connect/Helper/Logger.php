@@ -19,7 +19,8 @@ class Drip_Connect_Helper_Logger extends Mage_Core_Helper_Abstract
         return $settings;
     }
 
-    protected function initLogger() {
+    protected function initLogger()
+    {
         $logger = new Zend_Log();
         if ($this->getLogSettings()->getIsEnabled()) {
             $logFile = Mage::getBaseDir('log') . DS . $this->_logFilename;
@@ -27,6 +28,7 @@ class Drip_Connect_Helper_Logger extends Mage_Core_Helper_Abstract
         } else {
             $writer = new Zend_Log_Writer_Null();
         }
+
         $logger->addWriter($writer);
         $this->_logger = $logger;
     }
@@ -41,6 +43,7 @@ class Drip_Connect_Helper_Logger extends Mage_Core_Helper_Abstract
         if (!$this->_logger) {
             $this->initLogger();
         }
+
         return $this->_logger;
     }
 }

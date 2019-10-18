@@ -15,7 +15,10 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
     public function isModuleActive()
     {
         if (!empty(Mage::app()->getRequest()->getParam('store'))) {
-            return (bool)Mage::getStoreConfig('dripconnect_general/module_settings/is_enabled', Mage::app()->getRequest()->getParam('store'));
+            return (bool)Mage::getStoreConfig(
+                'dripconnect_general/module_settings/is_enabled',
+                Mage::app()->getRequest()->getParam('store')
+            );
         }
 
         return (bool)Mage::getStoreConfig('dripconnect_general/module_settings/is_enabled');
@@ -60,10 +63,15 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      * @param Mage_Customer_Model_Customer $customer
      * @param bool $updatableOnly leave only those fields which are used in update action
      * @param bool $statusChanged whether the status has changed and should be synced
-     * @param bool $overriddenStatus whether the status should be something other than what is on the customer's is_subscribed field.
+     * @param bool $overriddenStatus whether the status should be something other than what is on the customer's
+     *                               is_subscribed field.
      */
-    static public function prepareCustomerData($customer, $updatableOnly = true, $statusChanged = false, $overriddenStatus = null)
-    {
+    static public function prepareCustomerData(
+        $customer,
+        $updatableOnly = true,
+        $statusChanged = false,
+        $overriddenStatus = null
+    ) {
         if ($customer->getOrigData() && $customer->getData('email') != $customer->getOrigData('email')) {
             $newEmail = $customer->getData('email');
         } else {
@@ -88,7 +96,8 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
                 'birthday' => $customer->getDob(),
                 'gender' => Mage::helper('drip_connect')->getGenderText($customer->getGender()),
                 'magento_account_created' => $customer->getCreatedAt(),
-                'magento_customer_group' => Mage::getModel('customer/group')->load($customer->getGroupId())->getCustomerGroupCode(),
+                'magento_customer_group' => Mage::getModel('customer/group')->load($customer->getGroupId())
+                                                                            ->getCustomerGroupCode(),
                 'magento_store' => $customer->getStoreId(),
                 'accepts_marketing' => ($status ? 'yes' : 'no'),
             ),
@@ -145,7 +154,8 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return array
      */
-    public function prepareCustomerDataForGuestCheckout($order) {
+    public function prepareCustomerDataForGuestCheckout($order)
+    {
 
         return array (
             'email' => (string) $order->getCustomerEmail(),
@@ -174,7 +184,8 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return string
      */
-    public function getGenderText($genderCode) {
+    public function getGenderText($genderCode)
+    {
         if ($genderCode == 1) {
             $gender = 'Male';
         } else if ($genderCode == 2) {
@@ -182,6 +193,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
         } else {
             $gender = '';
         }
+
         return $gender;
     }
 
@@ -212,18 +224,20 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      * Return comma separated string of category names this product is assigned to
      * @return string
      */
-    public function getProductCategoryNames($product) {
+    public function getProductCategoryNames($product)
+    {
         $catIds = $product->getCategoryIds();
         $categoriesString = '';
         $numCategories = count($catIds);
-        if($numCategories) {
+        if ($numCategories) {
             $catCollection = Mage::getResourceModel('catalog/category_collection')
                 ->addAttributeToSelect('name')
                 ->addAttributeToFilter('entity_id', $catIds);
 
-            foreach($catCollection as $category) {
+            foreach ($catCollection as $category) {
                 $categoriesString .= $category->getName() . ', ';
             }
+
             $categoriesString = substr($categoriesString, 0, -2);
         }
 
@@ -237,7 +251,8 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return int
      */
-    public function priceAsCents($price) {
+    public function priceAsCents($price)
+    {
         if (empty($price)) {
             return 0;
         }
@@ -265,6 +280,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
                 $storeId
             );
         }
+
         Mage::app()->getStore($storeId)->resetConfig();
     }
 
@@ -288,6 +304,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
                 $storeId
             );
         }
+
         Mage::app()->getStore($storeId)->resetConfig();
     }
 
@@ -323,7 +340,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getSecureKey($quoteId, $storeId)
     {
-        return (substr(hash('sha256', $this->getSalt().$quoteId.$storeId), 0, 32 ));
+        return (substr(hash('sha256', $this->getSalt().$quoteId.$storeId), 0, 32));
     }
 
     /**
@@ -333,11 +350,14 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getAbandonedCartUrl($quote)
     {
-        return Mage::getUrl('drip/cart/index', [
-            self::QUOTE_KEY => $quote->getId(),
-            self::STORE_KEY => $quote->getStoreId(),
-            self::SECURE_KEY => $this->getSecureKey($quote->getId(), $quote->getStoreId()),
-        ]);
+        return Mage::getUrl(
+            'drip/cart/index',
+            array(
+                self::QUOTE_KEY => $quote->getId(),
+                self::STORE_KEY => $quote->getStoreId(),
+                self::SECURE_KEY => $this->getSecureKey($quote->getId(), $quote->getStoreId()),
+            )
+        );
     }
 
     /**

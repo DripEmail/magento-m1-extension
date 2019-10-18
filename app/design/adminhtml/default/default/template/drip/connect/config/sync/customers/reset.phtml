@@ -7,16 +7,16 @@
 //<![CDATA[
     function resetSyncCustomersState() {
 
-        var elem = $('<?=$this->getHtmlId()?>');
+        var elem = $('<?php echo $this->getHtmlId()?>');
 
         elem.addClassName('disabled').setAttribute('disabled', 'disabled');
 
         params = {
-            account_id: '<?=$this->getAccountId()?>',
-            store_id: '<?=$this->getStoreId()?>',
+            account_id: '<?php echo $this->getAccountId()?>',
+            store_id: '<?php echo $this->getStoreId()?>',
         };
 
-        new Ajax.Request('<?=$this->getAjaxUrl()?>', {
+        new Ajax.Request('<?php echo $this->getAjaxUrl()?>', {
             parameters: params,
             onSuccess: function(response) {
                 document.location.reload(true);
@@ -28,6 +28,6 @@
     }
 //]]>
 </script>
-<button onclick="javascript:resetSyncCustomersState(); return false;" type="button" id="<?= $this->getHtmlId() ?>" class="scalable delete">
-    <?= $this->escapeHtml($this->getButtonLabel()) ?>
-</button><!-- &nbsp; <?=$this->__('Stuck Estimate')?>: <b id="stuck_possibility_customers"><?=$this->getStuckPossibility()?></b>-->
+<button onclick="javascript:resetSyncCustomersState(); return false;" type="button" id="<?php echo $this->getHtmlId() ?>" class="scalable delete">
+    <?php echo $this->escapeHtml($this->getButtonLabel()) ?>
+</button><!-- &nbsp; <?php echo $this->__('Stuck Estimate')?>: <b id="stuck_possibility_customers"><?php echo $this->getStuckPossibility()?></b>-->

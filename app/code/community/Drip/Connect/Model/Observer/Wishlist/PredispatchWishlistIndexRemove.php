@@ -6,7 +6,8 @@ class Drip_Connect_Model_Observer_Wishlist_PredispatchWishlistIndexRemove extend
      * Call rest api endpoint with info about customer and product removed
      * @param $observer
      */
-    protected function executeWhenEnabled($observer) {
+    protected function executeWhenEnabled($observer)
+    {
         $wishlistItemId = filter_var(Mage::app()->getRequest()->getParam('item'), FILTER_SANITIZE_NUMBER_INT);
         if ($wishlistItemId) {
             $wishlistItem = Mage::getModel('wishlist/item')->load($wishlistItemId);

@@ -22,7 +22,9 @@ class Drip_Connect_Model_Observer_Quote_BeforeQuoteSaved extends Drip_Connect_Mo
             Mage::helper('drip_connect/quote')->checkForEmptyQuote($quote);
         }
 
-        if (!Mage::registry(Drip_Connect_Helper_Quote::REGISTRY_KEY_CUSTOMER_REGISTERED_OR_LOGGED_IN_WITH_EMTPY_QUOTE)) {
+        if (!Mage::registry(
+            Drip_Connect_Helper_Quote::REGISTRY_KEY_CUSTOMER_REGISTERED_OR_LOGGED_IN_WITH_EMTPY_QUOTE
+        )) {
             Mage::unregister(Drip_Connect_Helper_Quote::REGISTRY_KEY_IS_NEW);
             if (!$quote->getDrip()) {
                 Mage::register(Drip_Connect_Helper_Quote::REGISTRY_KEY_IS_NEW, true);

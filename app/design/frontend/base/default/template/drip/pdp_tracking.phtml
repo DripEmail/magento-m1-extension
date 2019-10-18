@@ -7,20 +7,20 @@
     <!-- Drip track -->
     <script type="text/javascript">
     _dcq.push(["track", "Viewed a product", {
-        product_id: "<?= $product->getId() ?>",
-        sku: "<?= $product->getSku() ?>",
-        name: "<?= $product->getName() ?>",
-        brand: "<?= $product->getAttributeText('manufacturer') ?>",
-        categories: "<?= Mage::helper('drip_connect')->getProductCategoryNames($product) ?>",
-        price: "<?= $currentPrice ?>",
+        product_id: "<?php echo $product->getId() ?>",
+        sku: "<?php echo $product->getSku() ?>",
+        name: "<?php echo $product->getName() ?>",
+        brand: "<?php echo $product->getAttributeText('manufacturer') ?>",
+        categories: "<?php echo Mage::helper('drip_connect')->getProductCategoryNames($product) ?>",
+        price: "<?php echo $currentPrice ?>",
         <?php if ($currentPrice != $initialPrice) : ?>
-        compared_at_price: "<?= $initialPrice ?>",
+        compared_at_price: "<?php echo $initialPrice ?>",
         <?php endif; ?>
-        currency: "<?= Mage::app()->getStore()->getCurrentCurrencyCode() ?>",
-        product_url: "<?= $product->getProductUrl() ?>",
-        image_url: "<?= Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()) ?>",
+        currency: "<?php echo Mage::app()->getStore()->getCurrentCurrencyCode() ?>",
+        product_url: "<?php echo $product->getProductUrl() ?>",
+        image_url: "<?php echo Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()) ?>",
         source: "magento",
-        version: "Magento <?=Mage::getVersion()?>, Drip Extension <?=Mage::getConfig()->getModuleConfig('Drip_Connect')->version?>"
+        version: "Magento <?php echo Mage::getVersion()?>, Drip Extension <?php echo Mage::getConfig()->getModuleConfig('Drip_Connect')->version?>"
     }]);
     </script>
     <!-- end Drip track -->

@@ -11,6 +11,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
         if (!$order->getId()) {
             return;
         }
+
         $this->proceedOrder($order);
         Mage::unregister(self::REGISTRY_KEY_ORDER_OLD_DATA);
     }
@@ -69,6 +70,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                     if ($this->isSameState($order)) {
                         break;
                     }
+
                     // full complete order
                     $response = Mage::getModel(
                         'drip_connect/ApiCalls_Helper_CreateUpdateOrder',
@@ -80,6 +82,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                 if ($this->isSameState($order)) {
                     break;
                 }
+
                 // full refund
                 $response = Mage::getModel(
                     'drip_connect/ApiCalls_Helper_CreateUpdateOrder',
@@ -99,6 +102,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                 if ($this->isSameState($order)) {
                     break;
                 }
+
                 // cancel order
                 $response = Mage::getModel(
                     'drip_connect/ApiCalls_Helper_CreateUpdateOrder',
@@ -109,6 +113,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                 if ($this->isSameState($order)) {
                     break;
                 }
+
                 // other states
                 $response = Mage::getModel(
                     'drip_connect/ApiCalls_Helper_CreateUpdateOrder',

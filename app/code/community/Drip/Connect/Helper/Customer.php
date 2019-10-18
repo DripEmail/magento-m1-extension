@@ -6,12 +6,17 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
      * drip actions for customer account change
      *
      * @param Mage_Customer_Model_Customer $customer
-     * @param bool $acceptsMarketing whether the customer accepts marketing. Overrides the customer is_subscribed record.
+     * @param bool $acceptsMarketing whether the customer accepts marketing. Overrides the customer is_subscribed
+     *                               record.
      * @param string $event The updated/created/deleted event.
      * @param bool $forceStatus Whether the customer has changed marketing preferences which should be synced to Drip.
      */
-    public function proceedAccount($customer, $acceptsMarketing = null, $event = Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED, $forceStatus = false)
-    {
+    public function proceedAccount(
+        $customer,
+        $acceptsMarketing = null,
+        $event = Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED,
+        $forceStatus = false
+    ) {
         $email = $customer->getEmail();
         if (!Mage::helper('drip_connect')->isEmailValid($email)) {
             $this->getLogger()->log("Skipping guest subscriber update due to unusable email", Zend_Log::NOTICE);
@@ -22,10 +27,13 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
 
         Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $customerData)->call();
 
-        $response = Mage::getModel('drip_connect/ApiCalls_Helper_RecordAnEvent', array(
-            'email' => $customer->getEmail(),
-            'action' => $event,
-        ))->call();
+        $response = Mage::getModel(
+            'drip_connect/ApiCalls_Helper_RecordAnEvent',
+            array(
+                'email' => $customer->getEmail(),
+                'action' => $event,
+            )
+        )->call();
     }
 
     /**
@@ -44,7 +52,8 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
         );
     }
 
-    protected function getLogger() {
+    protected function getLogger()
+    {
         return Mage::helper('drip_connect/logger')->logger();
     }
 }

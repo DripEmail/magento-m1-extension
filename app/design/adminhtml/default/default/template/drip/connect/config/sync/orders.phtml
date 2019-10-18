@@ -13,8 +13,8 @@
         elem.addClassName('disabled').setAttribute('disabled', 'disabled');
 
         params = {
-            account_id: '<?=$this->getAccountId()?>',
-            store_id: '<?=$this->getStoreId()?>',
+            account_id: '<?php echo $this->getAccountId()?>',
+            store_id: '<?php echo $this->getStoreId()?>',
         };
 
         new Ajax.Request('<?php echo $this->getAjaxUrl() ?>', {
@@ -22,9 +22,9 @@
             onSuccess: function(response) {
                 var result = '';
                 response = response.responseText;
-                if (response == <?=Drip_Connect_Model_Source_SyncState::QUEUED?>) {
+                if (response == <?php echo Drip_Connect_Model_Source_SyncState::QUEUED?>) {
                     res.removeClassName('error');
-                    result = '<?=Drip_Connect_Model_Source_SyncState::getLabel(Drip_Connect_Model_Source_SyncState::QUEUED)?>';
+                    result = '<?php echo Drip_Connect_Model_Source_SyncState::getLabel(Drip_Connect_Model_Source_SyncState::QUEUED)?>';
                 } else {
                     res.addClassName('error');
                     result = '<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Data send error')) ?>';
@@ -44,4 +44,4 @@
 <button onclick="javascript:syncOrders(); return false;" type="button" id="<?php echo $this->getHtmlId() ?>"
 <?php if (!$this->isSyncAvailable()) { ?> disabled="disabled" class="disabled" <?php } else { ?> class="scalable" <?php }?>>
     <?php echo $this->escapeHtml($this->getButtonLabel()) ?>
-</button> &nbsp; <b id="sync_orders_state"><?= Drip_Connect_Model_Source_SyncState::getLabel(Mage::getStoreConfig('dripconnect_general/actions/sync_orders_data_state', Mage::app()->getRequest()->getParam('store'))); ?></b>
+</button> &nbsp; <b id="sync_orders_state"><?php echo Drip_Connect_Model_Source_SyncState::getLabel(Mage::getStoreConfig('dripconnect_general/actions/sync_orders_data_state', Mage::app()->getRequest()->getParam('store'))); ?></b>

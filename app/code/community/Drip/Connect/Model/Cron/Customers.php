@@ -2,7 +2,8 @@
 
 class Drip_Connect_Model_Cron_Customers
 {
-    protected function getLogger() {
+    protected function getLogger()
+    {
         return Mage::helper('drip_connect/logger')->logger();
     }
 
@@ -18,23 +19,25 @@ class Drip_Connect_Model_Cron_Customers
     {
         ini_set('memory_limit', Mage::getStoreConfig('dripconnect_general/api_settings/memory_limit'));
 
-        $storeIds = [];
+        $storeIds = array();
         $stores = Mage::app()->getStores(false, false);
 
         $trackDefaultStatus = false;
-        if (Mage::getStoreConfig('dripconnect_general/actions/sync_customers_data_state', 0) == Drip_Connect_Model_Source_SyncState::QUEUED) {
+        if (Mage::getStoreConfig('dripconnect_general/actions/sync_customers_data_state', 0)
+                == Drip_Connect_Model_Source_SyncState::QUEUED) {
             $trackDefaultStatus = true;
             $storeIds = array_keys($stores);
             Mage::helper('drip_connect')->setCustomersSyncStateToStore(0, Drip_Connect_Model_Source_SyncState::PROGRESS);
         } else {
             foreach ($stores as $storeId => $store) {
-                if (Mage::getStoreConfig('dripconnect_general/actions/sync_customers_data_state', $storeId) == Drip_Connect_Model_Source_SyncState::QUEUED) {
+                if (Mage::getStoreConfig('dripconnect_general/actions/sync_customers_data_state', $storeId)
+                        == Drip_Connect_Model_Source_SyncState::QUEUED) {
                     $storeIds[] = $storeId;
                 }
             }
         }
 
-        $statuses = [];
+        $statuses = array();
         foreach ($storeIds as $storeId) {
             if (! Mage::getStoreConfig('dripconnect_general/module_settings/is_enabled', $storeId)) {
                 continue;
@@ -66,15 +69,16 @@ class Drip_Connect_Model_Cron_Customers
         }
 
         if ($trackDefaultStatus) {
-            $status_values = array_unique(array_values($statuses));
-            if (count($status_values) === 0 || (
-                count($status_values) === 1 &&
-                $status_values[0] === Drip_Connect_Model_Source_SyncState::READY
+            $statusValues = array_unique(array_values($statuses));
+            if (count($statusValues) === 0 || (
+                count($statusValues) === 1 &&
+                $statusValues[0] === Drip_Connect_Model_Source_SyncState::READY
             )) {
                 $status = Drip_Connect_Model_Source_SyncState::READY;
             } else {
                 $status = Drip_Connect_Model_Source_SyncState::READYERRORS;
             }
+
             Mage::helper('drip_connect')->setCustomersSyncStateToStore(0, $status);
         }
     }
@@ -86,7 +90,10 @@ class Drip_Connect_Model_Cron_Customers
      */
     protected function syncGuestSubscribersForStore($storeId)
     {
-        Mage::helper('drip_connect')->setCustomersSyncStateToStore($storeId, Drip_Connect_Model_Source_SyncState::PROGRESS);
+        Mage::helper('drip_connect')->setCustomersSyncStateToStore(
+            $storeId,
+            Drip_Connect_Model_Source_SyncState::PROGRESS
+        );
 
         $delay = (int) Mage::getStoreConfig('dripconnect_general/api_settings/batch_delay');
 
@@ -106,7 +113,10 @@ class Drip_Connect_Model_Cron_Customers
             foreach ($collection as $subscriber) {
                 $email = $subscriber->getSubscriberEmail();
                 if (!Mage::helper('drip_connect')->isEmailValid($email)) {
-                    $this->getLogger()->log("Skipping newsletter subscriber event during sync due to unusable email", Zend_Log::NOTICE);
+                    $this->getLogger()->log(
+                        "Skipping newsletter subscriber event during sync due to unusable email",
+                        Zend_Log::NOTICE
+                    );
                     continue;
                 }
 
@@ -128,21 +138,27 @@ class Drip_Connect_Model_Cron_Customers
                 }
             }
 
-            if (count($batchCustomer)) {
-                $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Subscribers', array(
-                    'batch' => $batchCustomer,
-                    'store_id' => $storeId,
-                ))->call();
+            if (!empty($batchCustomer)) {
+                $response = Mage::getModel(
+                    'drip_connect/ApiCalls_Helper_Batches_Subscribers',
+                    array(
+                        'batch' => $batchCustomer,
+                        'store_id' => $storeId,
+                    )
+                )->call();
 
                 if (empty($response) || $response->getResponseCode() != 201) { // drip success code for this action
                     $result = false;
                     break;
                 }
 
-                $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Events', array(
-                    'batch' => $batchEvents,
-                    'store_id' => $storeId,
-                ))->call();
+                $response = Mage::getModel(
+                    'drip_connect/ApiCalls_Helper_Batches_Events',
+                    array(
+                        'batch' => $batchEvents,
+                        'store_id' => $storeId,
+                    )
+                )->call();
 
                 if (empty($response) || $response->getResponseCode() != 201) { // drip success code for this action
                     $result = false;
@@ -157,7 +173,6 @@ class Drip_Connect_Model_Cron_Customers
 
                 sleep($delay);
             }
-
         } while ($page <= $collection->getLastPageNumber());
 
         return $result;
@@ -170,7 +185,10 @@ class Drip_Connect_Model_Cron_Customers
      */
     protected function syncCustomersForStore($storeId)
     {
-        Mage::helper('drip_connect')->setCustomersSyncStateToStore($storeId, Drip_Connect_Model_Source_SyncState::PROGRESS);
+        Mage::helper('drip_connect')->setCustomersSyncStateToStore(
+            $storeId,
+            Drip_Connect_Model_Source_SyncState::PROGRESS
+        );
 
         $delay = (int) Mage::getStoreConfig('dripconnect_general/api_settings/batch_delay');
 
@@ -182,7 +200,7 @@ class Drip_Connect_Model_Cron_Customers
             $collection = Mage::getModel('customer/customer')
                 ->getCollection()
                 ->addAttributeToSelect('*')
-                ->addFieldToFilter('website_id', ['in' => [0, $websiteId]])
+                ->addFieldToFilter('website_id', array('in' => array(0, $websiteId)))
                 ->setPageSize(Drip_Connect_Model_ApiCalls_Helper::MAX_BATCH_SIZE)
                 ->setCurPage($page++)
                 ->load();
@@ -191,7 +209,10 @@ class Drip_Connect_Model_Cron_Customers
             foreach ($collection as $customer) {
                 $email = $customer->getEmail();
                 if (!Mage::helper('drip_connect')->isEmailValid($email)) {
-                    $this->getLogger()->log("Skipping subscriber during sync due to unusable email ({$email})", Zend_Log::NOTICE);
+                    $this->getLogger()->log(
+                        "Skipping subscriber during sync due to unusable email ({$email})",
+                        Zend_Log::NOTICE
+                    );
                     continue;
                 }
 
@@ -205,11 +226,14 @@ class Drip_Connect_Model_Cron_Customers
                 }
             }
 
-            if (count($batchCustomer)) {
-                $response = Mage::getModel('drip_connect/ApiCalls_Helper_Batches_Subscribers', array(
-                    'batch' => $batchCustomer,
-                    'store_id' => $storeId,
-                ))->call();
+            if (!empty($batchCustomer)) {
+                $response = Mage::getModel(
+                    'drip_connect/ApiCalls_Helper_Batches_Subscribers',
+                    array(
+                        'batch' => $batchCustomer,
+                        'store_id' => $storeId,
+                    )
+                )->call();
 
                 if (empty($response) || $response->getResponseCode() != 201) { // drip success code for this action
                     $result = false;
@@ -224,7 +248,6 @@ class Drip_Connect_Model_Cron_Customers
 
                 sleep($delay);
             }
-
         } while ($page <= $collection->getLastPageNumber());
 
         return $result;

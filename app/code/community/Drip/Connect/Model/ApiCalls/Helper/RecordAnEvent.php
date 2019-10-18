@@ -16,22 +16,28 @@ class Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent
 
     public function __construct($data = null)
     {
-        $this->apiClient = Mage::getModel('drip_connect/ApiCalls_Base', array(
-            'endpoint' => Mage::getStoreConfig('dripconnect_general/api_settings/account_id').'/'.self::ENDPOINT_EVENTS,
-        ));
+        $this->apiClient = Mage::getModel(
+            'drip_connect/ApiCalls_Base',
+            array(
+                'endpoint' => Mage::getStoreConfig(
+                    'dripconnect_general/api_settings/account_id'
+                ).'/'.self::ENDPOINT_EVENTS,
+            )
+        );
 
         if (!empty($data) && is_array($data)) {
             $data['properties']['source'] = 'magento';
             $data['properties']['magento_source'] = Mage::helper('drip_connect')->getArea();
             $data['properties']['version'] = 'Magento ' . Mage::getVersion() . ', '
-                                           . 'Drip Extension ' . Mage::getConfig()->getModuleConfig('Drip_Connect')->version;
+                                           . 'Drip Extension '
+                                           . Mage::getConfig()->getModuleConfig('Drip_Connect')->version;
         }
 
-        $eventInfo = [
-            'events' => [
+        $eventInfo = array(
+            'events' => array(
                 $data
-            ]
-        ];
+            )
+        );
         $this->request = Mage::getModel('drip_connect/ApiCalls_Request_Base')
             ->setMethod(Zend_Http_Client::POST)
             ->setRawData(json_encode($eventInfo));
