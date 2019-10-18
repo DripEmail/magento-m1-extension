@@ -1,6 +1,6 @@
 # Magento 1 Drip Connect Changelog
 
-## NEXT
+## 1.7.6
 
 * Fix logging on customer events.
 * Send `product_variant_id` correctly for all product types

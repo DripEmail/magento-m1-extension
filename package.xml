@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
     <name>Drip</name>
-    <version>1.7.5</version>
+    <version>1.7.6</version>
     <stability>stable</stability>
     <license>GNU Lesser General Public License 3.0</license>
     <channel>community</channel>
@@ -52,12 +52,12 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                         </dir>
                     </dir>
                     <dir name="Helper">
-                        <file name="Customer.php" hash="fc2c4cf7011535e92a4ee9d9f5eb1a8f"/>
+                        <file name="Customer.php" hash="dac5975288590a06efc4291ea5c3a73b"/>
                         <file name="Data.php" hash="5184d844180c80178fcf840aa3089f50"/>
                         <file name="Logger.php" hash="0ec6df8b3b60ddcef74b37e14f31660f"/>
-                        <file name="Order.php" hash="c49b285adf653074f622ae6c3da40a9a"/>
+                        <file name="Order.php" hash="440c19c5a174a34487b7ae340e228d19"/>
                         <file name="Product.php" hash="e365a5bc6f31f5d17b576fc43ea6acce"/>
-                        <file name="Quote.php" hash="e3a795ead2f5ee21f3b58fe11f401129"/>
+                        <file name="Quote.php" hash="7be134f3e739fece2385dd8ae7ca7b7e"/>
                         <file name="Wishlist.php" hash="a7398feb59e74dd2807d0e7a2d0335f3"/>
                     </dir>
                     <dir name="Model">
@@ -88,7 +88,7 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                         </dir>
                         <dir name="Cron">
                             <file name="Customers.php" hash="5e3820936a573ab7d69fef1aedc2c154"/>
-                            <file name="Orders.php" hash="8ddbb4b263ba82b8eed80a6c9b17a56d"/>
+                            <file name="Orders.php" hash="66a563e01b319d7d4375ac5215038dcc"/>
                         </dir>
                         <dir name="Http">
                             <file name="Client.php" hash="cf5d97790773681d4427662ac736b954"/>
@@ -163,7 +163,7 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                     </dir>
                     <dir name="etc">
                         <file name="adminhtml.xml" hash="d4f35cee5cd38366de6ba2e6df312bf6"/>
-                        <file name="config.xml" hash="eca8310ce9def5dc24fa6cafdefbf885"/>
+                        <file name="config.xml" hash="abc11d9fd262e364e15052d732faac5f"/>
                         <file name="system.xml" hash="3ccea41a962d81b6bf6742ee3a24d455"/>
                     </dir>
                     <dir name="sql">
