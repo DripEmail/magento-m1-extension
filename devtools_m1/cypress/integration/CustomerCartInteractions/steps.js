@@ -383,33 +383,33 @@ Then('A grouped order event should be sent to Drip', function() {
 
     basicOrderBodyAssertions(body)
 
-    const item1 = body.items[0]
-    expect(item1.categories).to.be.empty
-    expect(item1.discounts).to.eq(0)
-    expect(item1.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
-    expect(item1.name).to.eq('Widget 1 Sub 1')
-    expect(item1.price).to.eq(11.22)
-    expect(item1.product_id).to.eq('2')
-    expect(item1.product_variant_id).to.eq('2')
-    expect(item1.product_url).to.eq('http://main.magento.localhost:3005/widget-1-sub-1.html')
-    expect(item1.quantity).to.eq(1)
-    expect(item1.sku).to.eq('widg-1-sub1')
-    expect(item1.taxes).to.eq(0)
-    expect(item1.total).to.eq(11.22)
-
-    const item2 = body.items[1]
-    expect(item2.categories).to.be.empty
-    expect(item2.discounts).to.eq(0)
-    expect(item2.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
-    expect(item2.name).to.eq('Widget 1 Sub 2')
-    expect(item2.price).to.eq(11.22)
-    expect(item2.product_id).to.eq('3')
-    expect(item2.product_variant_id).to.eq('3')
-    expect(item2.product_url).to.eq('http://main.magento.localhost:3005/widget-1-sub-2.html')
-    expect(item2.quantity).to.eq(1)
-    expect(item2.sku).to.eq('widg-1-sub2')
-    expect(item2.taxes).to.eq(0)
-    expect(item2.total).to.eq(11.22)
+    // These may be in any order, so we'll loop and assert based on SKU.
+    body.items.forEach(item => {
+      switch (item.sku) {
+        case 'widg-1-sub1':
+          expect(item.name).to.eq('Widget 1 Sub 1')
+          expect(item.product_id).to.eq('2')
+          expect(item.product_variant_id).to.eq('2')
+          expect(item.product_url).to.eq('http://main.magento.localhost:3005/widget-1-sub-1.html')
+          break;
+        case 'widg-1-sub2':
+          expect(item.name).to.eq('Widget 1 Sub 2')
+          expect(item.product_id).to.eq('3')
+          expect(item.product_variant_id).to.eq('3')
+          expect(item.product_url).to.eq('http://main.magento.localhost:3005/widget-1-sub-2.html')
+          break;
+        default:
+          expect.fail(`Unknown SKU: ${item.sku}`)
+          break;
+      }
+      expect(item.categories).to.be.empty
+      expect(item.discounts).to.eq(0)
+      expect(item.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
+      expect(item.price).to.eq(11.22)
+      expect(item.quantity).to.eq(1)
+      expect(item.taxes).to.eq(0)
+      expect(item.total).to.eq(11.22)
+    });
   })
 })
 
