@@ -105,7 +105,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
     {
         $childItems = array();
         foreach ($quote->getAllItems() as $item) {
-            if (!$item->getParentItemId()) {
+            if ($item->getParentItemId() === null) {
                 continue;
             }
 

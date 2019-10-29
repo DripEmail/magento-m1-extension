@@ -223,7 +223,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
         $data = array();
         foreach ($order->getAllVisibleItems() as $item) {
             $productVariantItem = $item;
-            if ($item->getProductType() === 'configurable' && $childItems[$item->getId()]) {
+            if ($item->getProductType() === 'configurable' && array_key_exists($item->getId(), $childItems)) {
                 $productVariantItem = $childItems[$item->getId()];
             }
 
