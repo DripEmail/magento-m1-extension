@@ -1,5 +1,6 @@
 import { Given, When, Then } from "cypress-cucumber-preprocessor/steps"
 import { mockServerClient } from "mockserver-client"
+import { getCurrentFrontendDomain, getCurrentFrontendWebsiteId } from "../../lib/frontend_context"
 
 const Mockclient = mockServerClient("localhost", 1080);
 
@@ -20,7 +21,7 @@ When('I add a {string} widget to my cart', function(type) {
   cy.on('uncaught:exception', (err, runnable) => {
     return false
   })
-  cy.visit(`/widget-1.html`)
+  cy.visit(`${getCurrentFrontendDomain()}/widget-1.html`)
   switch (type) {
     case 'configurable':
       cy.get('#product-options-wrapper select').select('XL')
@@ -45,7 +46,7 @@ When('I add a different {string} widget to my cart', function(type) {
   cy.on('uncaught:exception', (err, runnable) => {
     return false
   })
-  cy.visit(`/widget-1.html`)
+  cy.visit(`${getCurrentFrontendDomain()}/widget-1.html`)
   switch (type) {
     case 'configurable':
       cy.get('#product-options-wrapper select').select('L')
@@ -74,7 +75,7 @@ Then('A simple cart event should be sent to Drip', function() {
     expect(body.email).to.eq('testuser@example.com')
     expect(body.action).to.eq('created')
     expect(body.cart_id).to.eq('1')
-    expect(body.cart_url).to.startWith('http://main.magento.localhost:3005/drip/cart/index/q/1')
+    expect(body.cart_url).to.startWith(`${getCurrentFrontendDomain()}/drip/cart/index/q/1`)
     expect(body.currency).to.eq('USD')
     expect(body.grand_total).to.eq(11.22)
     expect(body.initial_status).to.eq('unsubscribed')
@@ -91,10 +92,10 @@ Then('A simple cart event should be sent to Drip', function() {
     expect(item.sku).to.eq('widg-1')
     expect(item.categories).to.be.empty
     expect(item.discounts).to.eq(0)
-    expect(item.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
+    expect(item.image_url).to.eq(`${getCurrentFrontendDomain()}/media/catalog/product/`)
     expect(item.name).to.eq('Widget 1')
     expect(item.price).to.eq(11.22)
-    expect(item.product_url).to.eq('http://main.magento.localhost:3005/widget-1.html')
+    expect(item.product_url).to.eq(`${getCurrentFrontendDomain()}/widget-1.html`)
     expect(item.quantity).to.eq(1)
     expect(item.total).to.eq(11.22)
   })
@@ -110,7 +111,7 @@ Then('A configurable cart event should be sent to Drip', function() {
     expect(body.email).to.eq('testuser@example.com')
     expect(body.action).to.eq('created')
     expect(body.cart_id).to.eq('1')
-    expect(body.cart_url).to.startWith('http://main.magento.localhost:3005/drip/cart/index/q/1')
+    expect(body.cart_url).to.startWith(`${getCurrentFrontendDomain()}/drip/cart/index/q/1`)
     expect(body.currency).to.eq('USD')
     expect(body.grand_total).to.eq(11.22)
     expect(body.initial_status).to.eq('unsubscribed')
@@ -127,10 +128,10 @@ Then('A configurable cart event should be sent to Drip', function() {
     expect(item.sku).to.eq('widg-1-xl')
     expect(item.categories).to.be.empty
     expect(item.discounts).to.eq(0)
-    expect(item.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
+    expect(item.image_url).to.eq(`${getCurrentFrontendDomain()}/media/catalog/product/`)
     expect(item.name).to.eq('Widget 1') // TODO: Figure out whether this is correct.
     expect(item.price).to.eq(11.22)
-    expect(item.product_url).to.eq('http://main.magento.localhost:3005/widget-1.html')
+    expect(item.product_url).to.eq(`${getCurrentFrontendDomain()}/widget-1.html`)
     expect(item.quantity).to.eq(1)
     expect(item.total).to.eq(11.22)
   })
@@ -166,7 +167,7 @@ Then('A grouped cart event should be sent to Drip', function() {
     expect(body.email).to.eq('testuser@example.com')
     expect(body.action).to.eq('created')
     expect(body.cart_id).to.eq('1')
-    expect(body.cart_url).to.startWith('http://main.magento.localhost:3005/drip/cart/index/q/1')
+    expect(body.cart_url).to.startWith(`${getCurrentFrontendDomain()}/drip/cart/index/q/1`)
     expect(body.currency).to.eq('USD')
     expect(body.grand_total).to.eq(22.44)
     expect(body.initial_status).to.eq('unsubscribed')
@@ -184,13 +185,13 @@ Then('A grouped cart event should be sent to Drip', function() {
           expect(item.product_id).to.eq('2')
           expect(item.product_variant_id).to.eq('2')
           expect(item.name).to.eq('Widget 1 Sub 1')
-          expect(item.product_url).to.eq('http://main.magento.localhost:3005/widget-1-sub-1.html')
+          expect(item.product_url).to.eq(`${getCurrentFrontendDomain()}/widget-1-sub-1.html`)
           break;
         case 'widg-1-sub2':
           expect(item.product_id).to.eq('3')
           expect(item.product_variant_id).to.eq('3')
           expect(item.name).to.eq('Widget 1 Sub 2')
-          expect(item.product_url).to.eq('http://main.magento.localhost:3005/widget-1-sub-2.html')
+          expect(item.product_url).to.eq(`${getCurrentFrontendDomain()}/widget-1-sub-2.html`)
           break;
         default:
           expect.fail(`Unknown SKU: ${item.sku}`)
@@ -198,7 +199,7 @@ Then('A grouped cart event should be sent to Drip', function() {
       }
       expect(item.categories).to.be.empty
       expect(item.discounts).to.eq(0)
-      expect(item.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
+      expect(item.image_url).to.eq(`${getCurrentFrontendDomain()}/media/catalog/product/`)
       expect(item.price).to.eq(11.22)
       expect(item.quantity).to.eq(1)
       expect(item.total).to.eq(11.22)
@@ -216,7 +217,7 @@ Then('A bundle cart event should be sent to Drip', function() {
     expect(body.email).to.eq('testuser@example.com')
     expect(body.action).to.eq('created')
     expect(body.cart_id).to.eq('1')
-    expect(body.cart_url).to.startWith('http://main.magento.localhost:3005/drip/cart/index/q/1')
+    expect(body.cart_url).to.startWith(`${getCurrentFrontendDomain()}/drip/cart/index/q/1`)
     expect(body.currency).to.eq('USD')
     expect(body.grand_total).to.eq(22.44)
     expect(body.initial_status).to.eq('unsubscribed')
@@ -234,10 +235,10 @@ Then('A bundle cart event should be sent to Drip', function() {
     expect(item.sku).to.eq('widg-1')
     expect(item.categories).to.be.empty
     expect(item.discounts).to.eq(0)
-    expect(item.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
+    expect(item.image_url).to.eq(`${getCurrentFrontendDomain()}/media/catalog/product/`)
     expect(item.name).to.eq('Widget 1')
     expect(item.price).to.eq(22.44)
-    expect(item.product_url).to.eq('http://main.magento.localhost:3005/widget-1.html')
+    expect(item.product_url).to.eq(`${getCurrentFrontendDomain()}/widget-1.html`)
     expect(item.quantity).to.eq(1)
     expect(item.total).to.eq(22.44)
   })
@@ -267,11 +268,13 @@ When('I check out', function() {
 })
 
 function basicOrderBodyAssertions(body) {
+  const websiteId = getCurrentFrontendWebsiteId()
+
   expect(body.currency).to.eq('USD')
   expect(body.magento_source).to.eq('Storefront')
   expect(body.occurred_at).to.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)
-  expect(body.order_id).to.eq('100000001')
-  expect(body.order_public_id).to.eq('100000001')
+  expect(body.order_id).to.eq(`${websiteId}00000001`)
+  expect(body.order_public_id).to.eq(`${websiteId}00000001`)
   expect(body.provider).to.eq('magento')
   expect(body.total_discounts).to.eq(0)
   expect(body.total_taxes).to.eq(0)
@@ -320,12 +323,12 @@ Then('A simple order event should be sent to Drip', function() {
     const item = body.items[0]
     expect(item.categories).to.be.empty
     expect(item.discounts).to.eq(0)
-    expect(item.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
+    expect(item.image_url).to.eq(`${getCurrentFrontendDomain()}/media/catalog/product/`)
     expect(item.name).to.eq('Widget 1')
     expect(item.price).to.eq(11.22)
     expect(item.product_id).to.eq('1')
     expect(item.product_variant_id).to.eq('1')
-    expect(item.product_url).to.eq('http://main.magento.localhost:3005/widget-1.html')
+    expect(item.product_url).to.eq(`${getCurrentFrontendDomain()}/widget-1.html`)
     expect(item.quantity).to.eq(1)
     expect(item.sku).to.eq('widg-1')
     expect(item.taxes).to.eq(0)
@@ -353,12 +356,12 @@ Then('A configurable order event should be sent to Drip', function() {
     const item = body.items[0]
     expect(item.categories).to.be.empty
     expect(item.discounts).to.eq(0)
-    expect(item.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
+    expect(item.image_url).to.eq(`${getCurrentFrontendDomain()}/media/catalog/product/`)
     expect(item.name).to.eq('Widget 1')
     expect(item.price).to.eq(11.22)
     expect(item.product_id).to.eq('3')
     expect(item.product_variant_id).to.eq('1')
-    expect(item.product_url).to.eq('http://main.magento.localhost:3005/widget-1.html')
+    expect(item.product_url).to.eq(`${getCurrentFrontendDomain()}/widget-1.html`)
     expect(item.quantity).to.eq(1)
     expect(item.sku).to.eq('widg-1-xl')
     expect(item.taxes).to.eq(0)
@@ -390,13 +393,13 @@ Then('A grouped order event should be sent to Drip', function() {
           expect(item.name).to.eq('Widget 1 Sub 1')
           expect(item.product_id).to.eq('2')
           expect(item.product_variant_id).to.eq('2')
-          expect(item.product_url).to.eq('http://main.magento.localhost:3005/widget-1-sub-1.html')
+          expect(item.product_url).to.eq(`${getCurrentFrontendDomain()}/widget-1-sub-1.html`)
           break;
         case 'widg-1-sub2':
           expect(item.name).to.eq('Widget 1 Sub 2')
           expect(item.product_id).to.eq('3')
           expect(item.product_variant_id).to.eq('3')
-          expect(item.product_url).to.eq('http://main.magento.localhost:3005/widget-1-sub-2.html')
+          expect(item.product_url).to.eq(`${getCurrentFrontendDomain()}/widget-1-sub-2.html`)
           break;
         default:
           expect.fail(`Unknown SKU: ${item.sku}`)
@@ -404,7 +407,7 @@ Then('A grouped order event should be sent to Drip', function() {
       }
       expect(item.categories).to.be.empty
       expect(item.discounts).to.eq(0)
-      expect(item.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
+      expect(item.image_url).to.eq(`${getCurrentFrontendDomain()}/media/catalog/product/`)
       expect(item.price).to.eq(11.22)
       expect(item.quantity).to.eq(1)
       expect(item.taxes).to.eq(0)
@@ -433,12 +436,12 @@ Then('A bundle order event should be sent to Drip', function() {
     const item = body.items[0]
     expect(item.categories).to.be.empty
     expect(item.discounts).to.eq(0)
-    expect(item.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
+    expect(item.image_url).to.eq(`${getCurrentFrontendDomain()}/media/catalog/product/`)
     expect(item.name).to.eq('Widget 1')
     expect(item.price).to.eq(22.44)
     expect(item.product_id).to.eq('3')
     expect(item.product_variant_id).to.eq('3')
-    expect(item.product_url).to.eq('http://main.magento.localhost:3005/widget-1.html')
+    expect(item.product_url).to.eq(`${getCurrentFrontendDomain()}/widget-1.html`)
     expect(item.quantity).to.eq(1)
     expect(item.sku).to.eq('widg-1')
     expect(item.taxes).to.eq(0)
