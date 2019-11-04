@@ -78,7 +78,7 @@ When('I {string} from the general newsletter', function(state) {
   cy.log('Resetting mocks')
   cy.wrap(Mockclient.reset())
 
-  cy.visit(getCurrentFrontendDomain() + '/newsletter/manage/')
+  cy.visit(`${getCurrentFrontendDomain()}/newsletter/manage/`)
 
   if (state === 'unsubscribe') {
     cy.get('input[name="is_subscribed"]').uncheck()
