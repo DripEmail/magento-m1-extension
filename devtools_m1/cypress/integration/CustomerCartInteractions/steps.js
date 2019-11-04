@@ -464,3 +464,10 @@ Then('A bundle order event should be sent to Drip', function() {
     expect(item.total).to.eq(22.44)
   })
 })
+
+Then('No web requests are sent', function() {
+  cy.log('Validating that we got nothing. Absolutely nothing.')
+  cy.wrap(Mockclient.retrieveRecordedRequests({})).then(function(recordedRequests) {
+    expect(recordedRequests).to.have.lengthOf(0)
+  })
+})

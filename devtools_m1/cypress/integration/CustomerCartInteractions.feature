@@ -59,7 +59,6 @@ Feature: Customer Cart Interactions
     When I check out
     Then A bundle order event should be sent to Drip
 
-  @focus
   Scenario: A customer adds a simple product to their cart when only that store is configured for Drip
     Given I am logged into the admin interface
       And I have set up a multi-store configuration
