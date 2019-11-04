@@ -98,7 +98,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
                 'magento_account_created' => $customer->getCreatedAt(),
                 'magento_customer_group' => Mage::getModel('customer/group')->load($customer->getGroupId())
                                                                             ->getCustomerGroupCode(),
-                'magento_store' => $customer->getStoreId(),
+                'magento_store' => $customer->getWebsiteId(), // getStoreId returns an invalid value in the admin.
                 'accepts_marketing' => ($status ? 'yes' : 'no'),
             ),
         );
