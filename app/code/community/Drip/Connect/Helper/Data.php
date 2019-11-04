@@ -12,16 +12,14 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return bool
      */
-    public function isModuleActive()
+    public function isModuleActive($store = null)
     {
-        if (!empty(Mage::app()->getRequest()->getParam('store'))) {
-            return (bool)Mage::getStoreConfig(
-                'dripconnect_general/module_settings/is_enabled',
-                Mage::app()->getRequest()->getParam('store')
-            );
+        $storeRequestParam = Mage::app()->getRequest()->getParam('store');
+        if (!empty($storeRequestParam)) {
+            $store = $storeRequestParam;
         }
 
-        return (bool)Mage::getStoreConfig('dripconnect_general/module_settings/is_enabled');
+        return (bool)Mage::getStoreConfig('dripconnect_general/module_settings/is_enabled', $store);
     }
 
     /**

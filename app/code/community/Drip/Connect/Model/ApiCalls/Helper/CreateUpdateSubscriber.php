@@ -32,5 +32,3 @@ class Drip_Connect_Model_ApiCalls_Helper_CreateUpdateSubscriber
             ->setRawData(json_encode($subscriberInfo));
     }
 }
-
-

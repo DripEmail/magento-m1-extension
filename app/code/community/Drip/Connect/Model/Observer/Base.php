@@ -17,7 +17,7 @@ abstract class Drip_Connect_Model_Observer_Base
 
     public function execute($observer)
     {
-        if (!Mage::helper('drip_connect')->isModuleActive()) {
+        if (!$this->isActive($observer)) {
             return;
         }
 
@@ -30,6 +30,10 @@ abstract class Drip_Connect_Model_Observer_Base
             // We should never blow up a customer's site due to bugs in our code.
             $this->getLogger()->critical($e);
         }
+    }
+
+    protected function isActive($observer) {
+        return Mage::helper('drip_connect')->isModuleActive();
     }
 
     protected function getLogger()
