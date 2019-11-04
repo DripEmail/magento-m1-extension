@@ -21,8 +21,11 @@ class Drip_Connect_Model_Observer_Customer_AfterDelete extends Drip_Connect_Mode
         $response = Mage::getModel(
             'drip_connect/ApiCalls_Helper_RecordAnEvent',
             array(
-                'email' => $customer->getEmail(),
-                'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_DELETED,
+                'data' => array(
+                    'email' => $customer->getEmail(),
+                    'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_DELETED,
+                ),
+                'store' => $customer->getWebsiteId(),
             )
         )->call();
     }

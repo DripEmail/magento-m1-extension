@@ -40,11 +40,13 @@ class Drip_Connect_Model_Observer_Customer_GuestSubscriberCreated extends Drip_C
         $response = Mage::getModel(
             'drip_connect/ApiCalls_Helper_RecordAnEvent',
             array(
-                'email' => $email,
-                'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_NEW,
-                'properties' => array(
-                    'source' => 'magento'
-                ),
+                'data' => array(
+                    'email' => $email,
+                    'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_NEW,
+                    'properties' => array(
+                        'source' => 'magento'
+                    ),
+                )
             )
         )->call();
     }
