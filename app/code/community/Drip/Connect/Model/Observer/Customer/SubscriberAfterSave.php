@@ -29,6 +29,6 @@ class Drip_Connect_Model_Observer_Customer_SubscriberAfterSave extends Drip_Conn
     protected function proceedSubscriberSave($subscriber)
     {
         $data = Drip_Connect_Helper_Data::prepareGuestSubscriberData($subscriber);
-        Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $data)->call();
+        Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', array('data' => $data))->call();
     }
 }

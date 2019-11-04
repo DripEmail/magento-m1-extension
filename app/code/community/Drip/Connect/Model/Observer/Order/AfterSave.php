@@ -44,7 +44,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                 && ! Mage::helper('drip_connect')->isSubscriberExists($order->getCustomerEmail())
             ) {
                 $customerData = Mage::helper('drip_connect')->prepareCustomerDataForGuestCheckout($order);
-                Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $customerData)->call();
+                Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', array('data' => $customerData))->call();
             }
 
             // new order
