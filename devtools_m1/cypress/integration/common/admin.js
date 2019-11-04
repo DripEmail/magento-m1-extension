@@ -1,5 +1,5 @@
 import { Given, When, Then } from "cypress-cucumber-preprocessor/steps"
-import { mapFrontendWebsiteId } from "../../lib/frontend_context"
+import { mapFrontendWebsiteId, mapAdminWebsiteName } from "../../lib/frontend_context"
 
 Given('I am logged into the admin interface', function() {
   cy.visit(`http://main.magento.localhost:3005/index.php/admin`)
@@ -47,19 +47,7 @@ Given('I have configured Drip to be enabled for {string}', function(site) {
   cy.contains('System').trigger('mouseover')
   cy.contains('Configuration').click()
   cy.contains('Drip Connect Configuration').click()
-  let websiteKey
-  switch (site) {
-    case 'main':
-      websiteKey = 'Main Website'
-      break;
-    case 'default':
-      websiteKey = 'Default Config'
-      break;
-    default:
-      websiteKey = `${site}_website`
-      break;
-  }
-  cy.get('select#store_switcher').select(websiteKey)
+  cy.get('select#store_switcher').select(mapAdminWebsiteName(site))
   cy.contains('Module Settings').click()
   cy.contains('API Settings').click()
   if (site !== 'default') {

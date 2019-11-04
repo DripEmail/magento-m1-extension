@@ -32,4 +32,21 @@ function mapFrontendWebsiteId(site) {
   return websiteId
 }
 
-export { setCurrentFrontendSite, getCurrentFrontendSite, getCurrentFrontendDomain, getCurrentFrontendWebsiteId, mapFrontendWebsiteId }
+function mapAdminWebsiteName(site) {
+  let websiteKey
+  switch (site) {
+    case 'main':
+      websiteKey = 'Main Website'
+      break;
+    case 'default':
+      websiteKey = 'Default Config'
+      break;
+    default:
+      websiteKey = `${site}_website`
+      break;
+  }
+
+  return websiteKey
+}
+
+export { setCurrentFrontendSite, getCurrentFrontendSite, getCurrentFrontendDomain, getCurrentFrontendWebsiteId, mapFrontendWebsiteId, mapAdminWebsiteName }
