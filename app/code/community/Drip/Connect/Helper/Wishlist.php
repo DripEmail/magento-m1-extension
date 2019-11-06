@@ -28,7 +28,7 @@ class Drip_Connect_Helper_Wishlist extends Mage_Core_Helper_Abstract
                         'source' => 'magento'
                     ),
                 ),
-                'store' => $customer->getWebsiteId(),
+                'store' => $customer->getStoreId(),
             )
         )->call();
     }

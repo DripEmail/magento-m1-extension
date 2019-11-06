@@ -6,6 +6,6 @@ abstract class Drip_Connect_Model_Observer_Customer_AdminBase extends Drip_Conne
         // When running from the admin, we need to do some more digging to determine whether we are active.
         $customer = $observer->getCustomer();
 
-        return Mage::helper('drip_connect')->isModuleActive($customer->getWebsiteId());
+        return Mage::helper('drip_connect')->isModuleActive($customer->getStoreId());
     }
 }
