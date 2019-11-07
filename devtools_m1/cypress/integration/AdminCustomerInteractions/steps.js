@@ -47,7 +47,7 @@ Then('A new {string} subscriber event should be sent to Drip', function(state) {
     expect(sub.custom_fields.gender).to.eq('')
     expect(sub.custom_fields.last_name).to.eq('User')
     expect(sub.custom_fields.magento_customer_group).to.eq('General')
-    expect(sub.custom_fields.magento_store).to.eq('1')
+    expect(sub.custom_fields.magento_store).to.eq('300')
   })
 
   cy.log('Validating that the event calls have everything we need')
@@ -105,7 +105,7 @@ Then('A {string} event should be sent to Drip', function(state) {
     expect(sub.custom_fields.gender).to.eq('')
     expect(sub.custom_fields.last_name).to.eq('User')
     expect(sub.custom_fields.magento_customer_group).to.eq('General')
-    expect(sub.custom_fields.magento_store).to.eq('1')
+    expect(sub.custom_fields.magento_store).to.eq('300')
   })
 
   cy.log('Validating that the event calls have everything we need')

@@ -25,7 +25,7 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
 
         $customerData = Drip_Connect_Helper_Data::prepareCustomerData($customer, true, $forceStatus, $acceptsMarketing);
 
-        Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', array('data' => $customerData, 'store' => $customer->getStoreId()))->call();
+        Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', array('data' => $customerData, 'store' => $this->firstStoreIdForCustomer($customer)))->call();
 
         $response = Mage::getModel(
             'drip_connect/ApiCalls_Helper_RecordAnEvent',
@@ -34,9 +34,28 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
                     'email' => $customer->getEmail(),
                     'action' => $event,
                 ),
-                'store' => $customer->getStoreId(),
+                'store' => $this->firstStoreIdForCustomer($customer),
             )
         )->call();
+    }
+
+    /**
+     * Gets the first store when a customer is in website scope.
+     * @param Mage_Customer_Model_Customer $customer
+     * @return string Customer ID
+     */
+    public function firstStoreIdForCustomer($customer) {
+        // Pilfered/adapted from Mage_Customer_Model_Customer#_getWebsiteStoreId
+
+        $storeId = $customer->getStoreId();
+        // When the store ID is null or admin, just get the first one for the website.
+        if ((int)$storeId === 0) {
+            $storeIds = Mage::app()->getWebsite($customer->getWebsiteId())->getStoreIds();
+            reset($storeIds);
+            $storeId = current($storeIds);
+        }
+
+        return $storeId;
     }
 
     /**

@@ -14,9 +14,8 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function isModuleActive($store = null)
     {
-        $storeRequestParam = Mage::app()->getRequest()->getParam('store');
-        if (!empty($storeRequestParam)) {
-            $store = $storeRequestParam;
+        if (empty($store)) {
+            $store = Mage::app()->getRequest()->getParam('store');
         }
 
         return (bool)Mage::getStoreConfig('dripconnect_general/module_settings/is_enabled', $store);
@@ -96,7 +95,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
                 'magento_account_created' => $customer->getCreatedAt(),
                 'magento_customer_group' => Mage::getModel('customer/group')->load($customer->getGroupId())
                                                                             ->getCustomerGroupCode(),
-                'magento_store' => $customer->getStoreId(),
+                'magento_store' => Mage::helper('drip_connect/customer')->firstStoreIdForCustomer($customer),
                 'accepts_marketing' => ($status ? 'yes' : 'no'),
             ),
         );
