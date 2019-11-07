@@ -101,6 +101,36 @@ Given('I have configured a configurable widget', function() {
   })
 })
 
+// TODO: Consider merging this and the above. Possibly use website name instead of ID.
+Given('I have configured a configurable widget for website {string}', function(websiteId) {
+  cy.createProduct({
+    "sku": "widg-1",
+    "name": "Widget 1",
+    "description": "This is really a widget. There are many like it, but this one is mine.",
+    "shortDescription": "This is really a widget.",
+    "typeId": "configurable",
+    "websiteIds": [websiteId],
+    "attributes": {
+      "widget_size": {
+        "XL": {
+          "sku": "widg-1-xl",
+          "name": "Widget 1 XL",
+          "description": "This is really an XL widget. There are many like it, but this one is mine.",
+          "shortDescription": "This is really an XL widget.",
+          "websiteIds": [websiteId],
+        },
+        "L": {
+          "sku": "widg-1-l",
+          "name": "Widget 1 L",
+          "description": "This is really an L widget. There are many like it, but this one is mine.",
+          "shortDescription": "This is really an L widget.",
+          "websiteIds": [websiteId],
+        }
+      }
+    }
+  })
+})
+
 // Grouped Product
 Given('I have configured a grouped widget', function() {
   cy.createProduct({
@@ -164,7 +194,9 @@ Given('I have configured a bundle widget', function() {
 })
 
 Given('a customer exists', function() {
-  cy.createCustomer({})
+  cy.createCustomer({
+    websiteId: 100,
+  })
 })
 
 When('I create an order', function() {
@@ -173,6 +205,9 @@ When('I create an order', function() {
 
   // Select customer
   cy.contains('John Doe').click()
+
+  // Select store.
+  cy.get('input#store_300').check()
 
   // Add product to order
   cy.contains('Add Products').click()
