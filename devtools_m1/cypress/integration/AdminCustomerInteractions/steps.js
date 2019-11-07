@@ -1,5 +1,4 @@
 import { Given, When, Then } from "cypress-cucumber-preprocessor/steps"
-import { mapAdminWebsiteName } from "../../lib/frontend_context"
 import { mockServerClient } from "mockserver-client"
 
 const Mockclient = mockServerClient("localhost", 1080);
@@ -9,7 +8,7 @@ When('I create a {string} user in the admin', function(site) {
 
   cy.contains('Add New Customer').click()
 
-  cy.get('select[name="account[website_id]"]').select(mapAdminWebsiteName(site))
+  cy.get('select[name="account[website_id]"]').select(site)
   cy.get('input[name="account[firstname]"]').type('Test')
   cy.get('input[name="account[lastname]"]').type('User')
   cy.get('input[name="account[email]"]').type('testuser@example.com')

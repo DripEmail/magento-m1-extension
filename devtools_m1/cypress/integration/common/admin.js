@@ -1,5 +1,5 @@
 import { Given, When, Then } from "cypress-cucumber-preprocessor/steps"
-import { mapFrontendWebsiteId, mapAdminWebsiteName } from "../../lib/frontend_context"
+import { mapFrontendWebsiteId } from "../../lib/frontend_context"
 
 Given('I am logged into the admin interface', function() {
   cy.visit(`http://main.magento.localhost:3005/index.php/admin`)
@@ -43,14 +43,14 @@ Given('I have set up a multi-store configuration', function() {
   cy.contains('Save Config').click()
 })
 
-Given('I have configured Drip to be enabled for {string}', function(site) {
+Given('I have configured Drip to be enabled for {string}', function(scope) {
   cy.contains('System').trigger('mouseover')
   cy.contains('Configuration').click()
   cy.contains('Drip Connect Configuration').click()
-  cy.get('select#store_switcher').select(mapAdminWebsiteName(site))
+  cy.get('select#store_switcher').select(scope)
   cy.contains('Module Settings').click()
   cy.contains('API Settings').click()
-  if (site !== 'default') {
+  if (scope !== 'Default Config') {
     cy.get('input[name="groups[module_settings][fields][is_enabled][inherit]"]').uncheck()
     cy.get('input[name="groups[api_settings][fields][account_id][inherit]"]').uncheck()
     cy.get('input[name="groups[api_settings][fields][api_key][inherit]"]').uncheck()
