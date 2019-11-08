@@ -6,6 +6,7 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
      * drip actions for customer account change
      *
      * @param Mage_Customer_Model_Customer $customer
+     * @param Drip_Connect_Model_Configuration $config
      * @param bool $acceptsMarketing whether the customer accepts marketing. Overrides the customer is_subscribed
      *                               record.
      * @param string $event The updated/created/deleted event.
@@ -13,6 +14,7 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
      */
     public function proceedAccount(
         $customer,
+        $config,
         $acceptsMarketing = null,
         $event = Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED,
         $forceStatus = false

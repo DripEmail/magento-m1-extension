@@ -9,12 +9,15 @@ class Drip_Connect_Model_Observer_Customer_AfterSave extends Drip_Connect_Model_
     {
         $customer = $observer->getCustomer();
 
+        $config = new Drip_Connect_Model_Configuration(Mage::helper('drip_connect/customer')->firstStoreIdForCustomer($customer));
+
         if (Mage::registry(self::REGISTRY_KEY_CUSTOMER_IS_NEW)) {
             // M2 DIFFERENCE: $customer->getIsSubscribed() is actually meaningful in M1, so we can use it here instead
             // of the registry.
             $acceptsMarketing = $customer->getIsSubscribed();
             Mage::helper('drip_connect/customer')->proceedAccount(
                 $customer,
+                $config,
                 $acceptsMarketing,
                 Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_NEW,
                 $acceptsMarketing
@@ -23,6 +26,7 @@ class Drip_Connect_Model_Observer_Customer_AfterSave extends Drip_Connect_Model_
             if ($this->isCustomerChanged($customer)) {
                 Mage::helper('drip_connect/customer')->proceedAccount(
                     $customer,
+                    $config,
                     Mage::registry(self::REGISTRY_KEY_SUBSCRIBER_SUBSCRIBE_INTENT),
                     Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED,
                     $this->isCustomerStatusChanged($customer)
