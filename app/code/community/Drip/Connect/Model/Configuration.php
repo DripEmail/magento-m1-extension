@@ -7,9 +7,24 @@ class Drip_Connect_Model_Configuration
      */
     protected $storeId;
 
+    public static function forGlobalScope()
+    {
+        return new self(0);
+    }
+
+    public static function forCurrentScope()
+    {
+        return new self(Mage::app()->getStore()->getId());
+    }
+
     public function __construct($storeId = null)
     {
         $this->storeId = $storeId;
+    }
+
+    public function getStoreId()
+    {
+        return $this->storeId;
     }
 
     public function getAccountId()

@@ -12,7 +12,9 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
             return;
         }
 
-        $this->proceedOrder($order);
+        $config = Drip_Connect_Model_Configuration::forCurrentScope();
+
+        $this->proceedOrder($order, $config);
         Mage::unregister(self::REGISTRY_KEY_ORDER_OLD_DATA);
     }
 
@@ -20,8 +22,9 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
      * drip actions on order state events
      *
      * @param Mage_Sales_Model_Order $order
+     * @param Drip_Connect_Model_Configuration $config
      */
-    protected function proceedOrder($order)
+    protected function proceedOrder(Mage_Sales_Model_Order $order, Drip_Connect_Model_Configuration $config)
     {
         // it is possible that we've already processed this order
         if ($order->getIsAlreadyProcessed()) {
@@ -44,7 +47,8 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                 && ! Mage::helper('drip_connect')->isSubscriberExists($order->getCustomerEmail())
             ) {
                 $customerData = Mage::helper('drip_connect')->prepareCustomerDataForGuestCheckout($order);
-                Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', array('data' => $customerData))->call();
+                $subscriberRequest = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateSubscriber($data, $config);
+                $subscriberRequest->call();
             }
 
             // new order

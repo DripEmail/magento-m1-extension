@@ -16,16 +16,19 @@ class Drip_Connect_Model_Observer_Customer_GuestSubscriberCreated extends Drip_C
         $email = Mage::app()->getRequest()->getParam('email');
         $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($email);
 
-        $this->proceedGuestSubscriberNew($subscriber, $subscriber->isSubscribed());
+        $config = Drip_Connect_Model_Configuration::forCurrentScope();
+
+        $this->proceedGuestSubscriberNew($subscriber, $config, $subscriber->isSubscribed());
     }
 
     /**
      * drip actions for customer account create
      *
      * @param Mage_Newsletter_Model_Subscriber $subscriber
+     * @param Drip_Connect_Model_Configuration $config
      * @param bool $forceStatus
      */
-    protected function proceedGuestSubscriberNew($subscriber, $forceStatus = false)
+    protected function proceedGuestSubscriberNew(Mage_Newsletter_Model_Subscriber $subscriber, Drip_Connect_Model_Configuration $config, $forceStatus = false)
     {
         // M2 DIFFERENCE: This is in the customer helper.
         $email = $subscriber->getSubscriberEmail();
@@ -35,7 +38,8 @@ class Drip_Connect_Model_Observer_Customer_GuestSubscriberCreated extends Drip_C
         }
 
         $data = Drip_Connect_Helper_Data::prepareGuestSubscriberData($subscriber, false, $forceStatus);
-        Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', array('data' => $data))->call();
+        $subscriberRequest = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateSubscriber($data, $config);
+        $subscriberRequest->call();
 
         $response = Mage::getModel(
             'drip_connect/ApiCalls_Helper_RecordAnEvent',

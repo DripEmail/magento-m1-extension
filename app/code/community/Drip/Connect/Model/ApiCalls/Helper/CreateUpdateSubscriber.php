@@ -3,28 +3,24 @@
 class Drip_Connect_Model_ApiCalls_Helper_CreateUpdateSubscriber
     extends Drip_Connect_Model_ApiCalls_Helper
 {
-    public function __construct($params = null)
+    /**
+     * @param object $data
+     * @param Drip_Connect_Model_Configuration $config
+     */
+    public function __construct($data, Drip_Connect_Model_Configuration $config)
     {
-        $store = null;
-        if (array_key_exists('store', $params)) {
-            $store = $params['store'];
-            unset($params['store']);
-        }
-
         $this->apiClient = Mage::getModel(
             'drip_connect/ApiCalls_Base',
             array(
-                'endpoint' => Mage::getStoreConfig(
-                    'dripconnect_general/api_settings/account_id',
-                    $store
-                ).'/'.self::ENDPOINT_SUBSCRIBERS,
-                'store_id' => $store,
+                'endpoint' => $config->getAccountId().'/'.self::ENDPOINT_SUBSCRIBERS,
+                // TODO: Figure out why we pass the store ID and try to just pass the config object instead.
+                'store_id' => $config->getStoreId(),
             )
         );
 
         $subscriberInfo = array(
             'subscribers' => array(
-                $params['data']
+                $data
             )
         );
         $this->request = Mage::getModel('drip_connect/ApiCalls_Request_Base')

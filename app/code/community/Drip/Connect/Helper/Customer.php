@@ -27,7 +27,8 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
 
         $customerData = Drip_Connect_Helper_Data::prepareCustomerData($customer, true, $forceStatus, $acceptsMarketing);
 
-        Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', array('data' => $customerData, 'store' => $this->firstStoreIdForCustomer($customer)))->call();
+        $subscriberRequest = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateSubscriber($data, $config);
+        $subscriberRequest->call();
 
         $response = Mage::getModel(
             'drip_connect/ApiCalls_Helper_RecordAnEvent',

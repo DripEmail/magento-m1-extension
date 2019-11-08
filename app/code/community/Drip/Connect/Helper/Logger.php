@@ -14,8 +14,7 @@ class Drip_Connect_Helper_Logger extends Mage_Core_Helper_Abstract
     protected function getLogSettings()
     {
         $settings = new Varien_Object();
-        // Using Store ID 0 so we can only turn on and off logging globally.
-        $config = new Drip_Connect_Model_Configuration(0);
+        $config = Drip_Connect_Model_Configuration::forGlobalScope();
         $settings->setData($config->getLogSettings());
         return $settings;
     }
