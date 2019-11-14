@@ -10,7 +10,7 @@ $ npm --version
 ```
  - in the `devtools_m1` directory, install the cypress test framework:
 ```bash
-$ npm install cypress
+$ npm install
 ```
  - add entries in your `/etc/hosts` file for test endpoints:
 ```
