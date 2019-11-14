@@ -28,7 +28,7 @@ You can access the admin at http://main.magento.localhost:3005/admin_123
 
 ```bash
 cd devtools_m1/
-./docker_compose down
+./docker_compose.sh down
 rm -rf db_data/
 ```
 
