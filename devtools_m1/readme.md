@@ -8,7 +8,7 @@ A few things need to be setup on your system prior to launching Docker and teh t
 $ npm --version
 6.11.3
 ```
- - in the `devtool_m1` directory, install the cypress test framework:
+ - in the `devtools_m1` directory, install the cypress test framework:
 ```bash
 $ npm install cypress
 ```
@@ -19,7 +19,7 @@ $ npm install cypress
 ```
  - Spin up Docker and Magento, run setup.sh in the devtools_m1 directory
  ```aidl
-$ ./setup.sh
+$ DRIP_COMPOSE_ENV=test ./setup.sh
 ```
 
 You can access the admin at http://main.magento.localhost:3005/admin_123
