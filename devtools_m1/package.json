@@ -12,5 +12,8 @@
   },
   "cypress-cucumber-preprocessor": {
     "nonGlobalStepDefinitions": true
+  },
+  "devDependencies": {
+    "cypress-plugin-retries": "^1.4.0"
   }
 }
