@@ -14,24 +14,16 @@ class Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent
     const EVENT_WISHLIST_ADD_PRODUCT = 'Added item to wishlist';
     const EVENT_WISHLIST_REMOVE_PRODUCT = 'Removed item from wishlist';
 
-    public function __construct($params = null)
+    public function __construct($params = array())
     {
-        $store = null;
+        // TODO: Pass in config instead of figuring it out here.
         if (array_key_exists('store', $params)) {
-            $store = $params['store'];
-            unset($params['store']);
+            $config = new Drip_Connect_Model_Configuration($params['store']);
+        } else {
+            $config = Drip_Connect_Model_Configuration::forCurrentScope();
         }
 
-        $this->apiClient = Mage::getModel(
-            'drip_connect/ApiCalls_Base',
-            array(
-                'endpoint' => Mage::getStoreConfig(
-                    'dripconnect_general/api_settings/account_id',
-                    $store
-                ).'/'.self::ENDPOINT_EVENTS,
-                'store_id' => $store,
-            )
-        );
+        $this->apiClient = new Drip_Connect_Model_ApiCalls_Base($config, $config->getAccountId().'/'.self::ENDPOINT_EVENTS);
 
         $data = $params['data'];
 
@@ -53,4 +45,3 @@ class Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent
             ->setRawData(json_encode($eventInfo));
     }
 }
-

@@ -7,14 +7,10 @@ class Drip_Connect_Model_ApiCalls_Helper_CreateUpdateRefund
 
     public function __construct($data = null)
     {
-        $this->apiClient = Mage::getModel(
-            'drip_connect/ApiCalls_Base',
-            array(
-                'endpoint' => Mage::getStoreConfig(
-                    'dripconnect_general/api_settings/account_id'
-                ).'/'.self::ENDPOINT_REFUNDS,
-            )
-        );
+        // TODO: Pass this in from caller.
+        $config = Drip_Connect_Model_Configuration::forCurrentScope();
+
+        $this->apiClient = new Drip_Connect_Model_ApiCalls_Base($config, $config->getAccountId().'/'.self::ENDPOINT_REFUNDS);
 
         $ordersInfo = array(
             'refunds' => array(

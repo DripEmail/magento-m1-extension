@@ -27,7 +27,8 @@ abstract class Drip_Connect_Model_ApiCalls_Helper
      *
      * two classes should be instantiated in every constructor: ApiClient and Request
      */
-    abstract public function __construct($data);
+    // TODO: Restore this, maybe.
+    // abstract public function __construct($data);
 
     /**
      * call api

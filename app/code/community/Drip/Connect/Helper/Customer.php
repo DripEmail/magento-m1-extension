@@ -24,12 +24,9 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
             $this->getLogger()->log("Skipping guest subscriber update due to unusable email", Zend_Log::NOTICE);
             return;
         }
-
         $customerData = Drip_Connect_Helper_Data::prepareCustomerData($customer, true, $forceStatus, $acceptsMarketing);
-
         $subscriberRequest = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateSubscriber($data, $config);
         $subscriberRequest->call();
-
         $response = Mage::getModel(
             'drip_connect/ApiCalls_Helper_RecordAnEvent',
             array(

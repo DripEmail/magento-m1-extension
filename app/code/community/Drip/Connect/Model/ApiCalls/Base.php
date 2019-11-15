@@ -3,76 +3,51 @@
 class Drip_Connect_Model_ApiCalls_Base
     extends Drip_Connect_Model_Restapi_Abstract
 {
+    const DEFAULT_RESPONSE_MODEL = 'drip_connect/ApiCalls_Response_Base';
+
     /**
-     * constructor
+     * @param Drip_Connect_Model_Configuration $config
+     * @param string $endpoint
+     * @param boolean $v3
      */
-    public function __construct(array $options)
+    public function __construct(Drip_Connect_Model_Configuration $config, $endpoint, $v3 = false)
     {
-        $storeId = empty($options['store_id']) ? Mage::helper('core')->getStoreId() : $options['store_id'];
-
+        $storeId = $config->getStoreId();
         $this->setStoreId($storeId);
+        $this->_behavior = $config->getBehavior();
 
-        if (isset($options['response_model'])) {
-            $this->_responseModel = $options['response_model'];
-        } else {
-            $this->_responseModel = 'drip_connect/ApiCalls_Response_Base';
+        $this->_responseModel = self::DEFAULT_RESPONSE_MODEL;
+
+        $url = $config->getUrl().$endpoint;
+
+        if ($v3) {
+            $url = str_replace('/v2/', '/v3/', $url);
         }
 
-        if (isset($options['log_filename'])) {
-            $this->_logFilename = $options['log_filename'];
-        }
+        $this->_httpClient = Mage::getModel(
+            'drip_connect/Http_Client',
+            array(
+                'uri' => $url,
+                'config' => array(
+                    'useragent' => self::USERAGENT,
+                    'timeout' => $config->getTimeout() / 1000,
+                ),
+                'logger' => $this->getLogger(),
+            )
+        );
 
-        if (isset($options['behavior'])) {
-            $this->_behavior = $options['behavior'];
-        } else {
-            $this->_behavior = Mage::getStoreConfig('dripconnect_general/api_settings/behavior', $storeId);
-        }
+        $this->_httpClient->setHeaders(
+            array(
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json'
+            )
+        );
 
-        if (isset($options['http_client'])) {
-            $this->_httpClient = $options['http_client'];
-        } else {
-            if ($options['endpoint']) {
-                $endpoint = $options['endpoint'];
-            } else {
-                $endpoint = '';
-            }
-
-            $url = Mage::getStoreConfig('dripconnect_general/api_settings/url', $storeId).$endpoint;
-
-            if (!empty($options['v3'])) {
-                $url = str_replace('/v2/', '/v3/', $url);
-            }
-
-            $config = array(
-                'useragent' => self::USERAGENT,
-                'timeout' => Mage::getStoreConfig('dripconnect_general/api_settings/timeout', $storeId) / 1000,
-            );
-            if (!empty($options['config']) && is_array($options['config'])) {
-                $config = array_merge($config, $options['config']);
-            }
-
-            $this->_httpClient = Mage::getModel(
-                'drip_connect/Http_Client',
-                array(
-                    'uri' => $url,
-                    'config' => $config,
-                    'logger' => $this->getLogger(),
-                )
-            );
-
-            $this->_httpClient->setHeaders(
-                array(
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json'
-                )
-            );
-
-            $this->_httpClient->setAuth(
-                Mage::getStoreConfig('dripconnect_general/api_settings/api_key', $storeId),
-                '',
-                Zend_Http_Client::AUTH_BASIC
-            );
-        }
+        $this->_httpClient->setAuth(
+            $config->getApiKey(),
+            '',
+            Zend_Http_Client::AUTH_BASIC
+        );
     }
 
     /**
