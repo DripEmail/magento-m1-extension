@@ -14,7 +14,7 @@ class Drip_Connect_Model_Observer_Wishlist_PredispatchWishlistIndexRemove extend
             $product = Mage::getModel('catalog/product')->load($wishlistItem->getProductId());
             $customer = Mage::getSingleton('customer/session')->getCustomer();
 
-            Mage::helper('drip_connect')->doWishlistEvent(
+            Mage::helper('drip_connect/wishlist')->doWishlistEvent(
                 Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_WISHLIST_REMOVE_PRODUCT,
                 $customer,
                 $product
