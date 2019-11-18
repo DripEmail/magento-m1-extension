@@ -23,14 +23,6 @@ abstract class Drip_Connect_Model_ApiCalls_Helper
     protected $request;
 
     /**
-     * must be implemented individually for every call helper
-     *
-     * two classes should be instantiated in every constructor: ApiClient and Request
-     */
-    // TODO: Restore this, maybe.
-    // abstract public function __construct($data);
-
-    /**
      * call api
      *
      * @return Drip_Connect_Model_ApiCalls_Response_Base
