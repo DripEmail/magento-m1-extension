@@ -21,7 +21,7 @@ class Drip_Connect_Model_Observer_Wishlist_RemoveProductsWithoutQuantity extends
             return;
         }
 
-        $post_description = filter_input(INPUT_POST, 'description', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $postDescription = filter_input(INPUT_POST, 'description', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (filter_input_array(INPUT_POST) && isset($post_description) && is_array($post_description)) {
 
             foreach ($post_description as $itemId => $description) {
