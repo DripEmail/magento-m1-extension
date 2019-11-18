@@ -28,8 +28,7 @@ class Drip_Connect_Model_Cron_Customers
         if ($globalConfig->getCustomersSyncState() == Drip_Connect_Model_Source_SyncState::QUEUED) {
             $trackDefaultStatus = true;
             $storeIds = array_keys($stores);
-            // TODO: Refactor this for config object.
-            Mage::helper('drip_connect')->setCustomersSyncStateToStore(0, Drip_Connect_Model_Source_SyncState::PROGRESS);
+            $globalConfig->setCustomersSyncState(Drip_Connect_Model_Source_SyncState::PROGRESS);
         } else {
             foreach ($stores as $storeId => $store) {
                 $storeConfig = new Drip_Connect_Model_Configuration($storeId);
@@ -68,8 +67,7 @@ class Drip_Connect_Model_Cron_Customers
 
             $statuses[$storeId] = $status;
 
-            // TODO: Refactor this into config object.
-            Mage::helper('drip_connect')->setCustomersSyncStateToStore($storeId, $status);
+            $storeConfig->setCustomersSyncState($status);
         }
 
         if ($trackDefaultStatus) {
@@ -83,8 +81,7 @@ class Drip_Connect_Model_Cron_Customers
                 $status = Drip_Connect_Model_Source_SyncState::READYERRORS;
             }
 
-            // TODO: Refactor this into config object.
-            Mage::helper('drip_connect')->setCustomersSyncStateToStore(0, $status);
+            $globalConfig->setCustomersSyncState($status);
         }
     }
 
@@ -95,11 +92,7 @@ class Drip_Connect_Model_Cron_Customers
      */
     protected function syncGuestSubscribersForStore($config)
     {
-        // TODO: Refactor this into config object.
-        Mage::helper('drip_connect')->setCustomersSyncStateToStore(
-            $config->getStoreId(),
-            Drip_Connect_Model_Source_SyncState::PROGRESS
-        );
+        $config->setCustomersSyncState(Drip_Connect_Model_Source_SyncState::PROGRESS);
 
         $delay = $config->getBatchDelay();
 
@@ -191,11 +184,7 @@ class Drip_Connect_Model_Cron_Customers
      */
     protected function syncCustomersForStore($config)
     {
-        // TODO: Refactor this into the config object.
-        Mage::helper('drip_connect')->setCustomersSyncStateToStore(
-            $config->getStoreId(),
-            Drip_Connect_Model_Source_SyncState::PROGRESS
-        );
+        $config->setCustomersSyncState(Drip_Connect_Model_Source_SyncState::PROGRESS);
 
         $delay = $config->getBatchDelay();
 

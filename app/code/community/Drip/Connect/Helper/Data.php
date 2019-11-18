@@ -261,54 +261,6 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * @param int $storeId
-     * @param int $state
-     */
-    public function setCustomersSyncStateToStore($storeId, $state)
-    {
-        if (empty($storeId)) {
-            Mage::getConfig()->saveConfig(
-                'dripconnect_general/actions/sync_customers_data_state',
-                $state
-            );
-            $storeId = null;
-        } else {
-            Mage::getConfig()->saveConfig(
-                'dripconnect_general/actions/sync_customers_data_state',
-                $state,
-                'stores',
-                $storeId
-            );
-        }
-
-        Mage::app()->getStore($storeId)->resetConfig();
-    }
-
-    /**
-     * @param int $storeId
-     * @param int $state
-     */
-    public function setOrdersSyncStateToStore($storeId, $state)
-    {
-        if (empty($storeId)) {
-            Mage::getConfig()->saveConfig(
-                'dripconnect_general/actions/sync_orders_data_state',
-                $state
-            );
-            $storeId = null;
-        } else {
-            Mage::getConfig()->saveConfig(
-                'dripconnect_general/actions/sync_orders_data_state',
-                $state,
-                'stores',
-                $storeId
-            );
-        }
-
-        Mage::app()->getStore($storeId)->resetConfig();
-    }
-
-    /**
      * @param string $date
      */
     public function formatDate($date)

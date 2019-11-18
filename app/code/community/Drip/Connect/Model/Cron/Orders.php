@@ -26,8 +26,7 @@ class Drip_Connect_Model_Cron_Orders
         if ($globalConfig->getOrdersSyncState() == Drip_Connect_Model_Source_SyncState::QUEUED) {
             $trackDefaultStatus = true;
             $storeIds = array_keys($stores);
-            // TODO: Refactor into config object.
-            Mage::helper('drip_connect')->setOrdersSyncStateToStore(0, Drip_Connect_Model_Source_SyncState::PROGRESS);
+            $globalConfig->setOrdersSyncState(Drip_Connect_Model_Source_SyncState::PROGRESS);
         } else {
             foreach ($stores as $storeId => $store) {
                 $storeConfig = new Drip_Connect_Model_Configuration($storeId);
@@ -59,8 +58,7 @@ class Drip_Connect_Model_Cron_Orders
 
             $statuses[$storeId] = $status;
 
-            // TODO: Refactor into config object.
-            Mage::helper('drip_connect')->setOrdersSyncStateToStore($storeId, $status);
+            $storeConfig->setOrdersSyncState($status);
         }
 
         if ($trackDefaultStatus) {
@@ -74,7 +72,7 @@ class Drip_Connect_Model_Cron_Orders
                 $status = Drip_Connect_Model_Source_SyncState::READYERRORS;
             }
 
-            Mage::helper('drip_connect')->setOrdersSyncStateToStore(0, $status);
+            $globalConfig->setOrdersSyncState($status);
         }
     }
 
@@ -85,11 +83,7 @@ class Drip_Connect_Model_Cron_Orders
      */
     protected function syncOrdersForStore($config)
     {
-        // TODO: Refactor into config object.
-        Mage::helper('drip_connect')->setOrdersSyncStateToStore(
-            $config->getStoreId(),
-            Drip_Connect_Model_Source_SyncState::PROGRESS
-        );
+        $config->setOrdersSyncState(Drip_Connect_Model_Source_SyncState::PROGRESS);
 
         $result = true;
         $page = 1;
