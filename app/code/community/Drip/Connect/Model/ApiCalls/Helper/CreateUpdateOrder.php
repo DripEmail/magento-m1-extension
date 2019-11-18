@@ -12,11 +12,12 @@ class Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder
     const ACTION_REFUND = 'refunded';
     const ACTION_CANCEL = 'canceled';
 
-    public function __construct($data = null)
+    /**
+     * @param Drip_Connect_Model_Configuration $config
+     * @param array $data
+     */
+    public function __construct(Drip_Connect_Model_Configuration $config, array $data)
     {
-        // TODO: Pass this in from caller.
-        $config = Drip_Connect_Model_Configuration::forCurrentScope();
-
         $this->apiClient = new Drip_Connect_Model_ApiCalls_Base($config, $config->getAccountId().'/'.self::ENDPOINT_ORDERS, true);
 
         if (!empty($data) && is_array($data)) {
@@ -29,5 +30,3 @@ class Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder
             ->setRawData(json_encode($data));
     }
 }
-
-
