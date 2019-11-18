@@ -48,7 +48,7 @@ class Drip_Connect_Helper_Product extends Mage_Core_Helper_Abstract
     {
         $data = $this->prepareData($product);
         $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateProduct::PRODUCT_NEW;
-        // TODO: Pass this in.
+        // TODO: Handle products being scoped to 1+ websites, but config being scoped to store views.
         $config = Drip_Connect_Model_Configuration::forCurrentScope();
         $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateProduct($config, $data);
         $apiCall->call();
@@ -63,7 +63,7 @@ class Drip_Connect_Helper_Product extends Mage_Core_Helper_Abstract
     {
         $data = $this->prepareData($product);
         $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateProduct::PRODUCT_CHANGED;
-        // TODO: Pass this in.
+        // TODO: Handle products being scoped to 1+ websites, but config being scoped to store views.
         $config = Drip_Connect_Model_Configuration::forCurrentScope();
         $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateProduct($config, $data);
         $apiCall->call();
@@ -78,7 +78,7 @@ class Drip_Connect_Helper_Product extends Mage_Core_Helper_Abstract
     {
         $data = $this->prepareData($product);
         $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateProduct::PRODUCT_DELETED;
-        // TODO: Pass this in.
+        // TODO: Handle products being scoped to 1+ websites, but config being scoped to store views.
         $config = Drip_Connect_Model_Configuration::forCurrentScope();
         $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateProduct($config, $data);
         $apiCall->call();
