@@ -17,21 +17,23 @@ class Drip_Connect_Model_Cron_Customers
      */
     public function syncCustomers()
     {
-        ini_set('memory_limit', Mage::getStoreConfig('dripconnect_general/api_settings/memory_limit'));
+        $globalConfig = Drip_Connect_Model_Configuration::forGlobalScope();
+
+        ini_set('memory_limit', $globalConfig->getMemoryLimit());
 
         $storeIds = array();
         $stores = Mage::app()->getStores(false, false);
 
         $trackDefaultStatus = false;
-        if (Mage::getStoreConfig('dripconnect_general/actions/sync_customers_data_state', 0)
-                == Drip_Connect_Model_Source_SyncState::QUEUED) {
+        if ($globalConfig->getCustomersSyncState() == Drip_Connect_Model_Source_SyncState::QUEUED) {
             $trackDefaultStatus = true;
             $storeIds = array_keys($stores);
+            // TODO: Refactor this for config object.
             Mage::helper('drip_connect')->setCustomersSyncStateToStore(0, Drip_Connect_Model_Source_SyncState::PROGRESS);
         } else {
             foreach ($stores as $storeId => $store) {
-                if (Mage::getStoreConfig('dripconnect_general/actions/sync_customers_data_state', $storeId)
-                        == Drip_Connect_Model_Source_SyncState::QUEUED) {
+                $storeConfig = new Drip_Connect_Model_Configuration($storeId);
+                if ($storeConfig->getCustomersSyncState() == Drip_Connect_Model_Source_SyncState::QUEUED) {
                     $storeIds[] = $storeId;
                 }
             }
@@ -39,19 +41,20 @@ class Drip_Connect_Model_Cron_Customers
 
         $statuses = array();
         foreach ($storeIds as $storeId) {
-            if (! Mage::getStoreConfig('dripconnect_general/module_settings/is_enabled', $storeId)) {
+            $storeConfig = new Drip_Connect_Model_Configuration($storeId);
+            if (!$storeConfig->isEnabled()) {
                 continue;
             }
 
             try {
-                $customerResult = $this->syncCustomersForStore($storeId);
+                $customerResult = $this->syncCustomersForStore($storeConfig);
             } catch (\Exception $e) {
                 $this->getLogger()->log($e->__toString(), Zend_Log::ERR);
                 $customerResult = false;
             }
 
             try {
-                $subscriberResult = $this->syncGuestSubscribersForStore($storeId);
+                $subscriberResult = $this->syncGuestSubscribersForStore($storeConfig);
             } catch (\Exception $e) {
                 $this->getLogger()->log($e->__toString(), Zend_Log::ERR);
                 $subscriberResult = false;
@@ -65,6 +68,7 @@ class Drip_Connect_Model_Cron_Customers
 
             $statuses[$storeId] = $status;
 
+            // TODO: Refactor this into config object.
             Mage::helper('drip_connect')->setCustomersSyncStateToStore($storeId, $status);
         }
 
@@ -79,23 +83,25 @@ class Drip_Connect_Model_Cron_Customers
                 $status = Drip_Connect_Model_Source_SyncState::READYERRORS;
             }
 
+            // TODO: Refactor this into config object.
             Mage::helper('drip_connect')->setCustomersSyncStateToStore(0, $status);
         }
     }
 
     /**
-     * @param int $storeId
+     * @param Drip_Connect_Model_Configuration $config
      *
      * @return bool
      */
-    protected function syncGuestSubscribersForStore($storeId)
+    protected function syncGuestSubscribersForStore($config)
     {
+        // TODO: Refactor this into config object.
         Mage::helper('drip_connect')->setCustomersSyncStateToStore(
-            $storeId,
+            $config->getStoreId(),
             Drip_Connect_Model_Source_SyncState::PROGRESS
         );
 
-        $delay = (int) Mage::getStoreConfig('dripconnect_general/api_settings/batch_delay');
+        $delay = $config->getBatchDelay();
 
         $result = true;
         $page = 1;
@@ -103,7 +109,7 @@ class Drip_Connect_Model_Cron_Customers
             $collection = Mage::getModel('newsletter/subscriber')->getCollection()
                 ->addFieldToSelect('*')
                 ->addFieldToFilter('customer_id', 0) // need only guests b/c customers have already been processed
-                ->addFieldToFilter('store_id', $storeId)
+                ->addFieldToFilter('store_id', $config->getStoreId())
                 ->setPageSize(Drip_Connect_Model_ApiCalls_Helper::MAX_BATCH_SIZE)
                 ->setCurPage($page++)
                 ->load();
@@ -143,7 +149,7 @@ class Drip_Connect_Model_Cron_Customers
                     'drip_connect/ApiCalls_Helper_Batches_Subscribers',
                     array(
                         'batch' => $batchCustomer,
-                        'store_id' => $storeId,
+                        'store_id' => $config->getStoreId(),
                     )
                 )->call();
 
@@ -156,7 +162,7 @@ class Drip_Connect_Model_Cron_Customers
                     'drip_connect/ApiCalls_Helper_Batches_Events',
                     array(
                         'batch' => $batchEvents,
-                        'store_id' => $storeId,
+                        'store_id' => $config->getStoreId(),
                     )
                 )->call();
 
@@ -179,20 +185,21 @@ class Drip_Connect_Model_Cron_Customers
     }
 
     /**
-     * @param int $storeId
+     * @param Drip_Connect_Model_Configuration $config
      *
      * @return bool
      */
-    protected function syncCustomersForStore($storeId)
+    protected function syncCustomersForStore($config)
     {
+        // TODO: Refactor this into the config object.
         Mage::helper('drip_connect')->setCustomersSyncStateToStore(
-            $storeId,
+            $config->getStoreId(),
             Drip_Connect_Model_Source_SyncState::PROGRESS
         );
 
-        $delay = (int) Mage::getStoreConfig('dripconnect_general/api_settings/batch_delay');
+        $delay = $config->getBatchDelay();
 
-        $websiteId = Mage::app()->getStore($storeId)->getWebsiteId();
+        $websiteId = Mage::app()->getStore($config->getStoreId())->getWebsiteId();
 
         $result = true;
         $page = 1;
@@ -231,7 +238,7 @@ class Drip_Connect_Model_Cron_Customers
                     'drip_connect/ApiCalls_Helper_Batches_Subscribers',
                     array(
                         'batch' => $batchCustomer,
-                        'store_id' => $storeId,
+                        'store_id' => $config->getStoreId(),
                     )
                 )->call();
 

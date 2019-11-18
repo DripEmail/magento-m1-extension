@@ -44,4 +44,4 @@
 <button onclick="javascript:syncOrders(); return false;" type="button" id="<?php echo $this->getHtmlId() ?>"
 <?php if (!$this->isSyncAvailable()) { ?> disabled="disabled" class="disabled" <?php } else { ?> class="scalable" <?php }?>>
     <?php echo $this->escapeHtml($this->getButtonLabel()) ?>
-</button> &nbsp; <b id="sync_orders_state"><?php echo Drip_Connect_Model_Source_SyncState::getLabel(Mage::getStoreConfig('dripconnect_general/actions/sync_orders_data_state', Mage::app()->getRequest()->getParam('store'))); ?></b>
+</button> &nbsp; <b id="sync_orders_state"><?php echo Drip_Connect_Model_Source_SyncState::getLabel(Drip_Connect_Model_Configuration::forCurrentStoreParam()->getOrdersSyncState()); ?></b>

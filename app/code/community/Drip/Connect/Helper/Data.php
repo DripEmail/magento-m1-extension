@@ -14,11 +14,14 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function isModuleActive($store = null)
     {
+        // TODO: Refactor this method away by using the config object at all the call sites.
         if (empty($store)) {
-            $store = Mage::app()->getRequest()->getParam('store');
+            $config = Drip_Connect_Model_Configuration::forCurrentStoreParam();
+        } else {
+            $config = new Drip_Connect_Model_Configuration($store);
         }
 
-        return (bool)Mage::getStoreConfig('dripconnect_general/module_settings/is_enabled', $store);
+        return $config->isEnabled();
     }
 
     /**
@@ -321,7 +324,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     protected function getSalt()
     {
-        $salt = Mage::getStoreConfig('dripconnect_general/module_settings/salt');
+        $salt = Drip_Connect_Model_Configuration::forGlobalScope()->getSalt();
         if (empty(trim($salt))) {
             $salt = self::SALT;
         }
