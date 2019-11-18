@@ -138,13 +138,8 @@ class Drip_Connect_Model_Cron_Customers
             }
 
             if (!empty($batchCustomer)) {
-                $response = Mage::getModel(
-                    'drip_connect/ApiCalls_Helper_Batches_Subscribers',
-                    array(
-                        'batch' => $batchCustomer,
-                        'store_id' => $config->getStoreId(),
-                    )
-                )->call();
+                $apiCall = new Drip_Connect_Model_ApiCalls_Helper_Batches_Subscribers($config, $batchCustomer);
+                $response = $apiCall->call();
 
                 if (empty($response) || $response->getResponseCode() != 201) { // drip success code for this action
                     $result = false;
@@ -218,13 +213,8 @@ class Drip_Connect_Model_Cron_Customers
             }
 
             if (!empty($batchCustomer)) {
-                $response = Mage::getModel(
-                    'drip_connect/ApiCalls_Helper_Batches_Subscribers',
-                    array(
-                        'batch' => $batchCustomer,
-                        'store_id' => $config->getStoreId(),
-                    )
-                )->call();
+                $apiCall = new Drip_Connect_Model_ApiCalls_Helper_Batches_Subscribers($config, $batchCustomer);
+                $response = $apiCall->call();
 
                 if (empty($response) || $response->getResponseCode() != 201) { // drip success code for this action
                     $result = false;
