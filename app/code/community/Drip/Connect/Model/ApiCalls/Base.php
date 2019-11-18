@@ -24,16 +24,13 @@ class Drip_Connect_Model_ApiCalls_Base
             $url = str_replace('/v2/', '/v3/', $url);
         }
 
-        $this->_httpClient = Mage::getModel(
-            'drip_connect/Http_Client',
+        $this->_httpClient = new Drip_Connect_Model_Http_Client(
+            $url,
             array(
-                'uri' => $url,
-                'config' => array(
-                    'useragent' => self::USERAGENT,
-                    'timeout' => $config->getTimeout() / 1000,
-                ),
-                'logger' => $this->getLogger(),
-            )
+                'useragent' => self::USERAGENT,
+                'timeout' => $config->getTimeout() / 1000,
+            ),
+            $this->getLogger()
         );
 
         $this->_httpClient->setHeaders(
