@@ -14,7 +14,7 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
      */
     public function proceedAccount(
         $customer,
-        $config,
+        Drip_Connect_Model_Configuration $config,
         $acceptsMarketing = null,
         $event = Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED,
         $forceStatus = false
@@ -25,7 +25,7 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
             return;
         }
         $customerData = Drip_Connect_Helper_Data::prepareCustomerData($customer, true, $forceStatus, $acceptsMarketing);
-        $subscriberRequest = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateSubscriber($data, $config);
+        $subscriberRequest = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateSubscriber($customerData, $config);
         $subscriberRequest->call();
         $apiCall = new Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent($config, array(
             'email' => $customer->getEmail(),
