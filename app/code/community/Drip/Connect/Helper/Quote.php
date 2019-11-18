@@ -45,15 +45,14 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
     /**
      * drip actions when send quote to drip 1st time
      *
+     * @param Drip_Connect_Model_Configuration $config
      * @param Mage_Sales_Model_Quote $quote
      */
-    public function proceedQuoteNew($quote)
+    public function proceedQuoteNew(Drip_Connect_Model_Configuration $config, $quote)
     {
         $data = $this->prepareQuoteData($quote);
         $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote::QUOTE_NEW;
         if (!empty($data['items'])) {
-            // TODO: Pass this in.
-            $config = Drip_Connect_Model_Configuration::forCurrentScope();
             $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote($config, $data);
             $apiCall->call();
         }
@@ -62,14 +61,13 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
     /**
      * drip actions existing quote gets changed
      *
+     * @param Drip_Connect_Model_Configuration $config
      * @param Mage_Sales_Model_Quote $quote
      */
-    public function proceedQuote($quote)
+    public function proceedQuote(Drip_Connect_Model_Configuration $config, $quote)
     {
         $data = $this->prepareQuoteData($quote);
         $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote::QUOTE_CHANGED;
-        // TODO: Pass this in.
-        $config = Drip_Connect_Model_Configuration::forCurrentScope();
         $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote($config, $data);
         $apiCall->call();
     }
@@ -81,7 +79,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
      */
     public function prepareQuoteData($quote)
     {
-        $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($th_is->email);
+        $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($this->_email);
 
         $data = array (
             "provider" => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote::PROVIDER_NAME,
