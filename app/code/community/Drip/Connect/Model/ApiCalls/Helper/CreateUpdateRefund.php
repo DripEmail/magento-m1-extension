@@ -1,15 +1,18 @@
 <?php
 
+// TODO: This class doesn't seem to be called from anywhere. Confirm that it is dead.
+
 class Drip_Connect_Model_ApiCalls_Helper_CreateUpdateRefund
     extends Drip_Connect_Model_ApiCalls_Helper
 {
     const PROVIDER_NAME = 'magento';
 
-    public function __construct($data = null)
+    /**
+     * @param Drip_Connect_Model_Configuration $config
+     * @param array $data
+     */
+    public function __construct(Drip_Connect_Model_Configuration $config, array $data)
     {
-        // TODO: Pass this in from caller.
-        $config = Drip_Connect_Model_Configuration::forCurrentScope();
-
         $this->apiClient = new Drip_Connect_Model_ApiCalls_Base($config, $config->getAccountId().'/'.self::ENDPOINT_REFUNDS);
 
         $ordersInfo = array(

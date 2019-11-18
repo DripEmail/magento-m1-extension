@@ -1,9 +1,15 @@
 <?php
 
+// TODO: This class doesn't seem to be called from anywhere. Confirm that it is dead.
+
 class Drip_Connect_Model_ApiCalls_Helper_GetSubscriberList
     extends Drip_Connect_Model_ApiCalls_Helper
 {
-    public function __construct($data)
+    /**
+     * @param Drip_Connect_Model_Configuration $config
+     * @param array $data
+     */
+    public function __construct(Drip_Connect_Model_Configuration $config, array $data)
     {
         $data = array_merge(
             array(
@@ -16,9 +22,6 @@ class Drip_Connect_Model_ApiCalls_Helper_GetSubscriberList
             ),
             $data
         );
-
-        // TODO: Pass this in from caller.
-        $config = Drip_Connect_Model_Configuration::forCurrentScope();
 
         $this->apiClient = new Drip_Connect_Model_ApiCalls_Base($config, $config->getAccountId().'/'.self::ENDPOINT_SUBSCRIBERS);
 

@@ -21,14 +21,13 @@ class Drip_Connect_Model_Observer_Customer_Login extends Drip_Connect_Model_Obse
      */
     protected function proceedCustomerLogin($customer)
     {
-        $response = Mage::getModel(
-            'drip_connect/ApiCalls_Helper_RecordAnEvent',
-            array(
-                'data' => array(
-                    'email' => $customer->getEmail(),
-                    'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_LOGIN,
-                )
-            )
-        )->call();
+        // This is pertinant to a customer, who are scoped to websites, but it
+        // is in the context of a store view, so we'll use the current scope.
+        $config = Drip_Connect_Model_Configuration::forCurrentScope();
+        $apiCall = new Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent($config, array(
+            'email' => $customer->getEmail(),
+            'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_LOGIN,
+        ));
+        $response = $apiCall->call();
     }
 }
