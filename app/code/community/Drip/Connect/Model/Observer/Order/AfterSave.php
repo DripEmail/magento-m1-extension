@@ -1,6 +1,6 @@
 <?php
 
-class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Observer_Base
+class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Observer_Order_OrderBase
 {
     /**
      * @param Varien_Event_Observer $observer
@@ -12,7 +12,8 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
             return;
         }
 
-        $config = Drip_Connect_Model_Configuration::forCurrentScope();
+        // We base on order store ID so it works in Admin.
+        $config = new Drip_Connect_Model_Configuration($order->getStoreId());
 
         $this->proceedOrder($order, $config);
         Mage::unregister(self::REGISTRY_KEY_ORDER_OLD_DATA);
