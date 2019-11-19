@@ -21,22 +21,19 @@ class Drip_Connect_Model_Observer_Wishlist_RemoveProductsWithoutQuantity extends
             return;
         }
 
-        //loop through each product and check quantity
-        if (filter_input_array(INPUT_POST) &&
-            (null !== filter_input(INPUT_POST, 'description')) &&
-            is_array(filter_input(INPUT_POST, 'description'))) {
-            foreach (filter_input(INPUT_POST, 'description') as $itemId => $description) {
+        $postDescription = filter_input(INPUT_POST, 'description', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        if (filter_input_array(INPUT_POST) && isset($post_description) && is_array($post_description)) {
+
+            foreach ($post_description as $itemId => $description) {
                 $item = Mage::getModel('wishlist/item')->load($itemId);
                 if ($item->getWishlistId() !== $wishlist->getId()) {
                     continue;
                 }
-
-                //item qty set to zero
-                if (isset(filter_input(INPUT_POST, 'qty')[$itemId]) && filter_input(INPUT_POST, 'qty')[$itemId] == 0) {
+                $post_quantity = filter_input(INPUT_POST, 'qty', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY)[$itemId];
+                if (isset($post_quantity) && $post_quantity == 0) {
                     $customer = Mage::getSingleton('customer/session')->getCustomer();
                     $product = Mage::getModel('catalog/product')->load($item->getProductId());
-
-                    Mage::helper('drip_connect')->doWishlistEvent(
+                    Mage::helper('drip_connect/wishlist')->doWishlistEvent(
                         Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_WISHLIST_REMOVE_PRODUCT,
                         $customer,
                         $product
