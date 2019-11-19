@@ -249,7 +249,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
                 }
 
                 $group['categories'] = $categories;
-                $group['product_url'] = (string) $item->getProduct()->getProductUrl();
+                $group['product_url'] = (string) $item->getProduct()->getProductUrl('');
                 $group['image_url'] = (string) Mage::getModel('catalog/product_media_config')->getMediaUrl(
                     $product->getThumbnail()
                 );

@@ -58,7 +58,7 @@ Then('an order event is sent to Drip', function() {
     expect(item.price).to.eq(11.22)
     expect(item.product_id).to.eq('3')
     expect(item.product_variant_id).to.eq('1')
-    expect(item.product_url).to.eq('http://site1.magento.localhost:3005/widget-1.html?SID=aav4akupmdl3sc207khb3qfb47&___store=site1_store_view')
+    expect(item.product_url).to.eq('http://site1.magento.localhost:3005/widget-1.html?___store=site1_store_view')
     expect(item.quantity).to.eq(1)
     expect(item.sku).to.eq('widg-1-xl')
     expect(item.taxes).to.eq(0)
