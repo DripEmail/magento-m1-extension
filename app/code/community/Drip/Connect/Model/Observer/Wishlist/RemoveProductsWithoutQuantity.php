@@ -24,9 +24,8 @@ class Drip_Connect_Model_Observer_Wishlist_RemoveProductsWithoutQuantity extends
         $config = Drip_Connect_Model_Configuration::forCurrentScope();
 
         $postDescription = filter_input(INPUT_POST, 'description', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-        if (filter_input_array(INPUT_POST) && isset($post_description) && is_array($post_description)) {
-
-            foreach ($post_description as $itemId => $description) {
+        if (filter_input_array(INPUT_POST) && isset($postDescription) && is_array($postDescription)) {
+            foreach ($postDescription as $itemId => $description) {
                 $item = Mage::getModel('wishlist/item')->load($itemId);
                 if ($item->getWishlistId() !== $wishlist->getId()) {
                     continue;
