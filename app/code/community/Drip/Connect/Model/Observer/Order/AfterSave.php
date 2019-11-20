@@ -32,7 +32,9 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
             return;
         }
 
-        if (! Mage::helper('drip_connect/order')->isCanBeSent($order, $config)) {
+        $orderTransformer = new Drip_Connect_Model_Transformer_Order($order, $config);
+
+        if (!$orderTransformer->isCanBeSent()) {
             return;
         }
 
@@ -55,7 +57,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
             // new order
             $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder(
                 $config,
-                Mage::helper('drip_connect/order')->getOrderDataNew($order, $config)
+                $orderTransformer->getOrderDataNew()
             );
             $response = $apiCall->call();
 
@@ -70,7 +72,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                     // partial refund of completed order
                     $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder(
                         $config,
-                        Mage::helper('drip_connect/order')->getOrderDataRefund($order, $config, $this->refundDiff($order))
+                        $orderTransformer->getOrderDataRefund($this->refundDiff($order))
                     );
                     $response = $apiCall->call();
                 } else {
@@ -81,7 +83,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                     // full complete order
                     $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder(
                         $config,
-                        Mage::helper('drip_connect/order')->getOrderDataCompleted($order, $config)
+                        $orderTransformer->getOrderDataCompleted()
                     );
                     $response = $apiCall->call();
                 }
@@ -94,7 +96,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                 // full refund
                 $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder(
                     $config,
-                    Mage::helper('drip_connect/order')->getOrderDataRefund($order, $config, $this->refundDiff($order))
+                    $orderTransformer->getOrderDataRefund($this->refundDiff($order))
                 );
                 $response = $apiCall->call();
                 break;
@@ -103,7 +105,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                     // partial refund of processing order
                     $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder(
                         $config,
-                        Mage::helper('drip_connect/order')->getOrderDataRefund($order, $config, $this->refundDiff($order))
+                        $orderTransformer->getOrderDataRefund($this->refundDiff($order))
                     );
                     $response = $apiCall->call();
                 }
@@ -116,7 +118,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                 // cancel order
                 $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder(
                     $config,
-                    Mage::helper('drip_connect/order')->getOrderDataCanceled($order, $config)
+                    $orderTransformer->getOrderDataCanceled()
                 );
                 $response = $apiCall->call();
                 break;
@@ -128,7 +130,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                 // other states
                 $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder(
                     $config,
-                    Mage::helper('drip_connect/order')->getOrderDataOther($order, $config)
+                    $orderTransformer->getOrderDataOther()
                 );
                 $response = $apiCall->call();
         }
