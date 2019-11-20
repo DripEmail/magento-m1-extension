@@ -32,7 +32,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
             return;
         }
 
-        if (! Mage::helper('drip_connect/order')->isCanBeSent($order)) {
+        if (! Mage::helper('drip_connect/order')->isCanBeSent($order, $config)) {
             return;
         }
 
@@ -70,7 +70,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                     // partial refund of completed order
                     $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder(
                         $config,
-                        Mage::helper('drip_connect/order')->getOrderDataRefund($order, $this->refundDiff($order))
+                        Mage::helper('drip_connect/order')->getOrderDataRefund($order, $config, $this->refundDiff($order))
                     );
                     $response = $apiCall->call();
                 } else {
@@ -94,7 +94,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                 // full refund
                 $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder(
                     $config,
-                    Mage::helper('drip_connect/order')->getOrderDataRefund($order, $this->refundDiff($order))
+                    Mage::helper('drip_connect/order')->getOrderDataRefund($order, $config, $this->refundDiff($order))
                 );
                 $response = $apiCall->call();
                 break;
@@ -103,7 +103,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                     // partial refund of processing order
                     $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder(
                         $config,
-                        Mage::helper('drip_connect/order')->getOrderDataRefund($order, $this->refundDiff($order))
+                        Mage::helper('drip_connect/order')->getOrderDataRefund($order, $config, $this->refundDiff($order))
                     );
                     $response = $apiCall->call();
                 }

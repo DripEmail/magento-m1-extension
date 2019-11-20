@@ -106,7 +106,7 @@ class Drip_Connect_Model_Cron_Orders
 
             $batch = array();
             foreach ($collection as $order) {
-                if (Mage::helper('drip_connect/order')->isCanBeSent($order)) {
+                if (Mage::helper('drip_connect/order')->isCanBeSent($order, $config)) {
                     $data = Mage::helper('drip_connect/order')->getOrderDataNew($order, $config);
                     $data['occurred_at'] = Mage::helper('drip_connect')->formatDate($order->getCreatedAt());
                     $batch[] = $data;
