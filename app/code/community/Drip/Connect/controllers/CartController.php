@@ -7,7 +7,8 @@ class Drip_Connect_CartController extends Mage_Core_Controller_Front_Action
      */
     public function indexAction()
     {
-        if (! Mage::helper('drip_connect')->isModuleActive()) {
+        $config = Drip_Connect_Model_Configuration::forCurrentScope();
+        if (!$config->isEnabled()) {
             $this->norouteAction();
             return;
         }
