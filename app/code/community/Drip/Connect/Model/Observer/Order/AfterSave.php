@@ -55,7 +55,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
             // new order
             $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder(
                 $config,
-                Mage::helper('drip_connect/order')->getOrderDataNew($order)
+                Mage::helper('drip_connect/order')->getOrderDataNew($order, $config)
             );
             $response = $apiCall->call();
 
@@ -81,7 +81,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                     // full complete order
                     $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder(
                         $config,
-                        Mage::helper('drip_connect/order')->getOrderDataCompleted($order)
+                        Mage::helper('drip_connect/order')->getOrderDataCompleted($order, $config)
                     );
                     $response = $apiCall->call();
                 }
@@ -116,7 +116,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                 // cancel order
                 $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder(
                     $config,
-                    Mage::helper('drip_connect/order')->getOrderDataCanceled($order)
+                    Mage::helper('drip_connect/order')->getOrderDataCanceled($order, $config)
                 );
                 $response = $apiCall->call();
                 break;
@@ -128,7 +128,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
                 // other states
                 $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder(
                     $config,
-                    Mage::helper('drip_connect/order')->getOrderDataOther($order)
+                    Mage::helper('drip_connect/order')->getOrderDataOther($order, $config)
                 );
                 $response = $apiCall->call();
         }

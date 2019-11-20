@@ -81,7 +81,7 @@ class Drip_Connect_Model_Cron_Orders
      *
      * @return bool
      */
-    protected function syncOrdersForStore($config)
+    protected function syncOrdersForStore(Drip_Connect_Model_Configuration $config)
     {
         $config->setOrdersSyncState(Drip_Connect_Model_Source_SyncState::PROGRESS);
 
@@ -108,7 +108,7 @@ class Drip_Connect_Model_Cron_Orders
             $batch = array();
             foreach ($collection as $order) {
                 if (Mage::helper('drip_connect/order')->isCanBeSent($order)) {
-                    $data = Mage::helper('drip_connect/order')->getOrderDataNew($order);
+                    $data = Mage::helper('drip_connect/order')->getOrderDataNew($order, $config);
                     $data['occurred_at'] = Mage::helper('drip_connect')->formatDate($order->getCreatedAt());
                     $batch[] = $data;
                 } else {

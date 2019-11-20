@@ -9,6 +9,7 @@ When('I click order sync', function() {
 
   cy.contains('Configuration').click({force: true})
   cy.contains('Drip Connect Configuration').click()
+  cy.get('select#store_switcher').select('site1_store_view')
   cy.contains('Drip Actions').click()
   cy.contains('Sync All Orders To Drip').click()
   cy.contains('Queued')
@@ -36,8 +37,8 @@ Then('an order event is sent to Drip', function() {
     // TODO: This needs to be figured out.
     // expect(order.magento_source).to.eq('Admin')
     expect(order.occurred_at).to.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)
-    expect(order.order_id).to.eq('100000001')
-    expect(order.order_public_id).to.eq('100000001')
+    expect(order.order_id).to.eq('30000000001')
+    expect(order.order_public_id).to.eq('30000000001')
     expect(order.provider).to.eq('magento')
     expect(order.total_discounts).to.eq(0)
     expect(order.total_taxes).to.eq(0)
@@ -74,7 +75,7 @@ Then('an order event is sent to Drip', function() {
     expect(item.price).to.eq(11.22)
     expect(item.product_id).to.eq('3')
     expect(item.product_variant_id).to.eq('1')
-    expect(item.product_url).to.eq('http://main.magento.localhost:3005/widget-1.html')
+    expect(item.product_url).to.eq('http://site1.magento.localhost:3005/widget-1.html?___store=site1_store_view')
     expect(item.quantity).to.eq(1)
     expect(item.sku).to.eq('widg-1-xl')
     expect(item.taxes).to.eq(0)

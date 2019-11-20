@@ -101,8 +101,10 @@ Given('I have configured a configurable widget', function() {
   })
 })
 
-// TODO: Consider merging this and the above. Possibly use website name instead of ID.
-Given('I have configured a configurable widget for website {string}', function(websiteId) {
+// TODO: Consider merging this and the above.
+Given('I have configured a configurable widget for website {string}', function(site) {
+  const websiteId = mapFrontendWebsiteId(site)
+
   cy.createProduct({
     "sku": "widg-1",
     "name": "Widget 1",
