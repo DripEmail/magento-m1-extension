@@ -36,10 +36,10 @@ function mapFrontendStoreId(site) {
   let storeId = 0
   switch (site) {
     case 'main':
-      storeId = 0
+      storeId = 1
       break
     case 'site1':
-      storeId = 1
+      storeId = 2
       break
     default:
       throw `Unexpected site name ${site}`

@@ -114,6 +114,35 @@ Given('I have configured a configurable widget', function() {
   })
 })
 
+// Configurable Product
+Given('I have configured a configurable widget with an invisible child', function() {
+  cy.createProduct({
+    "sku": "widg-1",
+    "name": "Widget 1",
+    "description": "This is really a widget. There are many like it, but this one is mine.",
+    "shortDescription": "This is really a widget.",
+    "image": "parent_image.png",
+    "typeId": "configurable",
+    "child_visibility": 4, // not visible in either seach or catalog
+    "attributes": {
+      "widget_size": {
+        "XL": {
+          "sku": "widg-1-xl",
+          "name": "Widget 1 XL",
+          "description": "This is really an XL widget. There are many like it, but this one is mine.",
+          "shortDescription": "This is really an XL widget.",
+        },
+        "L": {
+          "sku": "widg-1-l",
+          "name": "Widget 1 L",
+          "description": "This is really an L widget. There are many like it, but this one is mine.",
+          "shortDescription": "This is really an L widget.",
+        }
+      }
+    }
+  })
+})
+
 // Grouped Product
 Given('I have configured a grouped widget', function() {
   cy.createProduct({
