@@ -140,7 +140,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
                     (float)$item->getQty() * (float)$item->getPrice()
                 ) / 100,
                 'product_url' => $product->getProductUrl(),
-                'image_url' => Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getThumbnail()),
+                'image_url' => Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getImage()),
             );
 
             $data[] = $group;

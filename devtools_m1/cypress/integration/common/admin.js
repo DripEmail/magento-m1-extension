@@ -1,5 +1,5 @@
 import { Given, When, Then } from "cypress-cucumber-preprocessor/steps"
-import { mapFrontendWebsiteId } from "../../lib/frontend_context"
+import { mapFrontendWebsiteId, mapFrontendStoreId } from "../../lib/frontend_context"
 
 Given('I am logged into the admin interface', function() {
   cy.visit(`http://main.magento.localhost:3005/index.php/admin`)
@@ -78,6 +78,7 @@ Given('I have configured Drip to be enabled for {string}', function(site) {
 // Simple Product
 Given('I have configured a simple widget for {string}', function(site) {
   cy.createProduct({
+    "storeId": mapFrontendStoreId(site),
     "sku": "widg-1",
     "name": "Widget 1",
     "description": "This is really a widget. There are many like it, but this one is mine.",

@@ -92,7 +92,7 @@ Then('A simple cart event should be sent to Drip', function() {
     expect(item.sku).to.eq('widg-1')
     expect(item.categories).to.be.empty
     expect(item.discounts).to.eq(0)
-    expect(item.image_url).to.eq(`${getCurrentFrontendDomain()}/media/catalog/product/`)
+    expect(item.image_url).to.eq(`${getCurrentFrontendDomain()}/media/catalog/product/my_image.png`)
     expect(item.name).to.eq('Widget 1')
     expect(item.price).to.eq(11.22)
     expect(item.product_url).to.eq(`${getCurrentFrontendDomain()}/widget-1.html`)
@@ -128,7 +128,7 @@ Then('A configurable cart event should be sent to Drip', function() {
     expect(item.sku).to.eq('widg-1-xl')
     expect(item.categories).to.be.empty
     expect(item.discounts).to.eq(0)
-    expect(item.image_url).to.eq(`${getCurrentFrontendDomain()}/media/catalog/product/`)
+    expect(item.image_url).to.eq(`${getCurrentFrontendDomain()}/media/catalog/product/my_image.png`)
     expect(item.name).to.eq('Widget 1') // TODO: Figure out whether this is correct.
     expect(item.price).to.eq(11.22)
     expect(item.product_url).to.eq(`${getCurrentFrontendDomain()}/widget-1.html`)
@@ -199,7 +199,7 @@ Then('A grouped cart event should be sent to Drip', function() {
       }
       expect(item.categories).to.be.empty
       expect(item.discounts).to.eq(0)
-      expect(item.image_url).to.eq(`${getCurrentFrontendDomain()}/media/catalog/product/`)
+      expect(item.image_url).to.eq(`${getCurrentFrontendDomain()}/media/catalog/product/my_image.png`)
       expect(item.price).to.eq(11.22)
       expect(item.quantity).to.eq(1)
       expect(item.total).to.eq(11.22)
@@ -235,7 +235,7 @@ Then('A bundle cart event should be sent to Drip', function() {
     expect(item.sku).to.eq('widg-1')
     expect(item.categories).to.be.empty
     expect(item.discounts).to.eq(0)
-    expect(item.image_url).to.eq(`${getCurrentFrontendDomain()}/media/catalog/product/`)
+    expect(item.image_url).to.eq(`${getCurrentFrontendDomain()}/media/catalog/product/my_image.png`)
     expect(item.name).to.eq('Widget 1')
     expect(item.price).to.eq(22.44)
     expect(item.product_url).to.eq(`${getCurrentFrontendDomain()}/widget-1.html`)

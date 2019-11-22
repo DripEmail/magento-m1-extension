@@ -50,6 +50,7 @@ class Mage_Shell_Drip_CreateProduct extends Mage_Shell_Abstract
             "taxClassId" => 0, //tax class (0 - none, 1 - default, 2 - taxable, 4 - shipping)
             "price" => 11.22,
             "cost" => 22.33,
+            "image" => "my_image.png",
             "attributeSetId" => $defaultAttrSetId,
             "createdAt" => strtotime('now'),
             "updatedAt" => strtotime('now'),
