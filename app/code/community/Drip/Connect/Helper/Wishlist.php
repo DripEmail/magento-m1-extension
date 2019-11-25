@@ -5,12 +5,12 @@ class Drip_Connect_Helper_Wishlist extends Mage_Core_Helper_Abstract
     /**
      * @param Drip_Connect_Model_Configuration $config
      * @param string $action
-     * @param $customer
+     * @param Mage_Customer_Model_Customer $customer
      * @param $product
      *
      * @return mixed
      */
-    public function doWishlistEvent($config, $action, $customer, $product)
+    public function doWishlistEvent(Drip_Connect_Model_Configuration $config, $action, Mage_Customer_Model_Customer $customer, $product)
     {
         $apiCall = new Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent($config, array(
             'email' => $customer->getEmail(),

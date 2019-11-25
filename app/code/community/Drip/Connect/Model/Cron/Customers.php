@@ -90,7 +90,7 @@ class Drip_Connect_Model_Cron_Customers
      *
      * @return bool
      */
-    protected function syncGuestSubscribersForStore($config)
+    protected function syncGuestSubscribersForStore(Drip_Connect_Model_Configuration $config)
     {
         $config->setCustomersSyncState(Drip_Connect_Model_Source_SyncState::PROGRESS);
 
@@ -172,7 +172,7 @@ class Drip_Connect_Model_Cron_Customers
      *
      * @return bool
      */
-    protected function syncCustomersForStore($config)
+    protected function syncCustomersForStore(Drip_Connect_Model_Configuration $config)
     {
         $config->setCustomersSyncState(Drip_Connect_Model_Source_SyncState::PROGRESS);
 

@@ -17,16 +17,21 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
      * When customer logs in or registers, magento creates an empty quote right away.  We don't want to call
      * checkout created on this action, so we check the quote total to avoid firing any quote related events.
      *
-     * @param $customer
+     * @param Mage_Customer_Model_Customer $customer
      */
-    public function checkForEmptyQuoteCustomer($customer)
+    public function checkForEmptyQuoteCustomer(Mage_Customer_Model_Customer $customer)
     {
         //gets active quote for customer, but troube is quote hasn't been updated with this customer info yet
         $quote = Mage::getModel('sales/quote')->loadByCustomer($customer);
         $this->checkForEmptyQuote($quote);
     }
 
-    public function checkForEmptyQuote($quote)
+    /**
+     * Check whether quote has no value.
+     *
+     * @param Mage_Sales_Model_Quote $quote
+     */
+    public function checkForEmptyQuote(Mage_Sales_Model_Quote $quote)
     {
         if (Mage::helper('drip_connect')->priceAsCents($quote->getGrandTotal()) == 0) {
             $this->setEmptyQuoteFlag(true);
@@ -48,7 +53,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
      * @param Drip_Connect_Model_Configuration $config
      * @param Mage_Sales_Model_Quote $quote
      */
-    public function proceedQuoteNew(Drip_Connect_Model_Configuration $config, $quote)
+    public function proceedQuoteNew(Drip_Connect_Model_Configuration $config, Mage_Sales_Model_Quote $quote)
     {
         $data = $this->prepareQuoteData($quote);
         $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote::QUOTE_NEW;
@@ -64,7 +69,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
      * @param Drip_Connect_Model_Configuration $config
      * @param Mage_Sales_Model_Quote $quote
      */
-    public function proceedQuote(Drip_Connect_Model_Configuration $config, $quote)
+    public function proceedQuote(Drip_Connect_Model_Configuration $config, Mage_Sales_Model_Quote $quote)
     {
         $data = $this->prepareQuoteData($quote);
         $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote::QUOTE_CHANGED;
@@ -77,7 +82,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
      *
      * @return array
      */
-    public function prepareQuoteData($quote)
+    public function prepareQuoteData(Mage_Sales_Model_Quote $quote)
     {
         $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($this->_email);
 
@@ -105,7 +110,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
      *
      * @return array
      */
-    protected function prepareQuoteItemsData($quote)
+    protected function prepareQuoteItemsData(Mage_Sales_Model_Quote $quote)
     {
         $childItems = array();
         foreach ($quote->getAllItems() as $item) {
@@ -162,7 +167,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
      *
      * @return bool
      */
-    public function isQuoteChanged($quote)
+    public function isQuoteChanged(Mage_Sales_Model_Quote $quote)
     {
         $oldData = Mage::registry(self::REGISTRY_KEY_OLD_DATA);
         $newData = Mage::helper('drip_connect/quote')->prepareQuoteData($quote);
@@ -177,7 +182,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
      *
      * @return bool
      */
-    public function isUnknownUser($quote)
+    public function isUnknownUser(Mage_Sales_Model_Quote $quote)
     {
         $this->_email = '';
 
@@ -191,7 +196,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
     /**
      * @param Mage_Sales_Model_Quote $oldQuote
      */
-    public function recreateCartFromQuote($oldQuote)
+    public function recreateCartFromQuote(Mage_Sales_Model_Quote $oldQuote)
     {
         $quote = Mage::getSingleton('checkout/session')->getQuote();
         $checkoutSession = Mage::getSingleton('checkout/session');

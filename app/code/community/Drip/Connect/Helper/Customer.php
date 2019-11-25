@@ -13,7 +13,7 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
      * @param bool $forceStatus Whether the customer has changed marketing preferences which should be synced to Drip.
      */
     public function proceedAccount(
-        $customer,
+        Mage_Customer_Model_Customer $customer,
         Drip_Connect_Model_Configuration $config,
         $acceptsMarketing = null,
         $event = Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED,
@@ -39,7 +39,7 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
      * @param Mage_Customer_Model_Customer $customer
      * @return string Customer ID
      */
-    public function firstStoreIdForCustomer($customer) {
+    public function firstStoreIdForCustomer(Mage_Customer_Model_Customer $customer) {
         // Pilfered/adapted from Mage_Customer_Model_Customer#_getWebsiteStoreId
 
         $storeId = $customer->getStoreId();
