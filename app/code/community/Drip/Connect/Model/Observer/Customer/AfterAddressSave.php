@@ -19,7 +19,7 @@ class Drip_Connect_Model_Observer_Customer_AfterAddressSave extends Drip_Connect
         $customer = Mage::getModel('customer/customer')->load($address->getCustomerId());
 
         // TODO: Confirm (and test) that this isn't running in a store view scope. If it is, grab that.
-        $config = new Drip_Connect_Model_Configuration(Mage::helper('drip_connect/customer')->firstStoreIdForCustomer($customer));
+        $config = new Drip_Connect_Model_Configuration(Mage::helper('drip_connect/customer')->getCustomerStoreId($customer));
 
         if ($this->isAddressChanged($address)) {
             Mage::helper('drip_connect')->proceedAccount($customer, $config);

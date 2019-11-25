@@ -39,7 +39,7 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
      * @param Mage_Customer_Model_Customer $customer
      * @return string Store ID
      */
-    public function firstStoreIdForCustomer(Mage_Customer_Model_Customer $customer) {
+    public function getCustomerStoreId(Mage_Customer_Model_Customer $customer) {
         // Pilfered/adapted from Mage_Customer_Model_Customer#_getWebsiteStoreId
 
         $storeId = $customer->getStoreId();

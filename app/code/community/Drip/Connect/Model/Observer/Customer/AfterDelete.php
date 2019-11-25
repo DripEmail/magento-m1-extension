@@ -18,7 +18,7 @@ class Drip_Connect_Model_Observer_Customer_AfterDelete extends Drip_Connect_Mode
      */
     protected function proceedAccountDelete($customer)
     {
-        $storeId = Mage::helper('drip_connect/customer')->firstStoreIdForCustomer($customer);
+        $storeId = Mage::helper('drip_connect/customer')->getCustomerStoreId($customer);
         $config = new Drip_Connect_Model_Configuration($storeId);
         $apiCall = new Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent($config, array(
             'email' => $customer->getEmail(),

@@ -98,7 +98,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
                 'magento_account_created' => $customer->getCreatedAt(),
                 'magento_customer_group' => Mage::getModel('customer/group')->load($customer->getGroupId())
                                                                             ->getCustomerGroupCode(),
-                'magento_store' => Mage::helper('drip_connect/customer')->firstStoreIdForCustomer($customer),
+                'magento_store' => Mage::helper('drip_connect/customer')->getCustomerStoreId($customer),
                 'accepts_marketing' => ($status ? 'yes' : 'no'),
             ),
         );
