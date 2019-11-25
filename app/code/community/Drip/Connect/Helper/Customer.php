@@ -37,7 +37,7 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
     /**
      * Gets the first store when a customer is in website scope.
      * @param Mage_Customer_Model_Customer $customer
-     * @return string Customer ID
+     * @return string Store ID
      */
     public function firstStoreIdForCustomer(Mage_Customer_Model_Customer $customer) {
         // Pilfered/adapted from Mage_Customer_Model_Customer#_getWebsiteStoreId
