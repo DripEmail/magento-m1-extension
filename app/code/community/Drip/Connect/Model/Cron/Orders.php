@@ -16,7 +16,6 @@ class Drip_Connect_Model_Cron_Orders
 
         ini_set('memory_limit', $globalConfig->getMemoryLimit());
 
-        // TODO: This may need nuking once we properly pass the config object everywhere. We'd rather not set globals everywhere.
         Mage::app()->setCurrentStore('default');
 
         $storeIds = array();
