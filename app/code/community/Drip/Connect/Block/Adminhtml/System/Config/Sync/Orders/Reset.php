@@ -44,10 +44,7 @@ class Drip_Connect_Block_Adminhtml_System_Config_Sync_Orders_Reset
                 'button_label' => Mage::helper('drip_connect')->__($originalData['button_label']),
                 'html_id' => $element->getHtmlId(),
                 'ajax_url' => Mage::getSingleton('adminhtml/url')->getUrl('adminhtml/config_sync_orders/resetState'),
-                'account_id' => Mage::getStoreConfig(
-                    'dripconnect_general/api_settings/account_id',
-                    Mage::app()->getRequest()->getParam('store')
-                ),
+                'account_id' => Drip_Connect_Model_Configuration::forCurrentStoreParam()->getAccountId(),
             )
         );
 

@@ -43,26 +43,14 @@ Given('I have set up a multi-store configuration', function() {
   cy.contains('Save Config').click()
 })
 
-Given('I have configured Drip to be enabled for {string}', function(site) {
+Given('I have configured Drip to be enabled for {string}', function(scope) {
   cy.contains('System').trigger('mouseover')
   cy.contains('Configuration').click()
   cy.contains('Drip Connect Configuration').click()
-  let websiteKey
-  switch (site) {
-    case 'main':
-      websiteKey = 'Main Website'
-      break;
-    case 'default':
-      websiteKey = 'Default Config'
-      break;
-    default:
-      websiteKey = `${site}_website`
-      break;
-  }
-  cy.get('select#store_switcher').select(websiteKey)
+  cy.get('select#store_switcher').select(scope)
   cy.contains('Module Settings').click()
   cy.contains('API Settings').click()
-  if (site !== 'default') {
+  if (scope !== 'Default Config') {
     cy.get('input[name="groups[module_settings][fields][is_enabled][inherit]"]').uncheck()
     cy.get('input[name="groups[api_settings][fields][account_id][inherit]"]').uncheck()
     cy.get('input[name="groups[api_settings][fields][api_key][inherit]"]').uncheck()
@@ -107,6 +95,38 @@ Given('I have configured a configurable widget', function() {
           "name": "Widget 1 L",
           "description": "This is really an L widget. There are many like it, but this one is mine.",
           "shortDescription": "This is really an L widget.",
+        }
+      }
+    }
+  })
+})
+
+// TODO: Consider merging this and the above.
+Given('I have configured a configurable widget for website {string}', function(site) {
+  const websiteId = mapFrontendWebsiteId(site)
+
+  cy.createProduct({
+    "sku": "widg-1",
+    "name": "Widget 1",
+    "description": "This is really a widget. There are many like it, but this one is mine.",
+    "shortDescription": "This is really a widget.",
+    "typeId": "configurable",
+    "websiteIds": [websiteId],
+    "attributes": {
+      "widget_size": {
+        "XL": {
+          "sku": "widg-1-xl",
+          "name": "Widget 1 XL",
+          "description": "This is really an XL widget. There are many like it, but this one is mine.",
+          "shortDescription": "This is really an XL widget.",
+          "websiteIds": [websiteId],
+        },
+        "L": {
+          "sku": "widg-1-l",
+          "name": "Widget 1 L",
+          "description": "This is really an L widget. There are many like it, but this one is mine.",
+          "shortDescription": "This is really an L widget.",
+          "websiteIds": [websiteId],
         }
       }
     }
@@ -176,7 +196,9 @@ Given('I have configured a bundle widget', function() {
 })
 
 Given('a customer exists', function() {
-  cy.createCustomer({})
+  cy.createCustomer({
+    websiteId: 100,
+  })
 })
 
 When('I create an order', function() {
@@ -185,6 +207,9 @@ When('I create an order', function() {
 
   // Select customer
   cy.contains('John Doe').click()
+
+  // Select store.
+  cy.get('input#store_300').check()
 
   // Add product to order
   cy.contains('Add Products').click()

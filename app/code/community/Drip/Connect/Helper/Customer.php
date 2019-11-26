@@ -6,13 +6,15 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
      * drip actions for customer account change
      *
      * @param Mage_Customer_Model_Customer $customer
+     * @param Drip_Connect_Model_Configuration $config
      * @param bool $acceptsMarketing whether the customer accepts marketing. Overrides the customer is_subscribed
      *                               record.
      * @param string $event The updated/created/deleted event.
      * @param bool $forceStatus Whether the customer has changed marketing preferences which should be synced to Drip.
      */
     public function proceedAccount(
-        $customer,
+        Mage_Customer_Model_Customer $customer,
+        Drip_Connect_Model_Configuration $config,
         $acceptsMarketing = null,
         $event = Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED,
         $forceStatus = false
@@ -22,18 +24,33 @@ class Drip_Connect_Helper_Customer extends Mage_Core_Helper_Abstract
             $this->getLogger()->log("Skipping guest subscriber update due to unusable email", Zend_Log::NOTICE);
             return;
         }
-
         $customerData = Drip_Connect_Helper_Data::prepareCustomerData($customer, true, $forceStatus, $acceptsMarketing);
+        $subscriberRequest = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateSubscriber($customerData, $config);
+        $subscriberRequest->call();
+        $apiCall = new Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent($config, array(
+            'email' => $customer->getEmail(),
+            'action' => $event,
+        ));
+        $response = $apiCall->call();
+    }
 
-        Mage::getModel('drip_connect/ApiCalls_Helper_CreateUpdateSubscriber', $customerData)->call();
+    /**
+     * Gets the first store when a customer is in website scope.
+     * @param Mage_Customer_Model_Customer $customer
+     * @return string Store ID
+     */
+    public function getCustomerStoreId(Mage_Customer_Model_Customer $customer) {
+        // Pilfered/adapted from Mage_Customer_Model_Customer#_getWebsiteStoreId
 
-        $response = Mage::getModel(
-            'drip_connect/ApiCalls_Helper_RecordAnEvent',
-            array(
-                'email' => $customer->getEmail(),
-                'action' => $event,
-            )
-        )->call();
+        $storeId = $customer->getStoreId();
+        // When the store ID is null or admin, just get the first one for the website.
+        if ((int)$storeId === 0) {
+            $storeIds = Mage::app()->getWebsite($customer->getWebsiteId())->getStoreIds();
+            reset($storeIds);
+            $storeId = current($storeIds);
+        }
+
+        return $storeId;
     }
 
     /**

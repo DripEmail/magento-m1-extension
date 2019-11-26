@@ -1,6 +1,6 @@
 <?php
 
-class Drip_Connect_Model_Observer_Order_BeforeSave extends Drip_Connect_Model_Observer_Base
+class Drip_Connect_Model_Observer_Order_BeforeSave extends Drip_Connect_Model_Observer_Order_OrderBase
 {
     /**
      * store some current params we may need to compare with themselves later

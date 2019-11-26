@@ -1,15 +1,17 @@
 <?php
 class Drip_Connect_Model_Http_Client extends Zend_Http_Client
 {
-
     /** @var Zend_Log */
     protected $_logger;
 
-    public function __construct($args)
+    /**
+     * @param string $uri
+     * @param array $config
+     * @param Zend_Log $logger
+     */
+    public function __construct($uri, array $config, Zend_Log $logger)
     {
-        $uri = isset($args['uri']) ? $args['uri'] : null;
-        $config = isset($args['config']) ? $args['config'] : null;
-        $this->_logger = isset($args['logger']) ? $args['logger'] : null;
+        $this->_logger = $logger;
         parent::__construct($uri, $config);
     }
 

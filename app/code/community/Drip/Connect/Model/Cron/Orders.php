@@ -12,7 +12,9 @@ class Drip_Connect_Model_Cron_Orders
      */
     public function syncOrders()
     {
-        ini_set('memory_limit', Mage::getStoreConfig('dripconnect_general/api_settings/memory_limit'));
+        $globalConfig = Drip_Connect_Model_Configuration::forGlobalScope();
+
+        ini_set('memory_limit', $globalConfig->getMemoryLimit());
 
         Mage::app()->setCurrentStore('default');
 
@@ -20,15 +22,14 @@ class Drip_Connect_Model_Cron_Orders
         $stores = Mage::app()->getStores(false, false);
 
         $trackDefaultStatus = false;
-        if (Mage::getStoreConfig('dripconnect_general/actions/sync_orders_data_state', 0)
-                == Drip_Connect_Model_Source_SyncState::QUEUED) {
+        if ($globalConfig->getOrdersSyncState() == Drip_Connect_Model_Source_SyncState::QUEUED) {
             $trackDefaultStatus = true;
             $storeIds = array_keys($stores);
-            Mage::helper('drip_connect')->setOrdersSyncStateToStore(0, Drip_Connect_Model_Source_SyncState::PROGRESS);
+            $globalConfig->setOrdersSyncState(Drip_Connect_Model_Source_SyncState::PROGRESS);
         } else {
             foreach ($stores as $storeId => $store) {
-                if (Mage::getStoreConfig('dripconnect_general/actions/sync_orders_data_state', $storeId)
-                        == Drip_Connect_Model_Source_SyncState::QUEUED) {
+                $storeConfig = new Drip_Connect_Model_Configuration($storeId);
+                if ($storeConfig->getOrdersSyncState() == Drip_Connect_Model_Source_SyncState::QUEUED) {
                     $storeIds[] = $storeId;
                 }
             }
@@ -36,12 +37,13 @@ class Drip_Connect_Model_Cron_Orders
 
         $statuses = array();
         foreach ($storeIds as $storeId) {
-            if (! Mage::getStoreConfig('dripconnect_general/module_settings/is_enabled', $storeId)) {
+            $storeConfig = new Drip_Connect_Model_Configuration($storeId);
+            if (!$storeConfig->isEnabled()) {
                 continue;
             }
 
             try {
-                $result = $this->syncOrdersForStore($storeId);
+                $result = $this->syncOrdersForStore($storeConfig);
             } catch (\Exception $e) {
                 $this->getLogger()->log($e->__toString(), Zend_Log::ERR);
                 $result = false;
@@ -55,7 +57,7 @@ class Drip_Connect_Model_Cron_Orders
 
             $statuses[$storeId] = $status;
 
-            Mage::helper('drip_connect')->setOrdersSyncStateToStore($storeId, $status);
+            $storeConfig->setOrdersSyncState($status);
         }
 
         if ($trackDefaultStatus) {
@@ -69,21 +71,18 @@ class Drip_Connect_Model_Cron_Orders
                 $status = Drip_Connect_Model_Source_SyncState::READYERRORS;
             }
 
-            Mage::helper('drip_connect')->setOrdersSyncStateToStore(0, $status);
+            $globalConfig->setOrdersSyncState($status);
         }
     }
 
     /**
-     * @param int $storeId
+     * @param Drip_Connect_Model_Configuration $config
      *
      * @return bool
      */
-    protected function syncOrdersForStore($storeId)
+    protected function syncOrdersForStore(Drip_Connect_Model_Configuration $config)
     {
-        Mage::helper('drip_connect')->setOrdersSyncStateToStore(
-            $storeId,
-            Drip_Connect_Model_Source_SyncState::PROGRESS
-        );
+        $config->setOrdersSyncState(Drip_Connect_Model_Source_SyncState::PROGRESS);
 
         $result = true;
         $page = 1;
@@ -100,7 +99,7 @@ class Drip_Connect_Model_Cron_Orders
                         )
                     )
                 )
-                ->addFieldToFilter('store_id', $storeId)
+                ->addFieldToFilter('store_id', $config->getStoreId())
                 ->setPageSize(Drip_Connect_Model_ApiCalls_Helper::MAX_BATCH_SIZE)
                 ->setCurPage($page++)
                 ->load();
@@ -108,7 +107,7 @@ class Drip_Connect_Model_Cron_Orders
             $batch = array();
             foreach ($collection as $order) {
                 if (Mage::helper('drip_connect/order')->isCanBeSent($order)) {
-                    $data = Mage::helper('drip_connect/order')->getOrderDataNew($order);
+                    $data = Mage::helper('drip_connect/order')->getOrderDataNew($order, $config);
                     $data['occurred_at'] = Mage::helper('drip_connect')->formatDate($order->getCreatedAt());
                     $batch[] = $data;
                 } else {
@@ -123,13 +122,8 @@ class Drip_Connect_Model_Cron_Orders
             }
 
             if (!empty($batch)) {
-                $response = Mage::getModel(
-                    'drip_connect/ApiCalls_Helper_Batches_Orders',
-                    array(
-                        'batch' => $batch,
-                        'store_id' => $storeId,
-                    )
-                )->call();
+                $apiCall = new Drip_Connect_Model_ApiCalls_Helper_Batches_Orders($config, $batch);
+                $response = $apiCall->call();
 
                 if (empty($response) || $response->getResponseCode() != 202) { // drip success code for this action
                     $result = false;

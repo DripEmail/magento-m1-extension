@@ -1,6 +1,6 @@
 <?php
 
-class Drip_Connect_Model_Observer_Customer_BeforeSave extends Drip_Connect_Model_Observer_Base
+class Drip_Connect_Model_Observer_Customer_BeforeSave extends Drip_Connect_Model_Observer_Customer_AdminBase
 {
     /**
      * - check if customer new

@@ -1,6 +1,6 @@
 <?php
 
-class Drip_Connect_Model_Observer_Customer_AfterDelete extends Drip_Connect_Model_Observer_Base
+class Drip_Connect_Model_Observer_Customer_AfterDelete extends Drip_Connect_Model_Observer_Customer_AdminBase
 {
     /**
      * @param Varien_Event_Observer $observer
@@ -18,12 +18,12 @@ class Drip_Connect_Model_Observer_Customer_AfterDelete extends Drip_Connect_Mode
      */
     protected function proceedAccountDelete($customer)
     {
-        $response = Mage::getModel(
-            'drip_connect/ApiCalls_Helper_RecordAnEvent',
-            array(
-                'email' => $customer->getEmail(),
-                'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_DELETED,
-            )
-        )->call();
+        $storeId = Mage::helper('drip_connect/customer')->getCustomerStoreId($customer);
+        $config = new Drip_Connect_Model_Configuration($storeId);
+        $apiCall = new Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent($config, array(
+            'email' => $customer->getEmail(),
+            'action' => Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_DELETED,
+        ));
+        $response = $apiCall->call();
     }
 }
