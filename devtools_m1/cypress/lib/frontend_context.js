@@ -16,6 +16,10 @@ function getCurrentFrontendWebsiteId() {
   return mapFrontendWebsiteId(currentSite)
 }
 
+function getCurrentFrontendStoreViewId() {
+  return mapFrontendStoreViewId(currentSite)
+}
+
 function mapFrontendWebsiteId(site) {
   let websiteId = 1
   switch (site) {
@@ -23,7 +27,7 @@ function mapFrontendWebsiteId(site) {
       websiteId = 1
       break
     case 'site1':
-      websiteId = 2
+      websiteId = 100
       break
     default:
       throw `Unexpected site name ${site}`
@@ -31,6 +35,7 @@ function mapFrontendWebsiteId(site) {
 
   return websiteId
 }
+
 
 function mapFrontendStoreId(site) {
   let storeId = 0
@@ -44,8 +49,22 @@ function mapFrontendStoreId(site) {
     default:
       throw `Unexpected site name ${site}`
   }
-
   return storeId
 }
 
-export { setCurrentFrontendSite, getCurrentFrontendSite, getCurrentFrontendDomain, getCurrentFrontendWebsiteId, mapFrontendWebsiteId, mapFrontendStoreId }
+function mapFrontendStoreViewId(site) {
+  let storeViewId = 1
+  switch (site) {
+    case 'main':
+      storeViewId = 1
+      break
+    case 'site1':
+      storeViewId = 300
+      break
+    default:
+      throw `Unexpected site name ${site}`
+  }
+  return storeViewId
+}
+
+export { setCurrentFrontendSite, getCurrentFrontendSite, getCurrentFrontendDomain, getCurrentFrontendWebsiteId, getCurrentFrontendStoreViewId, mapFrontendWebsiteId, mapFrontendStoreId }

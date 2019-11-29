@@ -3,21 +3,16 @@
 class Drip_Connect_Model_ApiCalls_Helper_Batches_Events
     extends Drip_Connect_Model_ApiCalls_Helper
 {
-    public function __construct($data = null)
+    /**
+     * @param Drip_Connect_Model_Configuration $config
+     * @param array $batch
+     */
+    public function __construct(Drip_Connect_Model_Configuration $config, array $batch)
     {
-        $storeId = (int) $data['store_id'];
-        $accountId = Mage::getStoreConfig('dripconnect_general/api_settings/account_id', $storeId);
-
-        $this->apiClient = Mage::getModel(
-            'drip_connect/ApiCalls_Base',
-            array(
-                'endpoint' => $accountId.'/'.self::ENDPOINT_BATCH_EVENTS,
-                'store_id' => $storeId,
-            )
-        );
+        $this->apiClient = new Drip_Connect_Model_ApiCalls_Base($config, $config->getAccountId().'/'.self::ENDPOINT_BATCH_EVENTS);
 
         $eventsInfo = array(
-            'events' => $data['batch']
+            'events' => $batch
         );
         $batchesInfo = array(
             'batches' => array(
@@ -30,5 +25,3 @@ class Drip_Connect_Model_ApiCalls_Helper_Batches_Events
             ->setRawData(json_encode($batchesInfo));
     }
 }
-
-

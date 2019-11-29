@@ -7,17 +7,13 @@ class Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote
     const QUOTE_NEW = 'created';
     const QUOTE_CHANGED = 'updated';
 
-    public function __construct($data = null)
+    /**
+     * @param Drip_Connect_Model_Configuration $config
+     * @param array $data
+     */
+    public function __construct(Drip_Connect_Model_Configuration $config, array $data)
     {
-        $this->apiClient = Mage::getModel(
-            'drip_connect/ApiCalls_Base',
-            array(
-                'endpoint' => Mage::getStoreConfig(
-                    'dripconnect_general/api_settings/account_id'
-                ).'/'.self::ENDPOINT_CART,
-                'v3' => true,
-            )
-        );
+        $this->apiClient = new Drip_Connect_Model_ApiCalls_Base($config, $config->getAccountId().'/'.self::ENDPOINT_CART, true);
 
         if (!empty($data) && is_array($data)) {
             $data['version'] = 'Magento ' . Mage::getVersion() . ', '

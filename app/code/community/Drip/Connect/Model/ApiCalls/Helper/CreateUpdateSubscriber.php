@@ -3,17 +3,13 @@
 class Drip_Connect_Model_ApiCalls_Helper_CreateUpdateSubscriber
     extends Drip_Connect_Model_ApiCalls_Helper
 {
-    public function __construct($data = null)
+    /**
+     * @param object $data
+     * @param Drip_Connect_Model_Configuration $config
+     */
+    public function __construct($data, Drip_Connect_Model_Configuration $config)
     {
-        $this->apiClient = Mage::getModel(
-            'drip_connect/ApiCalls_Base',
-            array(
-                'endpoint' => Mage::getStoreConfig(
-                    'dripconnect_general/api_settings/account_id'
-                ).'/'.self::ENDPOINT_SUBSCRIBERS,
-            )
-        );
-
+        $this->apiClient = new Drip_Connect_Model_ApiCalls_Base($config, $config->getAccountId().'/'.self::ENDPOINT_SUBSCRIBERS);
         $subscriberInfo = array(
             'subscribers' => array(
                 $data
@@ -24,5 +20,3 @@ class Drip_Connect_Model_ApiCalls_Helper_CreateUpdateSubscriber
             ->setRawData(json_encode($subscriberInfo));
     }
 }
-
-

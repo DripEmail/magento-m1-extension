@@ -3,22 +3,16 @@
 class Drip_Connect_Model_ApiCalls_Helper_Batches_Orders
     extends Drip_Connect_Model_ApiCalls_Helper
 {
-    public function __construct($data = null)
+    /**
+     * @param Drip_Connect_Model_Configuration $config
+     * @param array $batch
+     */
+    public function __construct(Drip_Connect_Model_Configuration $config, array $batch)
     {
-        $storeId = (int) $data['store_id'];
-        $accountId = Mage::getStoreConfig('dripconnect_general/api_settings/account_id', $storeId);
-
-        $this->apiClient = Mage::getModel(
-            'drip_connect/ApiCalls_Base',
-            array(
-                'endpoint' => $accountId.'/'.self::ENDPOINT_BATCH_ORDERS,
-                'store_id' => $storeId,
-                'v3' => true,
-            )
-        );
+        $this->apiClient = new Drip_Connect_Model_ApiCalls_Base($config, $config->getAccountId().'/'.self::ENDPOINT_BATCH_ORDERS, true);
 
         $ordersInfo = array(
-            'orders' => $data['batch']
+            'orders' => $batch
         );
 
         $this->request = Mage::getModel('drip_connect/ApiCalls_Request_Base')

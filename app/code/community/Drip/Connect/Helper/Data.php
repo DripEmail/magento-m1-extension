@@ -12,16 +12,16 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return bool
      */
-    public function isModuleActive()
+    public function isModuleActive($store = null)
     {
-        if (!empty(Mage::app()->getRequest()->getParam('store'))) {
-            return (bool)Mage::getStoreConfig(
-                'dripconnect_general/module_settings/is_enabled',
-                Mage::app()->getRequest()->getParam('store')
-            );
+        // TODO: Refactor this method away by using the config object at all the call sites.
+        if (empty($store)) {
+            $config = Drip_Connect_Model_Configuration::forCurrentStoreParam();
+        } else {
+            $config = new Drip_Connect_Model_Configuration($store);
         }
 
-        return (bool)Mage::getStoreConfig('dripconnect_general/module_settings/is_enabled');
+        return $config->isEnabled();
     }
 
     /**
@@ -98,7 +98,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
                 'magento_account_created' => $customer->getCreatedAt(),
                 'magento_customer_group' => Mage::getModel('customer/group')->load($customer->getGroupId())
                                                                             ->getCustomerGroupCode(),
-                'magento_store' => $customer->getStoreId(),
+                'magento_store' => Mage::helper('drip_connect/customer')->getCustomerStoreId($customer),
                 'accepts_marketing' => ($status ? 'yes' : 'no'),
             ),
         );
@@ -261,54 +261,6 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * @param int $storeId
-     * @param int $state
-     */
-    public function setCustomersSyncStateToStore($storeId, $state)
-    {
-        if (empty($storeId)) {
-            Mage::getConfig()->saveConfig(
-                'dripconnect_general/actions/sync_customers_data_state',
-                $state
-            );
-            $storeId = null;
-        } else {
-            Mage::getConfig()->saveConfig(
-                'dripconnect_general/actions/sync_customers_data_state',
-                $state,
-                'stores',
-                $storeId
-            );
-        }
-
-        Mage::app()->getStore($storeId)->resetConfig();
-    }
-
-    /**
-     * @param int $storeId
-     * @param int $state
-     */
-    public function setOrdersSyncStateToStore($storeId, $state)
-    {
-        if (empty($storeId)) {
-            Mage::getConfig()->saveConfig(
-                'dripconnect_general/actions/sync_orders_data_state',
-                $state
-            );
-            $storeId = null;
-        } else {
-            Mage::getConfig()->saveConfig(
-                'dripconnect_general/actions/sync_orders_data_state',
-                $state,
-                'stores',
-                $storeId
-            );
-        }
-
-        Mage::app()->getStore($storeId)->resetConfig();
-    }
-
-    /**
      * @param string $date
      */
     public function formatDate($date)
@@ -324,7 +276,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     protected function getSalt()
     {
-        $salt = Mage::getStoreConfig('dripconnect_general/module_settings/salt');
+        $salt = Drip_Connect_Model_Configuration::forGlobalScope()->getSalt();
         if (empty(trim($salt))) {
             $salt = self::SALT;
         }
