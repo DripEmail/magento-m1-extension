@@ -88,8 +88,6 @@ Feature: Customer Cart Interactions
       And I have configured Drip to be enabled for 'Main Website'
       And I have configured a simple widget for 'main'
     When I open the 'main' homepage
-      And I create an account
-      And I add a 'simple' widget to my cart
       And I logout
       And I add a 'simple' widget to my cart
       And I check out as a guest
