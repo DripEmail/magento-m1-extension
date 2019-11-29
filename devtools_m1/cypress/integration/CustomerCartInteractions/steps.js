@@ -267,6 +267,39 @@ When('I check out', function() {
   cy.contains('Your order has been received')
 })
 
+When('I check out as a guest', function() {
+  cy.log('Resetting mocks')
+  cy.wrap(Mockclient.reset())
+
+  cy.contains('Proceed to Checkout').click()
+
+  cy.contains('Continue').click()
+
+  cy.get('input[id="billing:firstname"]').type('Test')
+  cy.get('input[id="billing:lastname"]').type('User')
+  cy.get('input[id="billing:email"]').type('testuser@example.com')
+  cy.get('input[name="billing[street][]"]:first').type('123 Main St.')
+  cy.get('input[name="billing[city]"]').type('Centerville')
+  cy.get('select[name="billing[region_id]"]').select('Minnesota')
+  cy.get('input[name="billing[postcode]"]').type('12345')
+  cy.get('input[name="billing[telephone]"]').type('999-999-9999')
+  cy.get('input[id="billing:use_for_shipping_yes"]').check()
+  cy.get('button[onclick="billing.save()"]').click()
+
+  cy.contains('Flat Rate')
+  cy.get('#shipping-method-buttons-container').contains('Continue').click()
+
+  cy.contains('Check / Money order')
+  cy.get('#checkout-step-payment').contains('Continue').click()
+
+  cy.contains('Place Order').click()
+  cy.contains('Your order has been received')
+})
+
+When('I logout', function() {
+  cy.visit('/customer/account/logout')
+})
+
 function basicOrderBodyAssertions(body) {
   const storeViewId = getCurrentFrontendStoreViewId()
 
