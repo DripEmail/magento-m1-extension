@@ -26,7 +26,7 @@ Feature: Customer Cart Interactions
 
     Scenario: A customer adds a configurable product where the sub-item is not individually visible
       Given I am logged into the admin interface
-        And I have configured Drip to be enabled for 'main'
+        And I have configured Drip to be enabled for 'Main Website'
         And I have configured a configurable widget with an invisible child
       When I open the 'main' homepage
         And I create an account
