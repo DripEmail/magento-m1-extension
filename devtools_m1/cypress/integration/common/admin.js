@@ -102,10 +102,7 @@ Given('I have configured a configurable widget', function() {
   })
 })
 
-<<<<<<< HEAD
-// Configurable Product
-Given('I have configured a configurable widget with an invisible child', function() {
-=======
+
 // TODO: Consider merging this and the above.
 Given('I have configured a configurable widget for website {string}', function(site) {
   const websiteId = mapFrontendWebsiteId(site)
@@ -115,9 +112,7 @@ Given('I have configured a configurable widget for website {string}', function(s
     "name": "Widget 1",
     "description": "This is really a widget. There are many like it, but this one is mine.",
     "shortDescription": "This is really a widget.",
-    "image": "parent_image.png",
     "typeId": "configurable",
-    "child_visibility": 4, // not visible in either seach or catalog
     "typeId": "configurable",
     "websiteIds": [websiteId],
     "attributes": {
@@ -135,6 +130,35 @@ Given('I have configured a configurable widget for website {string}', function(s
           "description": "This is really an L widget. There are many like it, but this one is mine.",
           "shortDescription": "This is really an L widget.",
           "websiteIds": [websiteId]
+        }
+      }
+    }
+  })
+})
+
+Given('I have configured a configurable widget with an invisible child', function() {
+  cy.createProduct({
+    "sku": "widg-1",
+    "name": "Widget 1",
+    "description": "This is really a widget. There are many like it, but this one is mine.",
+    "shortDescription": "This is really a widget.",
+    "image": "parent_image.png",
+    "typeId": "configurable",
+    "child_visibility": 4, // not visible in either seach or catalog
+    "typeId": "configurable",
+    "attributes": {
+      "widget_size": {
+        "XL": {
+          "sku": "widg-1-xl",
+          "name": "Widget 1 XL",
+          "description": "This is really an XL widget. There are many like it, but this one is mine.",
+          "shortDescription": "This is really an XL widget."
+        },
+        "L": {
+          "sku": "widg-1-l",
+          "name": "Widget 1 L",
+          "description": "This is really an L widget. There are many like it, but this one is mine.",
+          "shortDescription": "This is really an L widget."
         }
       }
     }
