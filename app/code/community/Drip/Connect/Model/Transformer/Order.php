@@ -1,39 +1,56 @@
 <?php
 
-class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
+class Drip_Connect_Model_Transformer_Order
 {
     const FULFILLMENT_NO = 'not_fulfilled';
     const FULFILLMENT_PARTLY = 'partially_fulfilled';
     const FULFILLMENT_YES = 'fulfilled';
 
     /**
-     * prepare array of order data
-     *
+     * @var Mage_Sales_Model_Order $order
+     */
+    protected $order;
+
+    /**
+     * @var Drip_Connect_Model_Configuration $config
+     */
+    protected $config;
+
+    /**
      * @param Mage_Sales_Model_Order $order
      * @param Drip_Connect_Model_Configuration $config
+     */
+    function __construct(Mage_Sales_Model_Order $order, Drip_Connect_Model_Configuration $config)
+    {
+        $this->order = $order;
+        $this->config = $config;
+    }
+
+    /**
+     * prepare array of order data
      *
      * @return array
      */
-    protected function getCommonOrderData(Mage_Sales_Model_Order $order, Drip_Connect_Model_Configuration $config)
+    protected function getCommonOrderData()
     {
-        $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($order->getCustomerEmail());
+        $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($this->order->getCustomerEmail());
 
         $data = array(
             'provider' => (string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
-            'email' => (string) $order->getCustomerEmail(),
+            'email' => (string) $this->order->getCustomerEmail(),
             'initial_status' => ($subscriber->isSubscribed() ? 'active' : 'unsubscribed'),
-            'order_id' => (string) $order->getIncrementId(),
-            'order_public_id' => (string) $order->getIncrementId(),
-            'grand_total' => Mage::helper('drip_connect')->priceAsCents($order->getGrandTotal()) / 100,
-            'total_discounts' => Mage::helper('drip_connect')->priceAsCents($order->getDiscountAmount()) / 100,
-            'total_taxes' => Mage::helper('drip_connect')->priceAsCents($order->getTaxAmount()) / 100,
-            'total_shipping' => Mage::helper('drip_connect')->priceAsCents($order->getShippingAmount()) / 100,
-            'currency' => (string) $order->getOrderCurrencyCode(),
-            'occurred_at' => (string) Mage::helper('drip_connect')->formatDate($order->getUpdatedAt()),
-            'items' => $this->getOrderItemsData($order, $config),
-            'billing_address' => $this->getOrderBillingData($order),
-            'shipping_address' => $this->getOrderShippingData($order),
-            'items_count' => floatval($order->getTotalQtyOrdered()),
+            'order_id' => (string) $this->order->getIncrementId(),
+            'order_public_id' => (string) $this->order->getIncrementId(),
+            'grand_total' => Mage::helper('drip_connect')->priceAsCents($this->order->getGrandTotal()) / 100,
+            'total_discounts' => Mage::helper('drip_connect')->priceAsCents($this->order->getDiscountAmount()) / 100,
+            'total_taxes' => Mage::helper('drip_connect')->priceAsCents($this->order->getTaxAmount()) / 100,
+            'total_shipping' => Mage::helper('drip_connect')->priceAsCents($this->order->getShippingAmount()) / 100,
+            'currency' => (string) $this->order->getOrderCurrencyCode(),
+            'occurred_at' => (string) Mage::helper('drip_connect')->formatDate($this->order->getUpdatedAt()),
+            'items' => $this->getOrderItemsData(),
+            'billing_address' => $this->getOrderBillingData(),
+            'shipping_address' => $this->getOrderShippingData(),
+            'items_count' => floatval($this->order->getTotalQtyOrdered()),
             'magento_source' => (string) Mage::helper('drip_connect')->getArea(),
         );
 
@@ -43,14 +60,11 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     /**
      * prepare array of order data we use to send in drip for new orders
      *
-     * @param Mage_Sales_Model_Order $order
-     * @param Mage_Sales_Model_Order $config
-     *
      * @return array
      */
-    public function getOrderDataNew(Mage_Sales_Model_Order $order, Drip_Connect_Model_Configuration $config)
+    public function getOrderDataNew()
     {
-        $data = $this->getCommonOrderData($order, $config);
+        $data = $this->getCommonOrderData();
         $data['action'] = (string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_NEW;
 
         return $data;
@@ -59,14 +73,11 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     /**
      * prepare array of order data we use to send in drip for full/partly completed orders
      *
-     * @param Mage_Sales_Model_Order $order
-     * @param Drip_Connect_Model_Configuration $config
-     *
      * @return array
      */
-    public function getOrderDataCompleted(Mage_Sales_Model_Order $order, Drip_Connect_Model_Configuration $config)
+    public function getOrderDataCompleted()
     {
-        $data = $this->getCommonOrderData($order, $config);
+        $data = $this->getCommonOrderData();
         $data['action'] = (string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_FULFILL;
 
         return $data;
@@ -75,14 +86,11 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     /**
      * prepare array of order data we use to send in drip for canceled orders
      *
-     * @param Mage_Sales_Model_Order $order
-     * @param Drip_Connect_Model_Configuration $config
-     *
      * @return array
      */
-    public function getOrderDataCanceled(Mage_Sales_Model_Order $order, Drip_Connect_Model_Configuration $config)
+    public function getOrderDataCanceled()
     {
-        $data = $this->getCommonOrderData($order, $config);
+        $data = $this->getCommonOrderData();
         $data['action'] = (string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_CANCEL;
 
         return $data;
@@ -91,25 +99,24 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     /**
      * prepare array of order data we use to send in drip for full/partly refunded orders
      *
-     * @param Mage_Sales_Model_Order $order
      * @param int $refundValue
      *
      * @return array
      */
-    public function getOrderDataRefund($order, $refundValue)
+    public function getOrderDataRefund($refundValue)
     {
-        $refunds = $order->getCreditmemosCollection();
+        $refunds = $this->order->getCreditmemosCollection();
         $refundId = $refunds->getLastItem()->getIncrementId();
 
         $data = array(
             'provider' => (string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
-            'email' => (string) $order->getCustomerEmail(),
+            'email' => (string) $this->order->getCustomerEmail(),
             'action' => (string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_REFUND,
-            'order_id' => (string) $order->getIncrementId(),
-            'order_public_id' => (string) $order->getIncrementId(),
-            'grand_total' => Mage::helper('drip_connect')->priceAsCents($order->getGrandTotal()) / 100,
+            'order_id' => (string) $this->order->getIncrementId(),
+            'order_public_id' => (string) $this->order->getIncrementId(),
+            'grand_total' => Mage::helper('drip_connect')->priceAsCents($this->order->getGrandTotal()) / 100,
             'refund_amount' => $refundValue / 100,
-            'occurred_at' => (string) Mage::helper('drip_connect')->formatDate($order->getUpdatedAt()),
+            'occurred_at' => (string) Mage::helper('drip_connect')->formatDate($this->order->getUpdatedAt()),
         );
 
         return $data;
@@ -118,14 +125,11 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     /**
      * prepare array of order data we use to send in drip for all other states
      *
-     * @param Mage_Sales_Model_Order $order
-     * @param Drip_Connect_Model_Configuration $config
-     *
      * @return array
      */
-    public function getOrderDataOther(Mage_Sales_Model_Order $order, Drip_Connect_Model_Configuration $config)
+    public function getOrderDataOther()
     {
-        $data = $this->getCommonOrderData($order);
+        $data = $this->getCommonOrderData();
         $data['action'] = (string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_CHANGE;
 
         return $data;
@@ -134,17 +138,15 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     /**
      * check fullfilment state of an order
      *
-     * @param Mage_Sales_Model_Order $order
-     *
      * @return string
      */
-    protected function getOrderFulfillment($order)
+    protected function getOrderFulfillment()
     {
-        if ($order->getState() == Mage_Sales_Model_Order::STATE_COMPLETE) {
+        if ($this->order->getState() == Mage_Sales_Model_Order::STATE_COMPLETE) {
             return self::FULFILLMENT_YES;
         }
 
-        foreach ($order->getAllItems() as $item) {
+        foreach ($this->order->getAllItems() as $item) {
             if ($item->getStatus() == 'Shipped') {
                 return self::FULFILLMENT_PARTLY;
             }
@@ -156,13 +158,11 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     /**
      * get order's billing address data
      *
-     * @param Mage_Sales_Model_Order $order
-     *
      * @return array
      */
-    protected function getOrderBillingData($order)
+    protected function getOrderBillingData()
     {
-        $addressId = $order->getBillingAddressId();
+        $addressId = $this->order->getBillingAddressId();
 
         return $this->getOrderAddressData($addressId);
     }
@@ -170,13 +170,11 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     /**
      * get order's shipping address data
      *
-     * @param Mage_Sales_Model_Order $order
-     *
      * @return array
      */
-    protected function getOrderShippingData($order)
+    protected function getOrderShippingData()
     {
-        $addressId = $order->getShippingAddressId();
+        $addressId = $this->order->getShippingAddressId();
 
         return $this->getOrderAddressData($addressId);
     }
@@ -209,16 +207,14 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     /**
      * get order's items data
      *
-     * @param Mage_Sales_Model_Order $order
-     * @param Drip_Connect_Model_Configuration $config
      * @param  bool $isRefund
      *
      * @return array
      */
-    protected function getOrderItemsData(Mage_Sales_Model_Order $order, Drip_Connect_Model_Configuration $config, $isRefund = false)
+    protected function getOrderItemsData($isRefund = false)
     {
         $childItems = array();
-        foreach ($order->getAllItems() as $item) {
+        foreach ($this->order->getAllItems() as $item) {
             if ($item->getParentItemId() === null) {
                 continue;
             }
@@ -227,7 +223,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
         }
 
         $data = array();
-        foreach ($order->getAllVisibleItems() as $item) {
+        foreach ($this->order->getAllVisibleItems() as $item) {
             $productVariantItem = $item;
             if ($item->getProductType() === 'configurable' && array_key_exists($item->getId(), $childItems)) {
                 $productVariantItem = $childItems[$item->getId()];
@@ -249,7 +245,7 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
             if (!empty($item->getProduct()->getId())) {
                 $product = Mage::getModel('catalog/product')->load($item->getProduct()->getId());
                 // This causes some context-based things to behave correctly. Like URLs.
-                $product->setStoreId($config->getStoreId());
+                $product->setStoreId($this->config->getStoreId());
                 $productCategoryNames = Mage::helper('drip_connect')->getProductCategoryNames($product);
                 $categories = explode(',', $productCategoryNames);
                 if ($productCategoryNames === '' || empty($categories)) {
@@ -277,12 +273,10 @@ class Drip_Connect_Helper_Order extends Mage_Core_Helper_Abstract
     /**
      * check if given order can be sent to drip
      *
-     * @param Mage_Sales_Model_Order $order
-     *
      * @return bool
      */
-    public function isCanBeSent($order)
+    public function isCanBeSent()
     {
-        return Mage::helper('drip_connect')->isEmailValid($order->getCustomerEmail());
+        return Mage::helper('drip_connect')->isEmailValid($this->order->getCustomerEmail());
     }
 }
