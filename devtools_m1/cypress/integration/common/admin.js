@@ -113,7 +113,6 @@ Given('I have configured a configurable widget for website {string}', function(s
     "description": "This is really a widget. There are many like it, but this one is mine.",
     "shortDescription": "This is really a widget.",
     "typeId": "configurable",
-    "typeId": "configurable",
     "websiteIds": [websiteId],
     "attributes": {
       "widget_size": {
