@@ -35,7 +35,7 @@ class Mage_Shell_Drip_CreateProduct extends Mage_Shell_Abstract
         }
     }
 
-    protected function buildSimpleProduct($data, $visibility = Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH) //catalog and search visibility
+    protected function buildSimpleProduct($data)
     {
         $product = Mage::getModel('catalog/product');
 
@@ -69,7 +69,7 @@ class Mage_Shell_Drip_CreateProduct extends Mage_Shell_Abstract
             $product->$methodName($value);
         }
 
-        $product->setVisibility($visibility);
+        $product->setVisibility(Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH); //catalog and search visibility
 
         return $product;
     }
@@ -108,8 +108,6 @@ class Mage_Shell_Drip_CreateProduct extends Mage_Shell_Abstract
     {
         $attributes = $data['attributes'];
         unset($data['attributes']);
-        $childVisibility = $data['child_visibility'];
-        unset($data['child_visibility']);
 
         $configProduct = $this->buildSimpleProduct($data);
         $configProduct->setStockData(array(
@@ -126,7 +124,7 @@ class Mage_Shell_Drip_CreateProduct extends Mage_Shell_Abstract
             $attributeIds[] = $attribute->getId();
 
             foreach ($attrValues as $option => $simpleProductData) {
-                $simpleProduct = $this->buildSimpleProduct($simpleProductData, $childVisibility);
+                $simpleProduct = $this->buildSimpleProduct($simpleProductData);
                 $optionId = $attribute->setStoreId(0)->getSource()->getOptionId($option);
                 $simpleProduct->setData($attrName, $optionId);
                 $simpleProduct->save();

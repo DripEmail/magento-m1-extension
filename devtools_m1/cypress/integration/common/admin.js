@@ -143,20 +143,21 @@ Given('I have configured a configurable widget with an invisible child', functio
     "shortDescription": "This is really a widget.",
     "image": "parent_image.png",
     "typeId": "configurable",
-    "child_visibility": 4, // not visible in either seach or catalog
     "attributes": {
       "widget_size": {
         "XL": {
           "sku": "widg-1-xl",
           "name": "Widget 1 XL",
           "description": "This is really an XL widget. There are many like it, but this one is mine.",
-          "shortDescription": "This is really an XL widget."
+          "shortDescription": "This is really an XL widget.",
+          "visibility": 4
         },
         "L": {
           "sku": "widg-1-l",
           "name": "Widget 1 L",
           "description": "This is really an L widget. There are many like it, but this one is mine.",
-          "shortDescription": "This is really an L widget."
+          "shortDescription": "This is really an L widget.",
+          "visibility": 4
         }
       }
     }
