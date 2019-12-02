@@ -56,11 +56,12 @@ class Drip_Connect_Block_Adminhtml_System_Config_Sync_Orders
      */
     public function isSyncAvailable()
     {
-        if (!Mage::helper('drip_connect')->isModuleActive()) {
+        $config = Drip_Connect_Model_Configuration::forCurrentStoreParam();
+        if (!$config->isEnabled()) {
             return false;
         }
 
-        $syncState = Drip_Connect_Model_Configuration::forCurrentStoreParam()->getOrdersSyncState();
+        $syncState = $config->getOrdersSyncState();
         if ($syncState != Drip_Connect_Model_Source_SyncState::READY &&
             $syncState != Drip_Connect_Model_Source_SyncState::READYERRORS) {
             return false;

@@ -33,7 +33,8 @@ abstract class Drip_Connect_Model_Observer_Base
     }
 
     protected function isActive($observer) {
-        return Mage::helper('drip_connect')->isModuleActive();
+        $config = Drip_Connect_Model_Configuration::forCurrentScope();
+        return $config->isEnabled();
     }
 
     protected function getLogger()
