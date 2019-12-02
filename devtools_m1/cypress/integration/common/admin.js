@@ -144,7 +144,6 @@ Given('I have configured a configurable widget with an invisible child', functio
     "image": "parent_image.png",
     "typeId": "configurable",
     "child_visibility": 4, // not visible in either seach or catalog
-    "typeId": "configurable",
     "attributes": {
       "widget_size": {
         "XL": {
