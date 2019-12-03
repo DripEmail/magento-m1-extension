@@ -60,6 +60,7 @@ class Mage_Shell_Drip_CreateProduct extends Mage_Shell_Abstract
                 "is_in_stock" => 1,
                 "qty" => 999
             ),
+            "visibility" => Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH, //catalog and search visibility
         );
         $fullData = array_replace_recursive($defaults, $data);
 
@@ -68,8 +69,6 @@ class Mage_Shell_Drip_CreateProduct extends Mage_Shell_Abstract
             $methodName = "set".ucfirst($key);
             $product->$methodName($value);
         }
-
-        $product->setVisibility(Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH); //catalog and search visibility
 
         return $product;
     }

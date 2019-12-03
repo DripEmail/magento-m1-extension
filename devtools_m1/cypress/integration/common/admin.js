@@ -83,6 +83,7 @@ Given('I have configured a configurable widget', function() {
     "description": "This is really a widget. There are many like it, but this one is mine.",
     "shortDescription": "This is really a widget.",
     "typeId": "configurable",
+    "image": "parent_image.png",
     "attributes": {
       "widget_size": {
         "XL": {
@@ -150,14 +151,14 @@ Given('I have configured a configurable widget with an invisible child', functio
           "name": "Widget 1 XL",
           "description": "This is really an XL widget. There are many like it, but this one is mine.",
           "shortDescription": "This is really an XL widget.",
-          "visibility": 4
+          "visibility": 1
         },
         "L": {
           "sku": "widg-1-l",
           "name": "Widget 1 L",
           "description": "This is really an L widget. There are many like it, but this one is mine.",
           "shortDescription": "This is really an L widget.",
-          "visibility": 4
+          "visibility": 1
         }
       }
     }
