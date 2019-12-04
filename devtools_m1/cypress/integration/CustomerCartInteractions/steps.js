@@ -339,10 +339,19 @@ function basicOrderBodyAssertions(body) {
 Then('A simple order event should be sent to Drip', function() {
   cy.log('Validating that the order call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
-    'path': '/v3/123456/shopper_activity/order'
+    'path': '/v3/123456/shopper_activity/(order|cart)'
   })).then(function(recordedRequests) {
-    expect(recordedRequests).to.have.lengthOf(1)
-    const body = JSON.parse(recordedRequests[0].body.string)
+    expect(recordedRequests).to.have.lengthOf(2)
+    const orderRequests = recordedRequests.filter(function(req) {
+      return req.path === '/v3/123456/shopper_activity/order';
+    })
+    const cartRequests = recordedRequests.filter(function(req) {
+      return req.path === '/v3/123456/shopper_activity/cart';
+    })
+    expect(orderRequests).to.have.lengthOf(1)
+    const body = JSON.parse(orderRequests[0].body.string)
+    const cartBody = JSON.parse(cartRequests[0].body.string)
+    expect(body.occurred_at).to.be.greaterThan(cartBody.occurred_at)
     expect(body.action).to.eq('placed')
     expect(body.email).to.eq('testuser@example.com')
     expect(body.grand_total).to.eq(16.22)
