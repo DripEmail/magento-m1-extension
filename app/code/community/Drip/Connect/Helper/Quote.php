@@ -134,8 +134,20 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
             }
 
             $productVariantItem = $item;
+            $productVariantProduct = $product;
             if ($item->getProductType() === 'configurable' && $childItems[$item->getId()]) {
                 $productVariantItem = $childItems[$item->getId()];
+                $productVariantProduct = Mage::getModel('catalog/product')->load($productVariantItem->getProduct()->getId());
+            }
+
+            $productImage = $productVariantProduct->getImage();
+
+            if (empty($productImage) || $productVariantProduct->getVisibility() == Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) {
+              $productImage = $product->getImage();
+            }
+
+            if (!empty($productImage)) {
+              $productImage = Mage::getModel('catalog/product_media_config')->getMediaUrl($productImage);
             }
 
             $group = array(
@@ -151,7 +163,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
                     (float)$item->getQty() * (float)$item->getPrice()
                 ) / 100,
                 'product_url' => $product->getProductUrl(),
-                'image_url' => Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getThumbnail()),
+                'image_url' => $productImage,
             );
 
             $data[] = $group;

@@ -8,6 +8,8 @@
 
 * Set occurred_at time for cart events based on time the relevant Quote was updated.
 
+* When a configurable product has children than are not visible individually, use the parent's url and image_url.
+
 ## 1.7.6
 
 * Fix logging on customer events.

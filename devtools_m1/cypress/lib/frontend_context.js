@@ -48,8 +48,7 @@ function mapFrontendStoreViewId(site) {
     default:
       throw `Unexpected site name ${site}`
   }
-
   return storeViewId
 }
 
-export { setCurrentFrontendSite, getCurrentFrontendSite, getCurrentFrontendDomain, getCurrentFrontendWebsiteId, getCurrentFrontendStoreViewId, mapFrontendWebsiteId }
+export { setCurrentFrontendSite, getCurrentFrontendSite, getCurrentFrontendDomain, getCurrentFrontendWebsiteId, getCurrentFrontendStoreViewId, mapFrontendWebsiteId, mapFrontendStoreViewId }
