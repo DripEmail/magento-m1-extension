@@ -57,7 +57,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
     {
         $data = $this->prepareQuoteData($quote);
         $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote::QUOTE_NEW;
-        $data['occurred_at'] = $quote->getUpdatedAt();
+        $data['occurred_at'] = (string) Mage::helper('drip_connect')->formatDate($quote->getUpdatedAt());
         if (!empty($data['items'])) {
             $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote($config, $data);
             $apiCall->call();
@@ -74,7 +74,7 @@ class Drip_Connect_Helper_Quote extends Mage_Core_Helper_Abstract
     {
         $data = $this->prepareQuoteData($quote);
         $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote::QUOTE_CHANGED;
-        $data['occurred_at'] = $quote->getUpdatedAt();
+        $data['occurred_at'] = (string) Mage::helper('drip_connect')->formatDate($quote->getUpdatedAt());
         $apiCall = new Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote($config, $data);
         $apiCall->call();
     }
