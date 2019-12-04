@@ -1,4 +1,4 @@
-<?php if (Mage::helper('drip_connect')->isModuleActive()) : ?>
+<?php if (Drip_Connect_Model_Configuration::forCurrentScope()->isEnabled()) : ?>
 <?php
     $product = Mage::registry('current_product');
     $currentPrice = Mage::helper('drip_connect')->priceAsCents($product->getFinalPrice());

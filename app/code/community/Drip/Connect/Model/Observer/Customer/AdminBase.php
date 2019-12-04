@@ -7,7 +7,8 @@ abstract class Drip_Connect_Model_Observer_Customer_AdminBase extends Drip_Conne
         $customer = $observer->getCustomer();
 
         $storeId = Mage::helper('drip_connect/customer')->getCustomerStoreId($customer);
+        $config = new Drip_Connect_Model_Configuration($storeId);
 
-        return Mage::helper('drip_connect')->isModuleActive($storeId);
+        return $config->isEnabled();
     }
 }

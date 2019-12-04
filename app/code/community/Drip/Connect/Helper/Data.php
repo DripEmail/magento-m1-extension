@@ -8,23 +8,6 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
     const SALT = 'kjs5hds%$#zgf';
 
     /**
-     * check if module active
-     *
-     * @return bool
-     */
-    public function isModuleActive($store = null)
-    {
-        // TODO: Refactor this method away by using the config object at all the call sites.
-        if (empty($store)) {
-            $config = Drip_Connect_Model_Configuration::forCurrentStoreParam();
-        } else {
-            $config = new Drip_Connect_Model_Configuration($store);
-        }
-
-        return $config->isEnabled();
-    }
-
-    /**
      * prepare array of guest subscriber data
      *
      * @param Mage_Newsletter_Model_Subscriber $subscriber

@@ -9,6 +9,7 @@ abstract class Drip_Connect_Model_Observer_Order_OrderBase extends Drip_Connect_
             return false;
         }
 
-        return Mage::helper('drip_connect')->isModuleActive($order->getStoreId());
+        $config = new Drip_Connect_Model_Configuration($order->getStoreId());
+        return $config->isEnabled();
     }
 }

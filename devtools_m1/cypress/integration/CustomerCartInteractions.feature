@@ -93,3 +93,13 @@ Feature: Customer Cart Interactions
     Then No web requests are sent
     When I check out
     Then No web requests are sent
+
+  Scenario: A customer adds a simple product to their cart, and checks out as a guest.
+    Given I am logged into the admin interface
+      And I have configured Drip to be enabled for 'Main Website'
+      And I have configured a simple widget for 'main'
+    When I open the 'main' homepage
+      And I logout
+      And I add a 'simple' widget to my cart
+      And I check out as a guest
+    Then A simple order event should be sent to Drip

@@ -303,6 +303,39 @@ When('I check out', function() {
   cy.contains('Your order has been received')
 })
 
+When('I check out as a guest', function() {
+  cy.log('Resetting mocks')
+  cy.wrap(Mockclient.reset())
+
+  cy.contains('Proceed to Checkout').click()
+
+  cy.contains('Continue').click()
+
+  cy.get('input[id="billing:firstname"]').type('Test')
+  cy.get('input[id="billing:lastname"]').type('User')
+  cy.get('input[id="billing:email"]').type('testuser@example.com')
+  cy.get('input[name="billing[street][]"]:first').type('123 Main St.')
+  cy.get('input[name="billing[city]"]').type('Centerville')
+  cy.get('select[name="billing[region_id]"]').select('Minnesota')
+  cy.get('input[name="billing[postcode]"]').type('12345')
+  cy.get('input[name="billing[telephone]"]').type('999-999-9999')
+  cy.get('input[id="billing:use_for_shipping_yes"]').check()
+  cy.get('button[onclick="billing.save()"]').click()
+
+  cy.contains('Flat Rate')
+  cy.get('#shipping-method-buttons-container').contains('Continue').click()
+
+  cy.contains('Check / Money order')
+  cy.get('#checkout-step-payment').contains('Continue').click()
+
+  cy.contains('Place Order').click()
+  cy.contains('Your order has been received')
+})
+
+When('I logout', function() {
+  cy.visit('/customer/account/logout')
+})
+
 function basicOrderBodyAssertions(body) {
   const storeViewId = getCurrentFrontendStoreViewId()
 
@@ -342,10 +375,19 @@ function basicOrderBodyAssertions(body) {
 Then('A simple order event should be sent to Drip', function() {
   cy.log('Validating that the order call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
-    'path': '/v3/123456/shopper_activity/order'
+    'path': '/v3/123456/shopper_activity/(order|cart)'
   })).then(function(recordedRequests) {
-    expect(recordedRequests).to.have.lengthOf(1)
-    const body = JSON.parse(recordedRequests[0].body.string)
+    expect(recordedRequests).to.have.lengthOf(2)
+    const orderRequests = recordedRequests.filter(function(req) {
+      return req.path === '/v3/123456/shopper_activity/order';
+    })
+    const cartRequests = recordedRequests.filter(function(req) {
+      return req.path === '/v3/123456/shopper_activity/cart';
+    })
+    expect(orderRequests).to.have.lengthOf(1)
+    const body = JSON.parse(orderRequests[0].body.string)
+    const cartBody = JSON.parse(cartRequests[0].body.string)
+    expect(body.occurred_at).to.be.greaterThan(cartBody.occurred_at)
     expect(body.action).to.eq('placed')
     expect(body.email).to.eq('testuser@example.com')
     expect(body.grand_total).to.eq(16.22)
