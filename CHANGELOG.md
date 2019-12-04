@@ -6,6 +6,8 @@
 
 * Fix events creation for a person when a product is added or removed from the wish list.
 
+* Set occurred_at time for cart events based on time the relevant Quote was updated.
+
 ## 1.7.6
 
 * Fix logging on customer events.
