@@ -25,9 +25,7 @@ class Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent
         if (!empty($data) && is_array($data)) {
             $data['properties']['source'] = 'magento';
             $data['properties']['magento_source'] = Mage::helper('drip_connect')->getArea();
-            $data['properties']['version'] = 'Magento ' . Mage::getVersion() . ', '
-                                           . 'Drip Extension '
-                                           . Mage::getConfig()->getModuleConfig('Drip_Connect')->version;
+            $data['properties']['version'] = Mage::helper('drip_connect')->getVersion();
         }
 
         $eventInfo = array(

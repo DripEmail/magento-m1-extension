@@ -16,8 +16,7 @@ class Drip_Connect_Model_ApiCalls_Helper_CreateUpdateQuote
         $this->apiClient = new Drip_Connect_Model_ApiCalls_Base($config, $config->getAccountId().'/'.self::ENDPOINT_CART, true);
 
         if (!empty($data) && is_array($data)) {
-            $data['version'] = 'Magento ' . Mage::getVersion() . ', '
-                             . 'Drip Extension ' . Mage::getConfig()->getModuleConfig('Drip_Connect')->version;
+            $data['version'] = Mage::helper('drip_connect')->getVersion();
         }
 
         $this->request = Mage::getModel('drip_connect/ApiCalls_Request_Base')
