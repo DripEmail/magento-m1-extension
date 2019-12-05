@@ -304,7 +304,7 @@ When('I check out', function() {
   cy.contains('Your order has been received')
 })
 
-When('I check out as a guest', function() {
+When('I begin check out as a guest', function() {
   cy.log('Resetting mocks')
   cy.wrap(Mockclient.reset())
 
@@ -322,8 +322,13 @@ When('I check out as a guest', function() {
   cy.get('input[name="billing[telephone]"]').type('999-999-9999')
   cy.get('input[id="billing:use_for_shipping_yes"]').check()
   cy.get('button[onclick="billing.save()"]').click()
-
   cy.contains('Flat Rate')
+})
+
+When('I complete check out as a guest', function() {
+  cy.log('Resetting mocks')
+  cy.wrap(Mockclient.reset())
+
   cy.get('#shipping-method-buttons-container').contains('Continue').click()
 
   cy.contains('Check / Money order')

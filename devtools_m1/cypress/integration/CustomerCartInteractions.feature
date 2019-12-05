@@ -101,5 +101,7 @@ Feature: Customer Cart Interactions
     When I open the 'main' homepage
       And I logout
       And I add a 'simple' widget to my cart
-      And I check out as a guest
+    When I begin check out as a guest
+    Then A simple cart event should be sent to Drip
+    When I complete check out as a guest
     Then A simple order event should be sent to Drip
