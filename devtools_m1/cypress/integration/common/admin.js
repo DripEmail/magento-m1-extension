@@ -227,9 +227,16 @@ Given('I have configured a bundle widget', function() {
   })
 })
 
-Given('a customer exists', function() {
+Given('a customer exists for website id {string}', function(websiteId) {
   cy.createCustomer({
-    websiteId: 100,
+    websiteId: websiteId,
+  })
+})
+
+Given('a different customer exists for website id {string}', function(websiteId) {
+  cy.createCustomer({
+    websiteId: websiteId,
+    email: "jd2@example.com",
   })
 })
 
