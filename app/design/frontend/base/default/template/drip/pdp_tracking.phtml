@@ -20,7 +20,7 @@
         product_url: "<?php echo $product->getProductUrl() ?>",
         image_url: "<?php echo Mage::getModel('catalog/product_media_config') ->getMediaUrl($product->getThumbnail()) ?>",
         source: "magento",
-        version: "Magento <?php echo Mage::getVersion()?>, Drip Extension <?php echo Mage::getConfig()->getModuleConfig('Drip_Connect')->version?>"
+        version: "<?php echo Mage::helper('drip_connect')->getVersion() ?>"
     }]);
     </script>
     <!-- end Drip track -->

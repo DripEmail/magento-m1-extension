@@ -320,4 +320,15 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
     {
         return !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
     }
+
+    /**
+     * get version
+     *
+     * @return string
+     */
+    public function getVersion()
+    {
+        return 'Magento ' . Mage::getVersion() . ', '
+                 . 'Drip Extension ' . Mage::getConfig()->getModuleConfig('Drip_Connect')->version;
+    }
 }
