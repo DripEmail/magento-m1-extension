@@ -6,6 +6,7 @@
 * Fix events creation for a person when a product is added or removed from the wish list.
 * Set occurred_at time for cart events based on time the relevant Quote was updated.
 * When a configurable product has children than are not visible individually, use the parent's url and image_url.
+* Only allow setting the memory limit override globally
 
 ## 1.7.6
 
