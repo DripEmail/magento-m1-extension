@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
     <name>Drip</name>
-    <version>1.7.6</version>
+    <version>1.8.0</version>
     <stability>stable</stability>
     <license>GNU Lesser General Public License 3.0</license>
     <channel>community</channel>
