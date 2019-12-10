@@ -2,6 +2,10 @@
 
 ## NEXT
 
+* Your note here!
+
+## 1.8.0
+
 * Properly support multi-site. What makes this tricky is that customers are associated with websites, whereas orders are associated with store views. When an order event occurs, the order's store view is interrogated to determine which Drip configuration should be utilized. When a frontend customer event occurs, the currently used store view is utilized; however for an admin customer event, the first store view for that website is used. This means that trying to configure Drip at a store view level when there is more than one store view per website may result in unexpected behavior.
 * Fix events creation for a person when a product is added or removed from the wish list.
 * Set occurred_at time for cart events based on time the relevant Quote was updated.
