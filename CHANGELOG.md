@@ -7,6 +7,7 @@
 * Set occurred_at time for cart events based on time the relevant Quote was updated.
 * When a configurable product has children than are not visible individually, use the parent's url and image_url.
 * Only allow setting the memory limit override globally
+* Wrap `BeforeQuoteSaved` and `AfterQuoteSaved` in a mutex to avoid an infinite loop condition triggered by OneStepCheckout.
 
 ## 1.7.6
 
