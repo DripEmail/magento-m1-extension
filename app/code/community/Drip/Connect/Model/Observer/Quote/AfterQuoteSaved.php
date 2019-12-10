@@ -12,6 +12,12 @@ class Drip_Connect_Model_Observer_Quote_AfterQuoteSaved extends Drip_Connect_Mod
             return;
         }
 
+        $mutex = new Drip_Connect_Model_RegistryMutex(Drip_Connect_Model_RegistryMutex::QUOTE_OBSERVER_MUTEX_KEY);
+        // Make sure we aren't currently processing a beforeQuoteSaved observer due to a loop.
+        if (!$mutex->checkAvailable()) {
+            return;
+        }
+
         $quote = $observer->getEvent()->getQuote();
 
         if (Mage::helper('drip_connect/quote')->isUnknownUser($quote)) {
