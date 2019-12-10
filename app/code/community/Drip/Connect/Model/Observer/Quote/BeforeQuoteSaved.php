@@ -13,6 +13,14 @@ class Drip_Connect_Model_Observer_Quote_BeforeQuoteSaved extends Drip_Connect_Mo
             return;
         }
 
+        $mutex = new Drip_Connect_Model_RegistryMutex(Drip_Connect_Model_RegistryMutex::QUOTE_OBSERVER_MUTEX_KEY);
+        if (!$mutex->checkAndSet()) {
+            // There can be an infinite loop due to loading the quote causing a
+            // write. So we use a lock around this and AfterQuoteSaved. This is
+            // especially triggered by OneStepCheckout.
+            return;
+        }
+
         if (!$quote->isObjectNew()) {
             $orig = Mage::getModel('sales/quote')->load($quote->getId());
             $data = Mage::helper('drip_connect/quote')->prepareQuoteData($orig);
@@ -33,5 +41,7 @@ class Drip_Connect_Model_Observer_Quote_BeforeQuoteSaved extends Drip_Connect_Mo
                 Mage::register(Drip_Connect_Helper_Quote::REGISTRY_KEY_IS_NEW, false);
             }
         }
+
+        $mutex->release();
     }
 }
