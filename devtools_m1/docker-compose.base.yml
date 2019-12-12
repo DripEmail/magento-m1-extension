@@ -14,18 +14,23 @@ services:
       - type: bind
         source: './../app/code/community/Drip/Connect'
         target: /var/www/html/magento/app/code/community/Drip/Connect
+        consistency: cached
       - type: bind
         source: './../app/etc/modules/Drip_Connect.xml'
         target: /var/www/html/magento/app/etc/modules/Drip_Connect.xml
+        consistency: cached
       - type: bind
         source: './../app/design/adminhtml/default/default/template/drip'
         target: /var/www/html/magento/app/design/adminhtml/default/default/template/drip
+        consistency: cached
       - type: bind
         source: './../app/design/frontend/base/default/layout/drip'
         target: /var/www/html/magento/app/design/frontend/base/default/layout/drip
+        consistency: cached
       - type: bind
         source: './../app/design/frontend/base/default/template/drip'
         target: /var/www/html/magento/app/design/frontend/base/default/template/drip
+        consistency: cached
   db:
     image: mysql:5.7.27
     environment:

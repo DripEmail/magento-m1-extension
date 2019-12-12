@@ -1,35 +1,45 @@
 FROM ubuntu:19.04
 
+
 ENV DEBIAN_FRONTEND=noninteractive
 
-# https://itsecureadmin.com/2018/03/running-apache-2-under-ubuntu-16-04-on-docker/
-ENV APACHE_RUN_USER  www-data
-ENV APACHE_RUN_GROUP www-data
-ENV APACHE_LOG_DIR   /var/log/apache2
-ENV APACHE_PID_FILE  /var/run/apache2/apache2.pid
-ENV APACHE_RUN_DIR   /var/run/apache2
-ENV APACHE_LOCK_DIR  /var/lock/apache2
-RUN mkdir -p $APACHE_RUN_DIR $APACHE_LOCK_DIR $APACHE_LOG_DIR
-
-RUN apt-get update && apt-get install -y software-properties-common git wget
+RUN apt update && apt install -y software-properties-common git wget curl gnupg2 ca-certificates lsb-release vim nginx fcgiwrap unzip net-tools make
 RUN add-apt-repository ppa:ondrej/php
-RUN add-apt-repository ppa:ondrej/apache2
-RUN apt-get update && apt-get install -y php5.6 apache2 php5.6-curl php5.6-dom php5.6-gd php5.6-iconv php5.6-mcrypt php5.6-pdo php5.6-simplexml php5.6-soap php5.6-mbstring php5.6-pdo-mysql
-RUN a2enmod rewrite
+RUN apt install -y php5.6 php5.6-curl php5.6-dom php5.6-gd php5.6-iconv php5.6-mcrypt php5.6-pdo php5.6-simplexml php5.6-soap php5.6-mbstring php5.6-pdo-mysql php5.6-fpm php5.6-dev
+RUN apt purge --assume-yes apache2
+RUN service nginx stop;service php5.6-fpm stop;echo "nginx and php-fpm stopped"
+# https://github.com/nginxinc/docker-nginx/blob/8921999083def7ba43a06fabd5f80e4406651353/mainline/jessie/Dockerfile#L21-L23
+RUN ln -sf /dev/stdout /var/log/nginx/magento-access.log && ln -sf /dev/stderr /var/log/nginx/magento-error.log
 
-RUN echo "ErrorLog /dev/stderr\nCustomLog /dev/stdout combined\n<VirtualHost *:80>\nServerAdmin webmaster@localhost\nDocumentRoot /var/www/html/magento\n<Directory /var/www/html/magento>\nAllowOverride All\n</Directory>\n</VirtualHost>" > /etc/apache2/sites-enabled/000-default.conf
-
-EXPOSE 80
+# Configure nginx and php
+RUN update-alternatives --set php /usr/bin/php5.6; \
+    update-alternatives --set phar /usr/bin/phar5.6; \
+    update-alternatives --set phar.phar /usr/bin/phar.phar5.6; \
+    update-alternatives --set phpize /usr/bin/phpize5.6; \
+    update-alternatives --set php-config /usr/bin/php-config5.6
+RUN pecl install xdebug-2.5.5
+ADD nginx*nginx.patch /etc/nginx/nginx.patch
+ADD php*opcache.ini /etc/php/5.6/mods-available/10-opcache.patch
+ADD nginx*magento /etc/nginx/sites-available/magento
+ADD --chown=root nginx*startup /startup.sh
+RUN cd /etc/nginx && /usr/bin/patch < nginx.patch && rm nginx.patch && cd
+RUN cd /etc/php/5.6/mods-available && /usr/bin/patch < 10-opcache.patch && rm 10-opcache.patch && cd
+RUN chmod 700 /startup.sh
+COPY nginx*fpm_patch /etc/php/5.6/fpm/pool.d/www.conf.patch
+COPY php*xdebug.ini /etc/php/5.6/fpm/conf.d/20-xdebug.ini
+RUN ln -s /etc/nginx/sites-available/magento /etc/nginx/sites-enabled/magento
+RUN cd /etc/php/5.6/fpm/pool.d && /usr/bin/patch < www.conf.patch && rm www.conf.patch && cd
 
 # Set up Magento
 RUN mkdir -p /var/www/html/magento
 RUN chown -R www-data:www-data /var/www/html/magento
 USER www-data
-RUN git clone --depth 1 --branch 1.9.4.2 https://github.com/OpenMage/magento-mirror.git /var/www/html/magento
+RUN git clone --depth 1 --branch 1.9.4.3 https://github.com/OpenMage/magento-mirror.git /var/www/html/magento
 RUN chmod +x /var/www/html/magento/mage /var/www/html/magento/cron.sh
+EXPOSE 80
 
 USER root
-CMD [ "/usr/sbin/apache2", "-DFOREGROUND" ]
+CMD [ "/startup.sh" ]
 
 # Make life a little nicer when we log into the container.
 WORKDIR /var/www/html/magento

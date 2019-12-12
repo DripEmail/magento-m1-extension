@@ -1,17 +1,17 @@
 import { Given, When, Then } from "cypress-cucumber-preprocessor/steps"
 import { mapFrontendWebsiteId, mapFrontendStoreViewId } from "../../lib/frontend_context"
 
-Given('I am logged into the admin interface', function() {
+Given('I am logged into the admin interface', function () {
   cy.visit(`http://main.magento.localhost:3005/index.php/admin`)
   cy.get('input[name="login[username]"]').type('admin')
-  cy.get('input[name="login[password]"]').type('abc1234567890')
+  cy.get('input[name="login[password]"]').type('!abc1234567890!')
   cy.contains('Login').click()
 })
 
-Given('I have set up a multi-store configuration', function() {
+Given('I have set up a multi-store configuration', function () {
   cy.contains('System').trigger('mouseover')
   cy.contains('Configuration').click()
-  cy.contains('Manage Stores').click({force: true})
+  cy.contains('Manage Stores').click({ force: true })
 
   cy.contains('Create Website').click()
   cy.get('input[name="website[name]"]').type('site1_website')
@@ -33,7 +33,7 @@ Given('I have set up a multi-store configuration', function() {
 
   cy.contains('System').trigger('mouseover')
   cy.contains('Configuration').click()
-  cy.get('ul#system_config_tabs').within(function() {
+  cy.get('ul#system_config_tabs').within(function () {
     cy.contains('Web').click()
   })
   cy.get('select#store_switcher').select('site1_website')
@@ -43,7 +43,7 @@ Given('I have set up a multi-store configuration', function() {
   cy.contains('Save Config').click()
 })
 
-Given('I have configured Drip to be enabled for {string}', function(scope) {
+Given('I have configured Drip to be enabled for {string}', function (scope) {
   cy.contains('System').trigger('mouseover')
   cy.contains('Configuration').click()
   cy.contains('Drip Connect Configuration').click()
@@ -64,7 +64,7 @@ Given('I have configured Drip to be enabled for {string}', function(scope) {
 })
 
 // Simple Product
-Given('I have configured a simple widget for {string}', function(site) {
+Given('I have configured a simple widget for {string}', function (site) {
   cy.createProduct({
     "storeId": mapFrontendStoreViewId(site),
     "sku": "widg-1",
@@ -76,7 +76,7 @@ Given('I have configured a simple widget for {string}', function(site) {
 })
 
 // Configurable Product
-Given('I have configured a configurable widget', function() {
+Given('I have configured a configurable widget', function () {
   cy.createProduct({
     "sku": "widg-1",
     "name": "Widget 1",
@@ -105,7 +105,7 @@ Given('I have configured a configurable widget', function() {
 
 
 // TODO: Consider merging this and the above.
-Given('I have configured a configurable widget for website {string}', function(site) {
+Given('I have configured a configurable widget for website {string}', function (site) {
   const websiteId = mapFrontendWebsiteId(site)
 
   cy.createProduct({
@@ -136,7 +136,7 @@ Given('I have configured a configurable widget for website {string}', function(s
   })
 })
 
-Given('I have configured a configurable widget with an invisible child', function() {
+Given('I have configured a configurable widget with an invisible child', function () {
   cy.createProduct({
     "sku": "widg-1",
     "name": "Widget 1",
@@ -166,7 +166,7 @@ Given('I have configured a configurable widget with an invisible child', functio
 })
 
 // Grouped Product
-Given('I have configured a grouped widget', function() {
+Given('I have configured a grouped widget', function () {
   cy.createProduct({
     "sku": "widg-1",
     "name": "Widget 1",
@@ -191,7 +191,7 @@ Given('I have configured a grouped widget', function() {
 })
 
 // Bundle Product
-Given('I have configured a bundle widget', function() {
+Given('I have configured a bundle widget', function () {
   // skuType of 1 is a fixed sku rather than generating a composite SKU.
   cy.createProduct({
     "sku": "widg-1",
@@ -227,21 +227,21 @@ Given('I have configured a bundle widget', function() {
   })
 })
 
-Given('a customer exists for website id {string}', function(websiteId) {
+Given('a customer exists for website id {string}', function (websiteId) {
   cy.createCustomer({
     websiteId: websiteId,
   })
 })
 
-Given('a different customer exists for website id {string}', function(websiteId) {
+Given('a different customer exists for website id {string}', function (websiteId) {
   cy.createCustomer({
     websiteId: websiteId,
     email: "jd2@example.com",
   })
 })
 
-When('I create an order', function() {
-  cy.contains('Orders').click({force: true})
+When('I create an order', function () {
+  cy.contains('Orders').click({ force: true })
   cy.contains('Create New Order').click()
 
   // Select customer
@@ -251,9 +251,9 @@ When('I create an order', function() {
   cy.get('input#store_300').check()
 
   // Add product to order
-  cy.contains('Add Products').click()
+  cy.contains('Add Products', { timeout: 30000 }).click()
   cy.contains('Widget 1').click()
-  cy.get('#product_composite_configure').within(function() {
+  cy.get('#product_composite_configure').within(function () {
     cy.get('select[name="super_attribute[135]"]').select('XL')
     cy.contains('OK').click()
   })

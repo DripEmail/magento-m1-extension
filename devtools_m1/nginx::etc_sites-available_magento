@@ -1,0 +1,75 @@
+map $http_host $MAGE_RUN_CODE {
+  default default;
+  site1.magento.localhost:3005 site1_website;
+}
+
+map $http_host $MAGE_RUN_TYPE {
+  default store;
+  site1.magento.localhost:3005 website;
+}
+
+server {
+    listen      80;
+    server_name *.magento.localhost;
+    access_log  /var/log/nginx/magento-access.log combined buffer=1m flush=10s;
+    error_log   /var/log/nginx/magento-error.log error;
+    set         $MAGE_ROOT /var/www/html/magento;
+    root        $MAGE_ROOT;
+    index       index.html index.php;
+  
+    location / {      
+        try_files $uri $uri/ @handler;
+    }
+  
+    location ^~ /app/                { deny all; }
+    location ^~ /includes/           { deny all; }
+    location ^~ /lib/                { deny all; }
+    location ^~ /media/downloadable/ { deny all; }
+    location ^~ /pkginfo/            { deny all; }
+    location ^~ /report/config.xml   { deny all; }
+    location ^~ /var/                { deny all; }
+ 
+    location  /\. { deny all; }
+  
+    location ~* \.(jpe?g|png|gif|ico|css|js)$ { expires 5d; }
+
+    location @handler {
+        rewrite / /index.php;
+    }
+  
+    location ~ .php/ {
+        rewrite ^(.*.php)/ $1 last;
+    }
+  
+    location ~ \.php$ {
+        try_files      $uri =404;
+        include        fastcgi_params;
+        expires        off;
+        fastcgi_index  index.php;
+        fastcgi_pass   127.0.0.254:65000;
+        fastcgi_connect_timeout 65;
+        fastcgi_send_timeout 7200;
+        fastcgi_read_timeout 7200;
+        fastcgi_buffers 256 16k;
+        fastcgi_buffer_size 128k;
+        fastcgi_busy_buffers_size 256k;
+        fastcgi_temp_file_write_size 256k; 
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        fastcgi_param  MAGE_ROOT $MAGE_ROOT;
+        fastcgi_param  MAGE_RUN_CODE $MAGE_RUN_CODE;
+        fastcgi_param  MAGE_RUN_TYPE $MAGE_RUN_TYPE;
+    }
+
+    gzip on;
+    gzip_vary on;
+    gzip_disable "msie6";
+    gzip_comp_level 2;
+    gzip_min_length 1100;
+    gzip_buffers 16 8k;
+    gzip_proxied any;
+
+    open_file_cache max=16384 inactive=16m;
+    open_file_cache_valid 2m;
+    open_file_cache_min_uses 1;
+    open_file_cache_errors on; 
+}
