@@ -122,7 +122,7 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                             <dir name="Quote">
                                 <file name="AfterQuoteSaved.php" hash="738b196342a3b2bcf2b4022b997ad262"/>
                                 <file name="BeforeQuoteSaved.php" hash="d2c98a36767a6c7afe2f3e240ee10c49"/>
-                                <file name="ClearCartOnLogin.php" hash="34d4054be7f00cfd87796345d18e58d1"/>
+                                <file name="ClearCartOnLogin.php" hash="4cd29edfcd2b6b1fe6f7daf3f5e7d6f8"/>
                             </dir>
                             <dir name="Wishlist">
                                 <file name="AddProduct.php" hash="80f47b1d3b1253295337c550e218b18b"/>
@@ -169,7 +169,7 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                     </dir>
                     <dir name="etc">
                         <file name="adminhtml.xml" hash="d4f35cee5cd38366de6ba2e6df312bf6"/>
-                        <file name="config.xml" hash="c86897cb12c40a8814c74e767fe129af"/>
+                        <file name="config.xml" hash="28bef4b84c55dbce1e884c162009593b"/>
                         <file name="system.xml" hash="80499537650c5c3e7f9869ff8a8c974a"/>
                     </dir>
                     <dir name="sql">
