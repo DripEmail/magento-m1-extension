@@ -83,7 +83,7 @@ Then('A simple cart event should be sent to Drip', function () {
     expect(body.magento_source).to.eq('Storefront')
     expect(body.provider).to.eq('magento')
     expect(body.total_discounts).to.eq(0)
-    expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+    expect(body.version).to.match(/^Magento 1\.9\.4\.3, Drip Extension \d+\.\d+\.\d+$/)
     expect(body.occurred_at).to.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)
     expect(body.items).to.have.lengthOf(1)
 
@@ -120,7 +120,7 @@ Then('A configurable cart event should be sent to Drip', function () {
     expect(body.magento_source).to.eq('Storefront')
     expect(body.provider).to.eq('magento')
     expect(body.total_discounts).to.eq(0)
-    expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+    expect(body.version).to.match(/^Magento 1\.9\.4\.3, Drip Extension \d+\.\d+\.\d+$/)
     expect(body.items).to.have.lengthOf(1)
 
     const item = body.items[0]
@@ -156,7 +156,7 @@ Then('A configurable cart event with parent image and url should be sent to Drip
     expect(body.magento_source).to.eq('Storefront')
     expect(body.provider).to.eq('magento')
     expect(body.total_discounts).to.eq(0)
-    expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+    expect(body.version).to.match(/^Magento 1\.9\.4\.3, Drip Extension \d+\.\d+\.\d+$/)
     expect(body.items).to.have.lengthOf(1)
 
     const item = body.items[0]
@@ -212,7 +212,7 @@ Then('A grouped cart event should be sent to Drip', function () {
     expect(body.magento_source).to.eq('Storefront')
     expect(body.provider).to.eq('magento')
     expect(body.total_discounts).to.eq(0)
-    expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+    expect(body.version).to.match(/^Magento 1\.9\.4\.3, Drip Extension \d+\.\d+\.\d+$/)
     expect(body.items).to.have.lengthOf(2)
 
     // These may be in any order, so we'll loop and assert based on SKU.
@@ -262,7 +262,7 @@ Then('A bundle cart event should be sent to Drip', function () {
     expect(body.magento_source).to.eq('Storefront')
     expect(body.provider).to.eq('magento')
     expect(body.total_discounts).to.eq(0)
-    expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+    expect(body.version).to.match(/^Magento 1\.9\.4\.3, Drip Extension \d+\.\d+\.\d+$/)
     expect(body.items).to.have.lengthOf(1)
 
     // We don't send anything unique for the child products right now.
@@ -353,7 +353,7 @@ function basicOrderBodyAssertions(body) {
   expect(body.provider).to.eq('magento')
   expect(body.total_discounts).to.eq(0)
   expect(body.total_taxes).to.eq(0)
-  expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+  expect(body.version).to.match(/^Magento 1\.9\.4\.3, Drip Extension \d+\.\d+\.\d+$/)
 
   expect(body.billing_address.address_1).to.eq('123 Main St.')
   expect(body.billing_address.address_2).to.eq('')

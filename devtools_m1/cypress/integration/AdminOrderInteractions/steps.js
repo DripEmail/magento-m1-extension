@@ -26,7 +26,7 @@ Then('an order event is sent to Drip', function() {
     expect(body.provider).to.eq('magento')
     expect(body.total_discounts).to.eq(0)
     expect(body.total_taxes).to.eq(0)
-    expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+    expect(body.version).to.match(/^Magento 1\.9\.4\.3, Drip Extension \d+\.\d+\.\d+$/)
 
     expect(body.billing_address.address_1).to.eq('123 Main St.')
     expect(body.billing_address.address_2).to.eq('')
