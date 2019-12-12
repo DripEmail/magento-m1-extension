@@ -105,3 +105,15 @@ Feature: Customer Cart Interactions
     Then A simple cart event should be sent to Drip
     When I complete check out as a guest
     Then A simple order event should be sent to Drip
+
+  Scenario: A customer adds a simple product to their cart and drip receives a working abandoned cart url
+    Given I am logged into the admin interface
+      And I have set up a multi-store configuration
+      And I have configured Drip to be enabled for 'site1_website'
+      And I have configured a simple widget for 'site1'
+    When I open the 'site1' homepage
+      And I create an account
+      And I add a 'simple' widget to my cart
+    Then A simple cart event should be sent to Drip
+    When I open the abandoned cart url
+    Then No web requests are sent
