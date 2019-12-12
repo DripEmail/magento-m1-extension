@@ -22,14 +22,14 @@ $ npm install
 $ DRIP_COMPOSE_ENV=test ./setup.sh
 ```
 
-You can access the admin at http://main.magento.localhost:3005/admin_123
+You can access the admin at http://main.magento.localhost:3005/admin
 
 ## Running the tests
 
 To start the cypress test runner ...
 
 ```bash
-cd devtools_m2/
+cd devtools_m1/
 ./node_modules/.bin/cypress open
 ```
 

@@ -9,7 +9,7 @@ class Drip_Connect_Model_Observer_Quote_ClearCartOnLogin extends Drip_Connect_Mo
      *
      * @param Varien_Event_Observer $observer
      */
-    protected function executeWhenEnabled(Varien_Event_Observer $observer)
+    protected function executeWhenEnabled($observer)
     {
         if ($this->isIgnoreMerge()) {
             return;
