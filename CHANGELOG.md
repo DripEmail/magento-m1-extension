@@ -4,6 +4,10 @@
 
 * Your note here!
 
+## 1.8.1
+
+* Fixed bug when clearCartOnLogin was being called from an abandoned cart email link.
+
 ## 1.8.0
 
 * Properly support multi-site. What makes this tricky is that customers are associated with websites, whereas orders are associated with store views. When an order event occurs, the order's store view is interrogated to determine which Drip configuration should be utilized. When a frontend customer event occurs, the currently used store view is utilized; however for an admin customer event, the first store view for that website is used. This means that trying to configure Drip at a store view level when there is more than one store view per website may result in unexpected behavior.
