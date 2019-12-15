@@ -61,7 +61,7 @@ Then('A new {string} subscriber event should be sent to Drip', function(state) {
     expect(custCreatedBody.events[0].email).to.eq('testuser@example.com')
     expect(custCreatedBody.events[0].properties.magento_source).to.eq('Admin')
     expect(custCreatedBody.events[0].properties.source).to.eq('magento')
-    expect(custCreatedBody.events[0].properties.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+    expect(custCreatedBody.events[0].properties.version).to.match(/^Magento 1\.9\.4\.3, Drip Extension \d+\.\d+\.\d+$/)
   })
 })
 
@@ -119,6 +119,6 @@ Then('A {string} event should be sent to Drip', function(state) {
     expect(custCreatedBody.events[0].email).to.eq('testuser@example.com')
     expect(custCreatedBody.events[0].properties.magento_source).to.eq('Admin')
     expect(custCreatedBody.events[0].properties.source).to.eq('magento')
-    expect(custCreatedBody.events[0].properties.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+    expect(custCreatedBody.events[0].properties.version).to.match(/^Magento 1\.9\.4\.3, Drip Extension \d+\.\d+\.\d+$/)
   })
 })

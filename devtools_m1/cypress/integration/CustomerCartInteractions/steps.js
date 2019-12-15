@@ -4,9 +4,9 @@ import { getCurrentFrontendDomain, getCurrentFrontendWebsiteId, getCurrentFronte
 
 const Mockclient = mockServerClient("localhost", 1080);
 
-When('I create an account', function() {
+When('I create an account', function () {
   cy.contains('Register').click({ force: true })
-  cy.get('#form-validate').within(function() {
+  cy.get('#form-validate').within(function () {
     cy.get('input[name="firstname"]').type('Test')
     cy.get('input[name="lastname"]').type('User')
     cy.get('input[name="email"]').type('testuser@example.com')
@@ -16,7 +16,7 @@ When('I create an account', function() {
   })
 })
 
-When('I add a {string} widget to my cart', function(type) {
+When('I add a {string} widget to my cart', function (type) {
   // For some reason, Magento throws an error here in JS. We don't really care, so ignore it.
   cy.on('uncaught:exception', (err, runnable) => {
     return false
@@ -41,7 +41,7 @@ When('I add a {string} widget to my cart', function(type) {
 })
 
 // TODO: This is kind of ugly and duplicates the prior.
-When('I add a different {string} widget to my cart', function(type) {
+When('I add a different {string} widget to my cart', function (type) {
   // For some reason, Magento throws an error here in JS. We don't really care, so ignore it.
   cy.on('uncaught:exception', (err, runnable) => {
     return false
@@ -65,11 +65,11 @@ When('I add a different {string} widget to my cart', function(type) {
   cy.contains('Add to Cart').click()
 })
 
-Then('A simple cart event should be sent to Drip', function() {
+Then('A simple cart event should be sent to Drip', function () {
   cy.log('Validating that the cart call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/cart'
-  })).then(function(recordedRequests) {
+  })).then(function (recordedRequests) {
     expect(recordedRequests).to.have.lengthOf(1)
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.email).to.eq('testuser@example.com')
@@ -85,7 +85,7 @@ Then('A simple cart event should be sent to Drip', function() {
     expect(body.magento_source).to.eq('Storefront')
     expect(body.provider).to.eq('magento')
     expect(body.total_discounts).to.eq(0)
-    expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+    expect(body.version).to.match(/^Magento 1\.9\.4\.3, Drip Extension \d+\.\d+\.\d+$/)
     expect(body.occurred_at).to.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)
     expect(body.items).to.have.lengthOf(1)
 
@@ -104,11 +104,11 @@ Then('A simple cart event should be sent to Drip', function() {
   })
 })
 
-Then('A configurable cart event should be sent to Drip', function() {
+Then('A configurable cart event should be sent to Drip', function () {
   cy.log('Validating that the cart call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/cart'
-  })).then(function(recordedRequests) {
+  })).then(function (recordedRequests) {
     expect(recordedRequests).to.have.lengthOf(1)
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.email).to.eq('testuser@example.com')
@@ -122,7 +122,7 @@ Then('A configurable cart event should be sent to Drip', function() {
     expect(body.magento_source).to.eq('Storefront')
     expect(body.provider).to.eq('magento')
     expect(body.total_discounts).to.eq(0)
-    expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+    expect(body.version).to.match(/^Magento 1\.9\.4\.3, Drip Extension \d+\.\d+\.\d+$/)
     expect(body.items).to.have.lengthOf(1)
 
     const item = body.items[0]
@@ -140,11 +140,11 @@ Then('A configurable cart event should be sent to Drip', function() {
   })
 })
 
-Then('A configurable cart event with parent image and url should be sent to Drip', function() {
+Then('A configurable cart event with parent image and url should be sent to Drip', function () {
   cy.log('Validating that the cart call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/cart'
-  })).then(function(recordedRequests) {
+  })).then(function (recordedRequests) {
     expect(recordedRequests).to.have.lengthOf(1)
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.email).to.eq('testuser@example.com')
@@ -158,7 +158,7 @@ Then('A configurable cart event with parent image and url should be sent to Drip
     expect(body.magento_source).to.eq('Storefront')
     expect(body.provider).to.eq('magento')
     expect(body.total_discounts).to.eq(0)
-    expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+    expect(body.version).to.match(/^Magento 1\.9\.4\.3, Drip Extension \d+\.\d+\.\d+$/)
     expect(body.items).to.have.lengthOf(1)
 
     const item = body.items[0]
@@ -176,11 +176,11 @@ Then('A configurable cart event with parent image and url should be sent to Drip
   })
 })
 
-Then('Configurable cart events should be sent to Drip', function() {
+Then('Configurable cart events should be sent to Drip', function () {
   cy.log('Validating that the cart call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/cart'
-  })).then(function(recordedRequests) {
+  })).then(function (recordedRequests) {
     expect(recordedRequests).to.have.lengthOf(2)
     const body = JSON.parse(recordedRequests[recordedRequests.length - 1].body.string)
     expect(body.email).to.eq('testuser@example.com')
@@ -196,11 +196,11 @@ Then('Configurable cart events should be sent to Drip', function() {
   })
 })
 
-Then('A grouped cart event should be sent to Drip', function() {
+Then('A grouped cart event should be sent to Drip', function () {
   cy.log('Validating that the cart call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/cart'
-  })).then(function(recordedRequests) {
+  })).then(function (recordedRequests) {
     expect(recordedRequests).to.have.lengthOf(1)
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.email).to.eq('testuser@example.com')
@@ -214,7 +214,7 @@ Then('A grouped cart event should be sent to Drip', function() {
     expect(body.magento_source).to.eq('Storefront')
     expect(body.provider).to.eq('magento')
     expect(body.total_discounts).to.eq(0)
-    expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+    expect(body.version).to.match(/^Magento 1\.9\.4\.3, Drip Extension \d+\.\d+\.\d+$/)
     expect(body.items).to.have.lengthOf(2)
 
     // These may be in any order, so we'll loop and assert based on SKU.
@@ -246,11 +246,11 @@ Then('A grouped cart event should be sent to Drip', function() {
   })
 })
 
-Then('A bundle cart event should be sent to Drip', function() {
+Then('A bundle cart event should be sent to Drip', function () {
   cy.log('Validating that the cart call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/cart'
-  })).then(function(recordedRequests) {
+  })).then(function (recordedRequests) {
     expect(recordedRequests).to.have.lengthOf(1)
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.email).to.eq('testuser@example.com')
@@ -264,7 +264,7 @@ Then('A bundle cart event should be sent to Drip', function() {
     expect(body.magento_source).to.eq('Storefront')
     expect(body.provider).to.eq('magento')
     expect(body.total_discounts).to.eq(0)
-    expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+    expect(body.version).to.match(/^Magento 1\.9\.4\.3, Drip Extension \d+\.\d+\.\d+$/)
     expect(body.items).to.have.lengthOf(1)
 
     // We don't send anything unique for the child products right now.
@@ -283,7 +283,7 @@ Then('A bundle cart event should be sent to Drip', function() {
   })
 })
 
-When('I check out', function() {
+When('I check out', function () {
   cy.log('Resetting mocks')
   cy.wrap(Mockclient.reset())
 
@@ -306,7 +306,7 @@ When('I check out', function() {
   cy.contains('Your order has been received')
 })
 
-When('I begin check out as a guest', function() {
+When('I begin check out as a guest', function () {
   cy.log('Resetting mocks')
   cy.wrap(Mockclient.reset())
 
@@ -327,7 +327,7 @@ When('I begin check out as a guest', function() {
   cy.contains('Flat Rate')
 })
 
-When('I complete check out as a guest', function() {
+When('I complete check out as a guest', function () {
   cy.log('Resetting mocks')
   cy.wrap(Mockclient.reset())
 
@@ -340,7 +340,7 @@ When('I complete check out as a guest', function() {
   cy.contains('Your order has been received')
 })
 
-When('I logout', function() {
+When('I logout', function () {
   cy.visit('/customer/account/logout')
 })
 
@@ -355,7 +355,7 @@ function basicOrderBodyAssertions(body) {
   expect(body.provider).to.eq('magento')
   expect(body.total_discounts).to.eq(0)
   expect(body.total_taxes).to.eq(0)
-  expect(body.version).to.match(/^Magento 1\.9\.4\.2, Drip Extension \d+\.\d+\.\d+$/)
+  expect(body.version).to.match(/^Magento 1\.9\.4\.3, Drip Extension \d+\.\d+\.\d+$/)
 
   expect(body.billing_address.address_1).to.eq('123 Main St.')
   expect(body.billing_address.address_2).to.eq('')
@@ -380,16 +380,16 @@ function basicOrderBodyAssertions(body) {
   expect(body.shipping_address.state).to.eq('Minnesota')
 }
 
-Then('A simple order event should be sent to Drip', function() {
+Then('A simple order event should be sent to Drip', function () {
   cy.log('Validating that the order call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/(order|cart)'
-  })).then(function(recordedRequests) {
+  })).then(function (recordedRequests) {
     expect(recordedRequests).to.have.lengthOf(2)
-    const orderRequests = recordedRequests.filter(function(req) {
+    const orderRequests = recordedRequests.filter(function (req) {
       return req.path === '/v3/123456/shopper_activity/order';
     })
-    const cartRequests = recordedRequests.filter(function(req) {
+    const cartRequests = recordedRequests.filter(function (req) {
       return req.path === '/v3/123456/shopper_activity/cart';
     })
     expect(orderRequests).to.have.lengthOf(1)
@@ -422,11 +422,11 @@ Then('A simple order event should be sent to Drip', function() {
   })
 })
 
-Then('A configurable order event should be sent to Drip', function() {
+Then('A configurable order event should be sent to Drip', function () {
   cy.log('Validating that the order call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/order'
-  })).then(function(recordedRequests) {
+  })).then(function (recordedRequests) {
     expect(recordedRequests).to.have.lengthOf(1)
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.action).to.eq('placed')
@@ -455,11 +455,11 @@ Then('A configurable order event should be sent to Drip', function() {
   })
 })
 
-Then('A grouped order event should be sent to Drip', function() {
+Then('A grouped order event should be sent to Drip', function () {
   cy.log('Validating that the order call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/order'
-  })).then(function(recordedRequests) {
+  })).then(function (recordedRequests) {
     expect(recordedRequests).to.have.lengthOf(1)
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.action).to.eq('placed')
@@ -502,11 +502,11 @@ Then('A grouped order event should be sent to Drip', function() {
   })
 })
 
-Then('A bundle order event should be sent to Drip', function() {
+Then('A bundle order event should be sent to Drip', function () {
   cy.log('Validating that the order call has everything we need')
   cy.wrap(Mockclient.retrieveRecordedRequests({
     'path': '/v3/123456/shopper_activity/order'
-  })).then(function(recordedRequests) {
+  })).then(function (recordedRequests) {
     expect(recordedRequests).to.have.lengthOf(1)
     const body = JSON.parse(recordedRequests[0].body.string)
     expect(body.action).to.eq('placed')
