@@ -1,7 +1,7 @@
 FROM ubuntu:19.04
 
-
 ENV DEBIAN_FRONTEND=noninteractive
+ARG CONTINUOUS_INTEGRATION
 
 RUN apt update && apt install -y software-properties-common git wget curl gnupg2 ca-certificates lsb-release vim nginx fcgiwrap unzip net-tools make
 RUN add-apt-repository ppa:ondrej/php
@@ -17,7 +17,7 @@ RUN update-alternatives --set php /usr/bin/php5.6; \
     update-alternatives --set phar.phar /usr/bin/phar.phar5.6; \
     update-alternatives --set phpize /usr/bin/phpize5.6; \
     update-alternatives --set php-config /usr/bin/php-config5.6
-RUN pecl install xdebug-2.5.5
+RUN test "true" = "${CONTINUOUS_INTEGRATION}" && echo "skipping install of php-xdebug" || pecl install xdebug-2.5.5
 ADD nginx*nginx.patch /etc/nginx/nginx.patch
 ADD php*opcache.ini /etc/php/5.6/mods-available/10-opcache.patch
 ADD nginx*magento /etc/nginx/sites-available/magento
@@ -26,7 +26,8 @@ RUN cd /etc/nginx && /usr/bin/patch < nginx.patch && rm nginx.patch && cd
 RUN cd /etc/php/5.6/mods-available && /usr/bin/patch < 10-opcache.patch && rm 10-opcache.patch && cd
 RUN chmod 700 /startup.sh
 COPY nginx*fpm_patch /etc/php/5.6/fpm/pool.d/www.conf.patch
-COPY php*xdebug.ini /etc/php/5.6/fpm/conf.d/20-xdebug.ini
+COPY php*xdebug.ini /etc/php/5.6/mods-available/xdebug.ini
+RUN rm -f /etc/php/5.6/fpm/conf.d/20-xdebug.ini;test "true" = "${CONTINUOUS_INTEGRATION}" && echo "skipping php-xdebug configuration" || ln -s /etc/php/5.6/mods-available/xdebug.ini /etc/php/5.6/fpm/conf.d/20-xdebug.ini
 RUN ln -s /etc/nginx/sites-available/magento /etc/nginx/sites-enabled/magento
 RUN cd /etc/php/5.6/fpm/pool.d && /usr/bin/patch < www.conf.patch && rm www.conf.patch && cd
 
