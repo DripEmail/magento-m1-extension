@@ -133,6 +133,22 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * find customer by email address
+     *
+     * @return Mage_Customer_Model_Customer $customer
+     */
+    public function getCustomerByEmail($email, $websiteId = null)
+    {
+        if ($websiteId == null) {
+            $websiteId = Mage::app()->getStore()->getWebsiteId();
+        }
+
+        $customer = Mage::getModel("customer/customer")->setWebsiteId($websiteId)->loadByEmail($email);
+
+        return $customer;
+    }
+
+    /**
      * @param $order
      *
      * @return array
