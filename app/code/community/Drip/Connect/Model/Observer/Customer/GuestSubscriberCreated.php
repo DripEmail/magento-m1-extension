@@ -17,15 +17,15 @@ class Drip_Connect_Model_Observer_Customer_GuestSubscriberCreated extends Drip_C
 
         $customer = Mage::helper('drip_connect')->getCustomerByEmail($email, $config);
         if ($customer->getId() !== null) {
-          Mage::helper('drip_connect/customer')->proceedAccount(
-            $customer,
-            $config,
-            true,
-            Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED,
-            true
-          );
+            Mage::helper('drip_connect/customer')->proceedAccount(
+                $customer,
+                $config,
+                true,
+                Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED,
+                true
+            );
         } else {
-           $this->proceedGuestSubscriberNew($subscriber, $config, $subscriber->isSubscribed());
+            $this->proceedGuestSubscriberNew($subscriber, $config, $subscriber->isSubscribed());
         }
     }
 
