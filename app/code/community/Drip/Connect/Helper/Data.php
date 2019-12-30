@@ -119,13 +119,14 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * check if customer exists on the website
      *
+     * @param string $email
+     * @param Drip_Connect_Model_Configuration $config
+     *
      * @return bool
      */
-    public function isCustomerExists($email, $websiteId = null)
+    public function isCustomerExists($email, $config)
     {
-        if ($websiteId == null) {
-            $websiteId = Mage::app()->getStore()->getWebsiteId();
-        }
+        $websiteId = $config->getWebsiteId();
 
         $customer = Mage::getModel("customer/customer")->setWebsiteId($websiteId)->loadByEmail($email);
 
@@ -135,17 +136,16 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * find customer by email address
      *
-     * @return Mage_Customer_Model_Customer $customer
+     * @param string $email
+     * @param Drip_Connect_Model_Configuration $config
+     *
+     * @return Mage_Customer_Model_Customer
      */
-    public function getCustomerByEmail($email, $websiteId = null)
+    public function getCustomerByEmail($email, $config)
     {
-        if ($websiteId == null) {
-            $websiteId = Mage::app()->getStore()->getWebsiteId();
-        }
+        $websiteId = $config->getWebsiteId();
 
-        $customer = Mage::getModel("customer/customer")->setWebsiteId($websiteId)->loadByEmail($email);
-
-        return $customer;
+        return Mage::getModel("customer/customer")->setWebsiteId($websiteId)->loadByEmail($email);
     }
 
     /**

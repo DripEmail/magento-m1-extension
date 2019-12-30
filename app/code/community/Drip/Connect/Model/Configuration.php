@@ -66,6 +66,11 @@ class Drip_Connect_Model_Configuration
         return $this->storeId;
     }
 
+    public function getWebsiteId()
+    {
+        return Mage::app()->getStore($this->storeId)->getWebsiteId();
+    }
+
     public function getAccountId()
     {
         return $this->getStoreConfig(self::ACCOUNT_ID_PATH);

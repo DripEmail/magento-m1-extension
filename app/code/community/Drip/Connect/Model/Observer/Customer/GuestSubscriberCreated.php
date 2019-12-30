@@ -16,8 +16,8 @@ class Drip_Connect_Model_Observer_Customer_GuestSubscriberCreated extends Drip_C
         $config = Drip_Connect_Model_Configuration::forCurrentScope();
 
         if (! Mage::registry(self::REGISTRY_KEY_NEW_GUEST_SUBSCRIBER)) {
-            $customer = Mage::helper('drip_connect')->getCustomerByEmail($email);
-            if ((bool) $customer->getId()) {
+            $customer = Mage::helper('drip_connect')->getCustomerByEmail($email, $config);
+            if ($customer->getId() !== null) {
               Mage::helper('drip_connect/customer')->proceedAccount(
                 $customer,
                 $config,
@@ -26,10 +26,9 @@ class Drip_Connect_Model_Observer_Customer_GuestSubscriberCreated extends Drip_C
                 true
               );
             }
-            return;
+        } else {
+           $this->proceedGuestSubscriberNew($subscriber, $config, $subscriber->isSubscribed());
         }
-
-        $this->proceedGuestSubscriberNew($subscriber, $config, $subscriber->isSubscribed());
     }
 
     /**

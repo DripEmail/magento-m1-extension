@@ -46,7 +46,7 @@ class Drip_Connect_Model_Observer_Order_AfterSave extends Drip_Connect_Model_Obs
             // if guest checkout and there is no such user and there is no such subscriber
             // create subscriber record
             if ($order->getCustomerIsGuest()
-                && ! Mage::helper('drip_connect')->isCustomerExists($order->getCustomerEmail())
+                && ! Mage::helper('drip_connect')->isCustomerExists($order->getCustomerEmail(), $config)
                 && ! Mage::helper('drip_connect')->isSubscriberExists($order->getCustomerEmail())
             ) {
                 $customerData = Mage::helper('drip_connect')->prepareCustomerDataForGuestCheckout($order);
