@@ -66,6 +66,11 @@ class Drip_Connect_Model_Configuration
         return $this->storeId;
     }
 
+    /**
+     * The website ID attached to the current store view.
+     *
+     * @returns int
+     */
     public function getWebsiteId()
     {
         return Mage::app()->getStore($this->storeId)->getWebsiteId();
