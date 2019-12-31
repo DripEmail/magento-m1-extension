@@ -126,9 +126,7 @@ class Drip_Connect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function isCustomerExists($email, Drip_Connect_Model_Configuration $config)
     {
-        $websiteId = $config->getWebsiteId();
-
-        $customer = Mage::getModel("customer/customer")->setWebsiteId($websiteId)->loadByEmail($email);
+        $customer = getCustomerByEmail($email, $config);
 
         return (bool) $customer->getId();
     }
