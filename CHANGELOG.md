@@ -1,6 +1,6 @@
 # Magento 1 Drip Connect Changelog
 
-## NEXT
+## 1.8.2
 
 * Sends existing customers to Drip on newsletter signup.
 
