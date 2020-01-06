@@ -9,16 +9,24 @@ class Drip_Connect_Model_Observer_Customer_GuestSubscriberCreated extends Drip_C
      */
     protected function executeWhenEnabled($observer)
     {
-        if (! Mage::registry(self::REGISTRY_KEY_NEW_GUEST_SUBSCRIBER)) {
-            return;
-        }
-
         $email = Mage::app()->getRequest()->getParam('email');
+
         $subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($email);
 
         $config = Drip_Connect_Model_Configuration::forCurrentScope();
 
-        $this->proceedGuestSubscriberNew($subscriber, $config, $subscriber->isSubscribed());
+        $customer = Mage::helper('drip_connect')->getCustomerByEmail($email, $config);
+        if ($customer->getId() === null) {
+            $this->proceedGuestSubscriberNew($subscriber, $config, $subscriber->isSubscribed());
+        } else {
+            Mage::helper('drip_connect/customer')->proceedAccount(
+                $customer,
+                $config,
+                true,
+                Drip_Connect_Model_ApiCalls_Helper_RecordAnEvent::EVENT_CUSTOMER_UPDATED,
+                true
+            );
+        }
     }
 
     /**

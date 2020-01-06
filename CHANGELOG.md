@@ -2,7 +2,7 @@
 
 ## NEXT
 
-* Your note here!
+* Sends existing customers to Drip on newsletter signup.
 
 ## 1.8.1
 

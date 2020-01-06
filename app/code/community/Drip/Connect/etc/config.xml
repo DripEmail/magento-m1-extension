@@ -45,14 +45,6 @@
                     </drip_connect_newsletter_subscriber_delete_commit_after>
                 </observers>
             </newsletter_subscriber_delete_commit_after>
-            <controller_action_predispatch_newsletter_subscriber_new>
-                <observers>
-                    <drip_connect_controller_action_predispatch_newsletter_subscriber_new>
-                        <class>drip_connect/observer_customer_guestSubscriberAttempt</class>
-                        <method>execute</method>
-                    </drip_connect_controller_action_predispatch_newsletter_subscriber_new>
-                </observers>
-            </controller_action_predispatch_newsletter_subscriber_new>
             <controller_action_postdispatch_newsletter_subscriber_new>
                 <observers>
                     <drip_connect_controller_action_postdispatch_newsletter_subscriber_new>
