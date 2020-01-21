@@ -1,38 +1,25 @@
 <?php
 
-class Drip_Connect_Model_Observer_Product_SaveAfter extends Drip_Connect_Model_Observer_Base
-{
+class Drip_Connect_Model_Observer_Product_SaveAfter extends Drip_Connect_Model_Observer_Product_ProductBase {
     /**
      * @param Varien_Event_Observer $observer
      */
     protected function executeWhenEnabled($observer)
     {
-        $product = $observer->getProduct();
-        $product->load($product->getId());
-        if (Mage::registry(Drip_Connect_Helper_Product::REGISTRY_KEY_IS_NEW)) {
-            Mage::helper('drip_connect/product')->proceedProductNew($product);
-        } else {
-            if ($this->isProductChanged($product)) {
-                Mage::helper('drip_connect/product')->proceedProduct($product);
+        $product = $observer->getProduct();  
+        $isNewProduct = Mage::registry(Drip_Connect_Model_Observer_Base::REGISTRY_KEY_PRODUCT_IS_NEW);
+        foreach ($product->getStoreIds() as $storeId) {
+            $storeProduct = Mage::getModel('catalog/product')->setStoreId($storeId)->load($product->getId());
+            $dripStoreConfig = new Drip_Connect_Model_Configuration($storeId);
+            if( $storeProduct !== false && $dripStoreConfig->isEnabled()) {
+                $productTransformer = new Drip_Connect_Model_Transformer_Product($storeProduct, $dripStoreConfig);
+                if ($isNewProduct) {
+                    $productTransformer->proceedProductNew();
+                } else {
+                    $productTransformer->proceedProductChanged();
+                }
             }
         }
-
-        Mage::unregister(Drip_Connect_Helper_Product::REGISTRY_KEY_IS_NEW);
-        Mage::unregister(Drip_Connect_Helper_Product::REGISTRY_KEY_OLD_DATA);
-    }
-
-    /**
-     * compare orig and new data
-     *
-     * @param Mage_Catalog_Model_Product $product
-     */
-    protected function isProductChanged($product)
-    {
-        $oldData = Mage::registry(Drip_Connect_Helper_Product::REGISTRY_KEY_OLD_DATA);
-        unset($oldData['occurred_at']);
-        $newData = Mage::helper('drip_connect/product')->prepareData($product);
-        unset($newData['occurred_at']);
-
-        return (Mage::helper('core')->jsonEncode($oldData) !== Mage::helper('core')->jsonEncode($newData));
+        Mage::unregister(Drip_Connect_Model_Observer_Base::REGISTRY_KEY_PRODUCT_IS_NEW);
     }
 }
