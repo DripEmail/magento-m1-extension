@@ -240,6 +240,23 @@ Given('a different customer exists for website id {string}', function (websiteId
   })
 })
 
+Given('I have created the {string} attribute for a configurable product', function(label) {
+  cy.createAttributes([{
+    "code": "thingamahattribute",
+    "scope": "global",
+    "type": "varchar",
+    "input": "select",
+    "visible": 1,
+    "required": 1,
+    "configurable": 1,
+    "filterable": 0,
+    "visible_on_front": 0,
+    "apply_to": ["configurable"],
+    "label": label,
+    "options": ["Classic", "Modern", "Contemporary"]
+  }])
+})
+
 When('I create an order', function () {
   cy.contains('Orders').click({ force: true })
   cy.contains('Create New Order').click()

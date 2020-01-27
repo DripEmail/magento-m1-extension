@@ -26,7 +26,6 @@ class Drip_Connect_Model_Transformer_Product
     {
         $data = $this->prepareData();
         $data['action'] = Drip_Connect_Model_ApiCalls_Helper_CreateUpdateProduct::PRODUCT_NEW;
-        $data['product_variant_id'] = $this->product->getId();
         $this->sendProductData($data);
     }
 
@@ -34,7 +33,6 @@ class Drip_Connect_Model_Transformer_Product
     {
         $data = $this->prepareData();
         $data['action'] =  Drip_Connect_Model_ApiCalls_Helper_CreateUpdateProduct::PRODUCT_CHANGED;
-        $data['product_variant_id'] = $this->product->getId();
         $this->sendProductData($data);
     }
 
@@ -46,10 +44,11 @@ class Drip_Connect_Model_Transformer_Product
      */
     public function proceedProductDelete($productInfo)
     {
+        $parentProduct = $this->getProductParent();
         $data = array(
             "provider" => (string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateProduct::PROVIDER_NAME,
             "action" => Drip_Connect_Model_ApiCalls_Helper_CreateUpdateProduct::PRODUCT_DELETED,
-            "product_id" => $productInfo->product_id,
+            "product_id" => $parentProduct->getId(),
             "product_variant_id" => $productInfo->product_id,
             "sku" => $productInfo->product_sku,
             "name" => $productInfo->product_name,
@@ -74,14 +73,12 @@ class Drip_Connect_Model_Transformer_Product
      */
     private function prepareData()
     {
-        $productVariant = $this->product;
-        if ($this->product->getProductType() === 'configurable' && array_key_exists($this->product->getId(), $childItems)) {
-            $productVariantItem = $childItems[$item->getId()];
-        }
+        $productParent = $this->getProductParent();
         
         $data = array(
             "provider" => (string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME,
-            "product_id" => $this->product->getId(),
+            "product_id" => $productParent->getId(),
+            "product_variant_id" => $this->product->getId(),
             "sku" => $this->product->getSku(),
             "name" => $this->product->getName(),
             "price" => Mage::helper('drip_connect')->priceAsCents($this->product->getFinalPrice()) / 100,
@@ -130,7 +127,8 @@ class Drip_Connect_Model_Transformer_Product
     }
 
     /**
-     *
+     * return the product image url
+     * 
      * @return string
      */
     private function getProductImageUrl()
@@ -146,11 +144,9 @@ class Drip_Connect_Model_Transformer_Product
     /**
      * return brand name for the given product
      *
-     * @param Magento_Catalog_Model_Product $product
-     *
      * @return string
      */
-    private function getBrandName($product)
+    private function getBrandName()
     {
         try {
             return $this->product->getAttributeText('manufacturer');
@@ -158,5 +154,37 @@ class Drip_Connect_Model_Transformer_Product
         }
 
         return '';
+    }
+
+    /**
+     * return a Mage_Catalog_Model_Product this is the parent of this product
+     * 
+     * return Mage_Catalog_Model_Product
+     */
+    private function getProductParent()
+    {
+        $parentIds = $this->getParentIds();
+        if(count($parentIds) > 0) {
+            // 
+            return Mage::getModel('catalog/product')->load($parentIds[0]);
+        }
+        return $this->product;
+    }
+
+    /**
+     * return an array of parent product ids if this is a child product
+     *  
+     * @return array
+    */
+    private function getParentIds()
+    {
+        $parentIds = array();
+        if ($this->product->getTypeId() == 'simple') {
+            $id = $this->product->getId();
+            // for now, we're specifically making the choice to service
+            // configurable products exclusively.
+            $parentIds = Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($id);
+        }
+        return $parentIds;
     }
 }
