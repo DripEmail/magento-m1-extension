@@ -290,6 +290,43 @@ When('I create an order', function () {
   cy.contains('The order has been created')
 })
 
+When('I create an order for both products', function () {
+  cy.contains('Orders').click({ force: true })
+  cy.contains('Create New Order').click()
+
+  // Select customer
+  cy.contains('John Doe').click()
+
+  // Select store.
+  cy.get('input#store_300').check()
+
+  // Add product to order
+  cy.contains('Add Products', { timeout: 30000 }).click()
+  cy.contains('Virtual 1').click()
+  cy.contains('Widget 1').click()
+  cy.get('#product_composite_configure').within(function () {
+    cy.get('select[name="super_attribute[135]"]').select('XL')
+    cy.contains('OK').click()
+  })
+  cy.contains('Add Selected Product(s) to Order').click()
+
+  // Fill out billing addresses
+  cy.get('input[name="order[billing_address][firstname]"]').type('John')
+  cy.get('input[name="order[billing_address][lastname]"]').type('Doe')
+  cy.get('input[name="order[billing_address][street][0]"]').type('123 Main St.')
+  cy.get('input[name="order[billing_address][city]"]').type('Centerville')
+  cy.get('select[name="order[billing_address][region_id]"]').select('Minnesota')
+  cy.get('input[name="order[billing_address][postcode]"]').type('12345')
+  cy.get('input[name="order[billing_address][telephone]"]').type('999-999-9999')
+
+  cy.contains('Get shipping methods and rates').click()
+  cy.get('input[name="order[shipping_method]"]').check()
+
+  cy.contains('Submit Order').click()
+
+  cy.contains('The order has been created')
+})
+
 When('I create an order for a virtual product', function () {
   cy.contains('Orders').click({ force: true })
   cy.contains('Create New Order').click()
