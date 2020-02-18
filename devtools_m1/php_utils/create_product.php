@@ -30,6 +30,9 @@ class Mage_Shell_Drip_CreateProduct extends Mage_Shell_Abstract
             case 'bundle':
                 $this->buildBundleProduct($json);
                 break;
+            case 'virtual':
+                $this->buildSimpleProduct($json)->save();
+                break;
             default:
                 throw new \Exception("Unsupported type: ${type}");
         }

@@ -49,10 +49,14 @@ class Drip_Connect_Model_Transformer_Order
             'occurred_at' => (string) Mage::helper('drip_connect')->formatDate($this->order->getUpdatedAt()),
             'items' => $this->getOrderItemsData(),
             'billing_address' => $this->getOrderBillingData(),
-            'shipping_address' => $this->getOrderShippingData(),
             'items_count' => floatval($this->order->getTotalQtyOrdered()),
             'magento_source' => (string) Mage::helper('drip_connect')->getArea(),
         );
+
+        $shipping = $this->getOrderShippingData();
+        if ($shipping !== null) {
+          $data['shipping_address'] = $shipping;
+        }
 
         return $data;
     }
@@ -188,6 +192,10 @@ class Drip_Connect_Model_Transformer_Order
      */
     protected function getOrderAddressData($addressId)
     {
+        if ($addressId === null) {
+            return;
+        }
+
         $address = Mage::getModel('sales/order_address')->load($addressId);
 
         return array(
