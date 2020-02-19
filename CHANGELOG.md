@@ -1,5 +1,9 @@
 # Magento 1 Drip Connect Changelog
 
+## NEXT
+
+* Fix a bug preventing orders for virtual products from syncing
+
 ## 1.8.2
 
 * Sends existing customers to Drip on newsletter signup.
