@@ -5,7 +5,7 @@ env:
   global:
     secure: Yq5osouVqg4mbeOLF/Q64SARlVRiXoE3M8g20hBzWWH02xXjKEvt2z+hQaRB2wEn4nlB2dh+6825MmDF89yt388LcR4Y4okkWuV96Ki9xzymXd38xOMmvOrNKDLg+YTodqyCCwFTDz6Xl9IQ5PNQTgqAZM+jw6C0MimbAZ48cGXXzrNleW7N7Mnd1t5nMagqigFt01SJX622pWmAxZFiHN0PxkwIdtMEEYQlMtq8oD8B79Sp19loNcD53AdRJVjNzZxSpUBCM5Ns/ZcXQ/WJaR1mk3FjvHfeZCa6QTEzTB+gKCsMNz9HbirxRAeh0Gy62DWbwzjrnLalllrOVTY1ooub1CYcO0SJexypdVzZJecMqbipm64/iEGeYeDv/kKOL5N84JR4DW6bpURuu5YOE7Dpy0zwO5ZP888aVFOCUhHn0WdEOqYZx0vsLFJxSal+Jlo/EA82FUTs3CLH+COyHUXUOXfCH3lT7DMBI1jDHkYDqeJVLWflnDI0uDkMKzjjdV7Wvo3XsXfZV6RHFOv3bpO3qMp+EiMxvCvLb3pxcbeJKMtya1ETRPE06AFwdeqXeKaHGDVmT9YxItwr0dulp34ppoITanYO7ulk0eodNJMK1x95FgO/FWWxzjlDw6z/p0YMyk6ekclUAGldvc3ue/u1TDEDMz16Nr3INOOg27Q=
 addons:
-  chrome: beta
+  chrome: stable
   hosts:
     - main.magento.localhost
     - site1.magento.localhost
@@ -22,7 +22,6 @@ cache:
     - ~/.cache
 before_install:
   - pip install --user awscli
-  - google-chrome-beta --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 install:
   - cd $TRAVIS_BUILD_DIR/devtools_m1/ && npm ci
 script:
