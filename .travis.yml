@@ -22,6 +22,7 @@ cache:
     - ~/.cache
 before_install:
   - pip install --user awscli
+  - google-chrome-beta --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 install:
   - cd $TRAVIS_BUILD_DIR/devtools_m1/ && npm ci
 script:
