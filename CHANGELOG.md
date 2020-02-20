@@ -2,6 +2,8 @@
 
 ## NEXT
 
+## 1.8.3
+
 * Fix a bug preventing orders for virtual products from syncing
 
 ## 1.8.2
