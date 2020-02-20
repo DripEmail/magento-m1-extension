@@ -2,6 +2,9 @@
 
 ## NEXT
 
+## 1.8.3
+
+* Fixed a bug that caused shipping address to be queried for orders that contained only virtual products
 * Fix a bug preventing orders for virtual products from syncing
 
 ## 1.8.2
