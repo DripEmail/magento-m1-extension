@@ -6,3 +6,6 @@
 /.bitbucket-pipelines export-ignore
 composer.json export-ignore
 /devtools_m1 export-ignore
+.travis.yml export-ignore
+/README.md export-ignore
+/license.txt
