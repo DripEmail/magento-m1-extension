@@ -279,12 +279,36 @@ class Drip_Connect_Model_Transformer_Order
     }
 
     /**
+     * simple check for valid stringage
+     * @param  mixed $stuff
+     * @return bool
+    */
+    private function isNotEmpty($stuff) {
+        return !empty(trim($stuff));
+    }
+
+    /**
      * check if given order can be sent to drip
-     *
+     * 
      * @return bool
      */
     public function isCanBeSent()
     {
-        return Mage::helper('drip_connect')->isEmailValid($this->order->getCustomerEmail());
+        /*for shopper activity, the following are required for minimum viability:
+         * action, email -or- person_id, provider, order_id
+         *   or
+         * action, person_id, provider, order_id
+         * 
+         * person_id is never used in the plugin, so we don't need to worry about the conditional
+        */
+        $foundOrderId = $this->isNotEmpty((string) $this->order->getIncrementId());
+        $foundProvider = $this->isNotEmpty((string) Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::PROVIDER_NAME);
+        $validEmail = Mage::helper('drip_connect')->isEmailValid($this->order->getCustomerEmail());
+        $foundActions = $this->isNotEmpty((string)Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_CANCEL) &&
+            $this->isNotEmpty((string)Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_CHANGE) &&
+            $this->isNotEmpty((string)Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_FULFILL) &&
+            $this->isNotEmpty((string)Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_NEW) &&
+            $this->isNotEmpty((string)Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder::ACTION_REFUND);        
+        return $foundOrderId && $foundProvider && $foundActions && $validEmail;
     }
 }
