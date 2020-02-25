@@ -114,7 +114,7 @@ class Drip_Connect_Model_Cron_Orders
                 } else {
                     $this->getLogger()->log(
                         sprintf(
-                            "Order with id %s can't be sent to Drip (email likely invalid)",
+                            "Order with id %s can't be sent to Drip (likely missing or corrupted information)",
                             $order->getId()
                         ),
                         Zend_Log::NOTICE

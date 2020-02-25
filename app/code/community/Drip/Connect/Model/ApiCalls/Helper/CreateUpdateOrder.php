@@ -7,7 +7,7 @@ class Drip_Connect_Model_ApiCalls_Helper_CreateUpdateOrder
 
     const ACTION_NEW = 'placed';
     const ACTION_CHANGE = 'updated';
-    const ACTION_PAID = 'paid';
+    const ACTION_PAID = 'paid'; // not used?
     const ACTION_FULFILL = 'fulfilled';
     const ACTION_REFUND = 'refunded';
     const ACTION_CANCEL = 'canceled';
