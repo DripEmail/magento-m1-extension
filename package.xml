@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
     <name>Drip</name>
-    <version>1.8.3</version>
+    <version>1.8.4</version>
     <stability>stable</stability>
     <license>GNU Lesser General Public License 3.0</license>
     <channel>community</channel>
@@ -69,7 +69,7 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                                     <file name="Orders.php" hash="6d14533941e39111ec85233628fa6823"/>
                                     <file name="Subscribers.php" hash="f26bc189b2e32d5956a2fb6dcc289e0c"/>
                                 </dir>
-                                <file name="CreateUpdateOrder.php" hash="faf59aa038c4fe7457dc60372d8c41b7"/>
+                                <file name="CreateUpdateOrder.php" hash="a95701f8ef20a018f1ebaa0f345ae371"/>
                                 <file name="CreateUpdateProduct.php" hash="bacc1b5d1c50f239ce1bd32614788aec"/>
                                 <file name="CreateUpdateQuote.php" hash="e1b1ef662bf9d4b3bc054f8b3290c73c"/>
                                 <file name="CreateUpdateRefund.php" hash="8dd2616eb2ec64a5d1b93f9c845a19f4"/>
@@ -88,7 +88,7 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                         <file name="Configuration.php" hash="7874c7b9681212b4db26fca01cfd580e"/>
                         <dir name="Cron">
                             <file name="Customers.php" hash="6d8954de23351a3c911326f2af67288a"/>
-                            <file name="Orders.php" hash="8ae4b5a56bc5b578cc52ff79b67dd6d5"/>
+                            <file name="Orders.php" hash="880ba8dc902314fa5cabfc3bb15df5d0"/>
                         </dir>
                         <dir name="Http">
                             <file name="Client.php" hash="3027e737b05fcd00d3c8913f9ced98b4"/>
@@ -145,7 +145,7 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                             <file name="SyncState.php" hash="772a0cf4e6787064893c3ec6ea01f1ba"/>
                         </dir>
                         <dir name="Transformer">
-                            <file name="Order.php" hash="07dda9a08534f9d269a7154adf222366"/>
+                            <file name="Order.php" hash="b4683a7c379f532a66db88eb5ed0b6ca"/>
                         </dir>
                     </dir>
                     <dir name="controllers">
@@ -168,7 +168,7 @@ Note that you'll need a Drip account in order to use this extension.</descriptio
                     </dir>
                     <dir name="etc">
                         <file name="adminhtml.xml" hash="d4f35cee5cd38366de6ba2e6df312bf6"/>
-                        <file name="config.xml" hash="8477febe18a5709d67b7445e77d22e26"/>
+                        <file name="config.xml" hash="5d583621060e336fcebd0c5d4629a75f"/>
                         <file name="system.xml" hash="80499537650c5c3e7f9869ff8a8c974a"/>
                     </dir>
                     <dir name="sql">
