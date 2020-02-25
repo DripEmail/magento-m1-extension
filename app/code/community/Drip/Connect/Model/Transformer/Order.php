@@ -289,7 +289,7 @@ class Drip_Connect_Model_Transformer_Order
 
     /**
      * check if given order can be sent to drip
-     * 
+     *
      * @return bool
      */
     public function isCanBeSent()
