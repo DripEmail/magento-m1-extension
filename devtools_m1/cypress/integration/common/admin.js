@@ -47,7 +47,9 @@ Given('I have configured Drip to be enabled for {string}', function (scope) {
   cy.contains('System').trigger('mouseover')
   cy.contains('Configuration').click()
   cy.contains('Drip Connect Configuration').click()
-  cy.get('select#store_switcher').select(scope)
+  if (scope !== 'Default Config') {
+    cy.get('select#store_switcher').select(scope)
+  }
   cy.contains('Module Settings').click()
   cy.contains('API Settings').click()
   if (scope !== 'Default Config') {
