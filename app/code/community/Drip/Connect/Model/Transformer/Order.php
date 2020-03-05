@@ -285,13 +285,12 @@ class Drip_Connect_Model_Transformer_Order
      */
     private function generateDefaultProductName($order_item, $variant_item)
     {
-        $template = '[Missing Product - Name]';
         $product_id = (string) $order_item->getProductId() ?: '0';
         $variant_id = (string) $variant_item->getProductId() ?: '0';
 
         return '[Missing Product ' . $product_id . '-' . $variant_id . ' Name]';
     }
-
+    
     /**
      * simple check for valid stringage
      * @param  mixed $stuff
