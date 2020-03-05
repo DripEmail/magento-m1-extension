@@ -4,7 +4,7 @@
 
 ## 1.8.5
 
-* Fixed a bug would cause order sync'ing to fail. If an order item has not product name associated with it, we will generate a default product name of "[Missing Product <x>-<y> Name]" where <x> and <y> are the parent product ID, and associated product ID respectively. If the product is not associated, both ids will be the same.
+* Fixed a bug would cause order sync'ing to fail. If an order item has no product name associated with it, we will generate a default product name of "[Missing Product <x>-<y> Name]" where <x> and <y> are the parent product ID, and associated product ID respectively. If the product is not associated, both ids will be the same.
 
 ## 1.8.4
 
