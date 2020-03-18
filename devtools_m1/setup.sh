@@ -3,18 +3,27 @@ set -e
 
 eval $(aws ecr get-login --no-include-email --registry-ids 648846177135 --region us-east-1)
 
+DB="db"
+MOCK="mock"
+if [[ $CONTINUOUS_INTEGRATION = "true" ]]; then
+  WEB="web-travis"
+else
+  WEB="web-local"
+fi
+
 # Spin up a new instance of Magento
 # Add --build when you need to rebuild the Dockerfile.
-./docker_compose.sh up -d
+./docker_compose.sh up -d $WEB $DB $MOCK
 
-port=$(./docker_compose.sh port web 80 | cut -d':' -f2)
-web_container=$(./docker_compose.sh ps -q web)
+
+port=$(./docker_compose.sh port $WEB 80 | cut -d':' -f2)
+web_container=$(./docker_compose.sh ps -q $WEB)
 
 # Wait for the DB to be up.
-./docker_compose.sh exec -T db /bin/bash -c 'while ! mysql --protocol TCP -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "show databases;" > /dev/null 2>&1; do sleep 1; done'
+./docker_compose.sh exec -T $DB /bin/bash -c 'while ! mysql --protocol TCP -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "show databases;" > /dev/null 2>&1; do sleep 1; done'
 
 # Install a couple nice-to-haves on db
-./docker_compose.sh exec -T db /bin/bash -c "apt update -y > /dev/null 2>&1 && apt install -y procps vim > /dev/null 2>&1"
+./docker_compose.sh exec -T $DB /bin/bash -c "apt update -y > /dev/null 2>&1 && apt install -y procps vim > /dev/null 2>&1"
 
 magento_setup_script=$(cat <<SCRIPT
 cd /var/www/html/magento/ && \
@@ -42,8 +51,8 @@ echo '<?xml version="1.0"?><config><modules><Mage_AdminNotification><active>fals
 SCRIPT
 )
 
-./docker_compose.sh exec -T -u www-data web /bin/bash -c "$magento_setup_script"
+./docker_compose.sh exec -T -u www-data $WEB /bin/bash -c "$magento_setup_script"
 
 echo "Backing up database for later reset"
 mkdir -p db_data/
-./docker_compose.sh exec -e MYSQL_PWD=magento db mysqldump -u magento magento > db_data/dump.sql
+./docker_compose.sh exec -e MYSQL_PWD=magento $DB mysqldump -u magento magento > db_data/dump.sql

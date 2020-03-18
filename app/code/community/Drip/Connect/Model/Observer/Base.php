@@ -9,6 +9,9 @@ abstract class Drip_Connect_Model_Observer_Base
     const REGISTRY_KEY_CUSTOMER_OLD_ADDR = 'oldcustomeraddress';
     const REGISTRY_KEY_CUSTOMER_OLD_DATA = 'oldcustomerdata';
     const REGISTRY_KEY_NEW_GUEST_SUBSCRIBER = 'newguestsubscriber';
+    const REGISTRY_KEY_PRODUCT_DELETE_PREVIOUS_DATA = 'producttobedeletedpreviousstate';
+    const REGISTRY_KEY_PRODUCT_IS_NEW = 'productisbeingcreated';
+    const REGISTRY_KEY_PRODUCT_DELETED_FROM_STORES = 'productisbeingdeletefromthesestores';
     const REGISTRY_KEY_ORDER_OLD_DATA = 'orderoldvalues';
     const REGISTRY_KEY_SUBSCRIBER_PREV_STATE = 'oldsubscriptionstatus';
     const REGISTRY_KEY_SUBSCRIBER_SUBSCRIBE_INTENT = 'userwantstosubscribe';
