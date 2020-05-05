@@ -16,8 +16,6 @@ class Drip_Connect_Model_Cron_Orders
 
         ini_set('memory_limit', $globalConfig->getMemoryLimit());
 
-        Mage::app()->setCurrentStore('default');
-
         $storeIds = array();
         $stores = Mage::app()->getStores(false, false);
 
@@ -42,11 +40,18 @@ class Drip_Connect_Model_Cron_Orders
                 continue;
             }
 
+            // Back up the current store ID and overwrite it for context.
+            $prevStoreId = Mage::app()->getStore()->getId();
+            Mage::app()->setCurrentStore($storeId);
+
             try {
                 $result = $this->syncOrdersForStore($storeConfig);
             } catch (\Exception $e) {
                 $this->getLogger()->log($e->__toString(), Zend_Log::ERR);
                 $result = false;
+            } finally {
+                // Restore whatever the previous store ID was.
+                Mage::app()->setCurrentStore($prevStoreId);
             }
 
             if ($result) {

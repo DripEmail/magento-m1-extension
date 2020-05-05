@@ -312,12 +312,12 @@ Then('an order event with both products is sent to Drip', function () {
 function validateWidget(item, product_id, product_variant_id) {
   expect(item.categories).to.be.empty
   expect(item.discounts).to.eq(0)
-  expect(item.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
+  expect(item.image_url).to.eq('http://site1.magento.localhost:3005/media/catalog/product/')
   expect(item.name).to.eq('Widget 1')
   expect(item.price).to.eq(11.22)
   expect(item.product_id).to.eq(product_id)
   expect(item.product_variant_id).to.eq(product_variant_id)
-  expect(item.product_url).to.eq('http://site1.magento.localhost:3005/widget-1.html?___store=site1_store_view')
+  expect(item.product_url).to.eq('http://site1.magento.localhost:3005/widget-1.html')
   expect(item.quantity).to.eq(1)
   expect(item.sku).to.eq('widg-1-xl')
   expect(item.taxes).to.eq(0)
@@ -327,12 +327,12 @@ function validateWidget(item, product_id, product_variant_id) {
 function validateVirtualProduct(item) {
   expect(item.categories).to.be.empty
   expect(item.discounts).to.eq(0)
-  expect(item.image_url).to.eq('http://main.magento.localhost:3005/media/catalog/product/')
+  expect(item.image_url).to.eq('http://site1.magento.localhost:3005/media/catalog/product/')
   expect(item.name).to.eq('Virtual 1')
   expect(item.price).to.eq(11.22)
   expect(item.product_id).to.eq('1')
   expect(item.product_variant_id).to.eq('1')
-  expect(item.product_url).to.eq('http://site1.magento.localhost:3005/virtual-1.html?___store=site1_store_view')
+  expect(item.product_url).to.eq('http://site1.magento.localhost:3005/virtual-1.html')
   expect(item.quantity).to.eq(1)
   expect(item.sku).to.eq('v-widg-1')
   expect(item.taxes).to.eq(0)
