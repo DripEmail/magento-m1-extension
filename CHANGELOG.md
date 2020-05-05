@@ -2,6 +2,8 @@
 
 ## NEXT
 
+## 1.8.6
+
 * Fixed an order syncing issue where the current store is not set properly.
 
 ## 1.8.5
