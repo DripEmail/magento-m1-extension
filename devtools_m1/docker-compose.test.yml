@@ -1,6 +1,14 @@
 version: '3.7'
 services:
-  web:
+  web-local:
+    links:
+    - 'mock'
+    volumes:
+      - type: bind
+        source: './php_utils'
+        target: /var/www/html/magento/shell/drip
+        consistency: cached
+  web-travis:
     links:
     - 'mock'
     volumes:

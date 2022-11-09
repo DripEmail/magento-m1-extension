@@ -213,6 +213,7 @@
     of fixing this in the short term. Disable it in order to not make a mess of
     data while we work on it. Product data will still be sent as part of order
     and cart events.
+    -->
     <adminhtml>
         <events>
             <catalog_product_save_before>
@@ -231,17 +232,25 @@
                     </drip_connect_catalog_product_save_after>
                 </observers>
             </catalog_product_save_after>
+            <catalog_product_delete_before>
+                <observers>
+                    <drip_connect_catalog_product_delete_before>
+                        <class>drip_connect/observer_product_deleteBefore</class>
+                        <method>execute</method>
+                    </drip_connect_catalog_product_delete_before>
+                </observers>
+            </catalog_product_delete_before>
             <catalog_product_delete_after>
                 <observers>
                     <drip_connect_catalog_product_delete_commit_after>
-                        <class>drip_connect/observer_product_afterDelete</class>
+                        <class>drip_connect/observer_product_deleteAfter</class>
                         <method>execute</method>
                     </drip_connect_catalog_product_delete_commit_after>
                 </observers>
             </catalog_product_delete_after>
         </events>
     </adminhtml>
-    -->
+<!-- -->
     <default>
         <dripconnect_general>
             <module_settings>
